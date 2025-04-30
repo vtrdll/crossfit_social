@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Usuários Cadastrados</title>
+</head>
+<body>
+    <h1>Usuários cadastrados</h1>
+
+    <ul>
+    {% for user in object_list %}
+        <li>{{ user.username }} - {{ post.text }}</li>
+        {% with user.profile as profile %}
+            {% if profile.photo and profile.photo.name %}
+                <img src="{{ profile.photo.url }}" class="img-thumbnail" alt="Foto de Perfil" style="max-width: 200px;">
+            {% else %}
+                <p>Sem foto de perfil.</p>
+            {% endif %}
+        {% endwith %}
+    {% empty %}
+    
+        <li>Nenhum usuário cadastrado.</li>
+    {% endfor %}
+    </ul>
+
+
+
+
+
+
+</body>
+</html>

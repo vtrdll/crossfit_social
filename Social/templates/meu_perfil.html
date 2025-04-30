@@ -1,0 +1,41 @@
+<!-- templates/perfil.html -->
+{% extends "base.html" %}
+
+{% block title %}Meu Perfil{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex align-items-center mb-4">
+        {% if user.profile.photo %}
+            <img src="{{ user.profile.photo.url }}" alt="Foto de perfil" class="rounded-circle me-3" width="100" height="100">
+       
+            
+        {% endif %}
+        <div>
+            <h2>{{ user.username }}</h2>
+            <p>{{ user.email }}</p>
+        </div>
+    </div>
+
+    <h3>Meus Posts</h3>
+    <hr>
+
+    {% for post in posts %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h4 class="card-title">{{ post.titulo }}</h4>
+                <p class="card-text">{{ post.text|truncatewords:30 }}</p>
+                {% if post.photo %}
+                    <img src="{{ post.photo.url }}" alt="Imagem do post" class="img-fluid post-image" width="150" height="150" >
+                {% endif %}
+                <p class="text-muted">Publicado em {{ post.date|date:"d/m/Y H:i" }}</p>
+                
+            </div>
+        </div>
+    {% empty %}
+        <p>Você ainda não publicou nenhum post.</p>
+    {% endfor %}
+</div>
+{% endblock %}
+
+
