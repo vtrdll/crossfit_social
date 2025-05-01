@@ -34,7 +34,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('post-list')
+            return redirect('home')
         else:
             login_form = AuthenticationForm()
     else:
@@ -44,4 +44,4 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('post-list')
+    return redirect('login')

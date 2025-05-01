@@ -13,26 +13,48 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'post-list' %}">Meu Blog</a>
+            <a class="navbar-brand" href="{% url 'home' %}">My Social</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'post-list' %}">Início</a>
+                        <a class="nav-link" href="{% url 'home' %}">Início</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'post-list' %}">Sobre</a>
+                        <a class="nav-link" href="{% url 'my-perfil' %}">Meu Perfil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'post-list' %}">Contato</a>
+                        <a class="nav-link" href=https://www.linkedin.com/in/jo%C3%A3o-vitor-xavier-532191279/>Contato</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">sair</a>
+                    </li>   
+                    {% endif %}
+
+                    {% if not user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">Cadastro</a>
+                    </li>
+                
+                    {% endif %}
+
                 </ul>
             </div>
         </div>
+            
     </nav>
 
+    
     <!-- Main content -->
     <div class="container">
         {% block content %}
@@ -44,6 +66,7 @@
     <footer class="bg-light text-center text-muted py-3 mt-4 border-top">
         <div class="container">
             <small>&copy; {{ year|default:2025 }} Meu Blog. Todos os direitos reservados.</small>
+            
         </div>
     </footer>
 

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -8,7 +9,7 @@
     <h1>Usuários cadastrados</h1>
 
     <ul>
-    {% for user in object_list %}
+    {% for user in users %}
         <li>{{ user.username }} - {{ post.text }}</li>
         {% with user.profile as profile %}
             {% if profile.photo and profile.photo.name %}
@@ -20,6 +21,14 @@
     {% empty %}
     
         <li>Nenhum usuário cadastrado.</li>
+    {% endfor %}
+    {% for post in posts %}
+        <li>{{ post.text }} </li>
+            {% if post.photo %}
+                <img src="{{ post.photo.url }}" alt="Imagem do post" class="img-fluid post-image" width="150" height="150" >
+            {% else %}
+                <p>Sem foto</p>
+            {% endif %}
     {% endfor %}
     </ul>
 

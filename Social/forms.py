@@ -1,8 +1,10 @@
 from django import forms 
-from Social.models import Post
+from Social.models import Post, Comment
 
-class PostForm(forms.ModelForm):
+
+
+class CommentForm(forms.ModelForm):
 
     class Meta():
-        model = Post
-        fields = '__all__'
+        model = Comment
+        fields = ['comment']

@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from Social.views import PostCreateView, PostListView, UsersList,  perfil_view, home_view
+from Social.views import PostCreateView, PostListView, UsersList,  perfil_view, HomeView #home_view
 from account.views import register_view, login_view, logout_view
 from django.conf import settings
 from django.conf.urls.static import static
@@ -29,7 +29,8 @@ urlpatterns = [
     path('post/', PostCreateView.as_view(), name='post-create' ),
     path('pagina-inicial/', PostListView.as_view(), name='post-list'),
     path('users/', UsersList.as_view(), name='users-list'),
-    path('home/', home_view, name='home'),
-    path('meu-perfil/', perfil_view, name='')
+    
+    path('home/', HomeView.as_view(), name='home'),
+    path('my-/', perfil_view, name='my-perfil')
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
