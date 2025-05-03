@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Alterar Senha{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 500px;">
+    <h2 class="mb-4">Alterar Senha</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <div class="text-danger">
+                        {{ field.errors|join:", " }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        
+        <button type="submit" class="btn btn-primary w-100">Atualizar Senha</button>
+    </form>
+
+    <a href="{% url 'my-perfil' %}" class="btn btn-link mt-3">Cancelar</a>
+</div>
+{% endblock %}

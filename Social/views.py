@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from account.models import Profile
 from Social.models import Post
-from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic import CreateView, ListView, DetailView, UpdateView
 from django.views.generic.edit import FormMixin
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
@@ -21,8 +21,9 @@ class PostCreateView(CreateView):
     success_url = reverse_lazy('home')
 
     def form_valid(self, form):
-        form.instance.usuario = self.request.user
+        form.instance.author = self.request.user
         return super().form_valid(form)
+    
 
 class HomeView(FormMixin, ListView):
     model = Post
@@ -47,27 +48,6 @@ class HomeView(FormMixin, ListView):
             return self.form_valid(form)
         return self.form_invalid(form)
 
-
-
-
-
-
-
-
-
-
-
-'''
-
-class CommentCreateView(CreateView):
-    model = Comment
-    fields = ['comment']
-    template_name = 'home.html'
-    success_url = reverse_lazy('home')
-    context_object_name = 'comment'
-
-'''
-
 class PostListView(ListView):
     model = Post
     template_name = 'users_list.html'
@@ -78,9 +58,6 @@ class UsersList(ListView):
     model = User
     template_name = 'users_list.html'
     context_object_name = 'users'
-
-
-
 
 
 class ProfileDetailView(DetailView):
@@ -99,7 +76,15 @@ class ProfileDetailView(DetailView):
 def perfil_view(request):
     posts = request.user.post_set.all().order_by('-date')
     return render(request, 'my_perfil.html', {'user': request.user, 'posts': posts})
-'''
-def home_view(request):
-    posts = Post.objects.select_related('author__profile').order_by('-date')
-    return render(request, 'home.html', {'posts': posts})'''
+
+
+
+
+class PostUpdate(UpdateView):
+    model = Post
+    fields = ['text', 'photo']
+    template_name ='post-edit.html'
+    context_object_name = 'post_update'
+    success_url =reverse_lazy('my-perfil')
+
+
