@@ -34,6 +34,9 @@
                         <a class="nav-link" href=https://www.linkedin.com/in/jo%C3%A3o-vitor-xavier-532191279/>Contato</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'user-detail' user.pk%}">Configurações Conta </a>
+                    </li> 
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">sair</a>
                     </li>   
                     {% endif %}

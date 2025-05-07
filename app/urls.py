@@ -16,8 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from Social.views import PostCreateView, PostListView, UsersList,  perfil_view, HomeView, PostUpdate
-from account.views import register_view, login_view, logout_view, UserUpdate, PasswordUpdate
+from Social.views import PostCreateView, PostListView, UsersList,  perfil_view, HomeView, PostUpdate, PostDelete
+from account.views import register_view, login_view, logout_view, UserUpdate, PasswordUpdate, UserDelete, UserDetail, PhotoUpdate, PhotoDelete
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -26,12 +26,19 @@ urlpatterns = [
     path('register/', register_view, name='register' ),
     path('login/', login_view, name='login' ),
     path('logout/', logout_view, name='logout' ),
+    
     path('post/', PostCreateView.as_view(), name='post-create' ),
     path('pagina-inicial/', PostListView.as_view(), name='post-list'),
     path('users/', UsersList.as_view(), name='users-list'),
     path('post/<int:pk>/editar/', PostUpdate.as_view(), name='post-edit'),
-    path('user/<int:pk>/editar/', UserUpdate.as_view(), name='user-edit'),
-    path('password/<int:pk>/editar/', PasswordUpdate.as_view(), name='pass-edit'),
+    path('post/<int:pk>/delete/', PostDelete.as_view(), name='post-delete'),
+    path('user/<int:pk>/editar/', UserUpdate.as_view(), name='user-update'),
+    path('user/<int:pk>/detail/', UserDetail.as_view(), name='user-detail'),
+    path('password/<int:pk>/editar/', PasswordUpdate.as_view(), name='password-change'),
+    path('user/<int:pk>/delete/', UserDelete.as_view(), name ='user-delete'),
+
+    path('photo/<int:pk>/delete/', PhotoDelete.as_view(), name='photo-delete'),
+    path('photo/<int:pk>/update/', PhotoUpdate.as_view(), name='photo-update'),
     path('', HomeView.as_view(), name='home'),
     path('my-perfil/', perfil_view, name='my-perfil')
     

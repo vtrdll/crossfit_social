@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from account.models import Profile
 from Social.models import Post
-from django.views.generic import CreateView, ListView, DetailView, UpdateView
+from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 from django.views.generic.edit import FormMixin
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
@@ -86,5 +86,12 @@ class PostUpdate(UpdateView):
     template_name ='post-edit.html'
     context_object_name = 'post_update'
     success_url =reverse_lazy('my-perfil')
+    
+
+
+class PostDelete(DeleteView):
+    model = Post 
+    template_name = 'post-delete.html'
+    success_url = reverse_lazy('my-perfil')
 
 

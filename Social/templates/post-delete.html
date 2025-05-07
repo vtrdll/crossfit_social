@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Confirmar Exclusão{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 600px;">
+    <div class="card shadow">
+        <div class="card-body text-center">
+            <h3 class="mb-4 text-danger">Tem certeza que deseja excluir este post?</h3>
+            
+            
+            <p class="text-muted">{{ object.text|truncatewords:20 }}</p>
+            <p class="text-muted">{{ post.date|date:"d/m/Y H:i" }}</p>
+            {% if object.photo %}
+                <img src="{{ object.photo.url }}" class="img-fluid rounded" style="max-height: 200px;" alt="Imagem do post">
+            {% endif %}
+
+            <form method="post" class="mt-4">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Sim, Excluir</button>
+                <a href="{% url 'my-perfil' %}" class="btn btn-secondary ms-2">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

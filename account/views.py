@@ -1,12 +1,18 @@
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm,SetPasswordForm
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm,SetPasswordForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from django.shortcuts import render, redirect
-from account.models import Profile
+
 from django.contrib.auth.models import User
-from account.forms import ProfileForm, UserForm, PasswordForm
-from django.views.generic import UpdateView, FormView
+from .forms import ProfileForm, UserForm
+from .models import Profile
+from django.views.generic import UpdateView, FormView, DeleteView, DetailView
+
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+
 from django.urls import reverse_lazy
 
 
@@ -45,12 +51,15 @@ def login_view(request):
         login_form = AuthenticationForm()
     return render(request, 'login.html', {'login_form': login_form})
 
-
+@method_decorator(login_required(login_url='login'), name='dispatch')
 def logout_view(request):
     logout(request)
     return redirect('login')
 
 
+
+
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class UserUpdate(UpdateView):
     model = User
     form_class = UserForm
@@ -64,17 +73,60 @@ class UserUpdate(UpdateView):
         return self.request.user
     
 
-
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class PasswordUpdate(LoginRequiredMixin, FormView):
     template_name = 'pass-update.html'
     form_class = SetPasswordForm
-    success_url = reverse_lazy('login')  # redirecionamento após sucesso
+    success_url = reverse_lazy('login') 
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['user'] = self.request.user  # Passando o usuário para o formulário
+        kwargs['user'] = self.request.user  
         return kwargs
 
     def form_valid(self, form):
-        form.save()  # Salva a nova senha
+        form.save()  
         return super().form_valid(form)
+    
+@method_decorator(login_required(login_url='login'), name='dispatch')
+class UserDelete(DeleteView):
+    model = User
+    template_name = 'user-delete.html'
+    success_url = reverse_lazy ('home')
+
+
+class UserDetail(DetailView):
+    model = Profile 
+    template_name = 'configuracao.html'
+    
+
+
+class PhotoUpdate(UpdateView):
+    model = Profile 
+    form_class = ProfileForm
+    template_name = 'photo-update.html'
+    success_url = reverse_lazy('my-perfil')
+    
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['action'] = 'update'  
+        return context
+
+
+class PhotoDelete(DeleteView):
+    model = Profile
+    
+    template_name = 'photo-update.html'
+
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.photo.delete(save=True)
+        return redirect('user-detail', pk=self.object.user.pk)
+    
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        self.action = 'delete'  
+        return context

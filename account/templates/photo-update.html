@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if view.action == "delete" %}
+        Remover Foto de Perfil
+    {% else %}
+        Alterar Foto de Perfil
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 500px;">
+    <h2 class="mb-4 text-center">
+        {% if view.action == "delete" %}
+            Remover Foto de Perfil
+        {% else %}
+            Alterar Foto de Perfil
+        {% endif %}
+    </h2>
+
+    <div class="text-center mb-4">
+        {% if user.profile.photo %}
+            <img src="{{ user.profile.photo.url }}" alt="Foto atual" class="rounded-circle" width="150" height="150" style="object-fit: cover;">
+        {% else %}
+            <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 150px; height: 150px; margin: auto;">
+                <span style="font-size: 50px;">{{ user.username|slice:":1"|upper }}</span>
+            </div>
+        {% endif %}
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if view.action == "delete" %}
+            <p class="text-center">Tem certeza de que deseja remover sua foto de perfil?</p>
+            <button type="submit" class="btn btn-danger w-100">Remover Foto</button>
+            {% else %}
+            <div class="mb-3">
+                {{ form.photo.label_tag }}
+                {{ form.photo }}
+                {% if form.photo.errors %}
+                    <div class="text-danger">{{ form.photo.errors }}</div>
+                {% endif %}
+            </div>
+        
+            <button type="submit" class="btn btn-primary w-100 mb-2">Salvar Nova Foto</button>
+        
+            {% if user.profile.photo %}
+                <a href="{% url 'photo-delete' user.profile.pk %}" class="btn btn-outline-danger w-100">Remover Foto</a>
+            {% endif %}
+        {% endif %}
+
+    <div class="text-center mt-3">
+        <a href="{% url 'user-detail' user.pk %}" class="btn btn-link">Cancelar</a>
+    </div>
+</div>
+{% endblock %}
