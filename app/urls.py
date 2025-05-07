@@ -40,6 +40,6 @@ urlpatterns = [
     path('photo/<int:pk>/delete/', PhotoDelete.as_view(), name='photo-delete'),
     path('photo/<int:pk>/update/', PhotoUpdate.as_view(), name='photo-update'),
     path('', HomeView.as_view(), name='home'),
-    path('my-perfil/', perfil_view, name='my-perfil')
+    path('my-perfil/', perfil_view, name='my-perfil'),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

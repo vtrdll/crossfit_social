@@ -1,4 +1,4 @@
-from django.contrib.auth import update_session_auth_hash
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm,SetPasswordForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 
 from django.contrib.auth.models import User
-from .forms import ProfileForm, UserForm
+from .forms import ProfileForm, UserForm, ProfileFormUpdate
 from .models import Profile
 from django.views.generic import UpdateView, FormView, DeleteView, DetailView
 
@@ -51,23 +51,21 @@ def login_view(request):
         login_form = AuthenticationForm()
     return render(request, 'login.html', {'login_form': login_form})
 
+
 @method_decorator(login_required(login_url='login'), name='dispatch')
 def logout_view(request):
     logout(request)
     return redirect('login')
 
 
-
-
 @method_decorator(login_required(login_url='login'), name='dispatch')
 class UserUpdate(UpdateView):
+
+
     model = User
     form_class = UserForm
-    
-    
     template_name = 'user-update.html'
     success_url = reverse_lazy('my-perfil')
-
 
     def get_object(self):
         return self.request.user
@@ -88,22 +86,28 @@ class PasswordUpdate(LoginRequiredMixin, FormView):
         form.save()  
         return super().form_valid(form)
     
+
 @method_decorator(login_required(login_url='login'), name='dispatch')
 class UserDelete(DeleteView):
     model = User
     template_name = 'user-delete.html'
     success_url = reverse_lazy ('home')
 
-
+    
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class UserDetail(DetailView):
     model = Profile 
     template_name = 'configuracao.html'
-    
+    context_object_name = 'profile'
+
+    def get_object(self, queryset=None):
+        return self.request.user.profile  
 
 
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class PhotoUpdate(UpdateView):
     model = Profile 
-    form_class = ProfileForm
+    form_class = ProfileFormUpdate
     template_name = 'photo-update.html'
     success_url = reverse_lazy('my-perfil')
     
@@ -112,13 +116,15 @@ class PhotoUpdate(UpdateView):
         context = super().get_context_data(**kwargs)
         context['action'] = 'update'  
         return context
-
-
+    
+    def get_object(self, queryset=None):
+        return self.request.user.profile 
+    
+    
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class PhotoDelete(DeleteView):
     model = Profile
-    
     template_name = 'photo-update.html'
-
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -130,3 +136,6 @@ class PhotoDelete(DeleteView):
         context = super().get_context_data(**kwargs)
         self.action = 'delete'  
         return context
+
+    def get_object(self, queryset = ...):
+        return self.request.user.profile

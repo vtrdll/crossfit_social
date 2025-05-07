@@ -33,6 +33,23 @@
                 <label for="id_username" class="form-label">Usuário</label>
                 {{ user_form.username|add_class:"form-control" }}
             </div>
+            <div class="mb-3">
+                <label for="id_username" class="form-label">Primeiro nome</label>
+                {{ user_form.first_name|add_class:"form-control" }}
+            </div>
+            <div class="mb-3">
+                <label for="id_username" class="form-label">Segundo nome</label>
+                {{ user_form.last_name|add_class:"form-control" }}
+            </div>
+            <div class="mb-3">
+                <label for="id_email" class="form-label">Email</label>
+                {{ user_form.email|add_class:"form-control" }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_birthday" class="form-label">Data de Nascimento</label>
+                {{ profile_form.birthday|add_class:"form-control" }}
+            </div>
 
             <div class="mb-3">
                 <label for="id_password1" class="form-label">Senha</label>
