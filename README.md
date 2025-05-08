@@ -42,30 +42,36 @@ Este projeto é um sistema de blog desenvolvido com o framework Django. A aplica
 Como Executar Localmente
 
 1. Clone o repositório:
+    git clone https://github.com/vtrdll/blog.git
 
-  git clone https://github.com/vtrdll/blog.git
-  cd blog
+    cd blog
 
-2. Crie e ative um ambiente virtual:
+3. Crie e ative um ambiente virtual:
 
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate     # Windows
+    python -m venv venv
+
+    source venv/bin/activate  # Linux/Mac
+
+    venv\Scripts\activate     # Windows
 
 3. Instale as dependências:
-  pip install -r requirements.txt
+    pip install -r requirements.txt
 
 4. Aplique as migrações:
-  python manage.py makemigrations
-  python manage.py migrate
+   
+    python manage.py makemigrations
+  
+    python manage.py migrate
 
-5. Crie um superusuário (opcional):
+6. Crie um superusuário (opcional):
+   
    python manage.py createsuperuser
 
-6. Execute o servidor:
+8. Execute o servidor:
+   
    python manage.py runserver
 
-Acesse http://127.0.0.1:8000/ no navegador para usar o blog.
+   Acesse http://127.0.0.1:8000/ no navegador para usar o blog.
 
 
 
