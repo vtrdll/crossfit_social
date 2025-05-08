@@ -42,6 +42,7 @@ Este projeto é um sistema de blog desenvolvido com o framework Django. A aplica
 Como Executar Localmente
 
 1. Clone o repositório:
+   
     git clone https://github.com/vtrdll/blog.git
 
     cd blog
@@ -55,9 +56,10 @@ Como Executar Localmente
     venv\Scripts\activate     # Windows
 
 3. Instale as dependências:
+   
     pip install -r requirements.txt
 
-4. Aplique as migrações:
+5. Aplique as migrações:
    
     python manage.py makemigrations
   
