@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from account.models import Profile
-from Social.models import Post
+from .models import Post, Comment
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 from django.views.generic.edit import FormMixin
 from django.urls import reverse_lazy
@@ -17,13 +17,13 @@ from .forms import CommentForm
 class PostCreateView(CreateView):
     model = Post
     fields = ['text','photo']
-    template_name = 'post.html'
+    template_name = 'post-create.html'
     success_url = reverse_lazy('home')
 
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
-    
+
 
 class HomeView(FormMixin, ListView):
     model = Post
@@ -53,6 +53,10 @@ class PostListView(ListView):
     template_name = 'users_list.html'
     context_object_name = 'posts'
 
+class PostDetail(DetailView):
+    model = Post
+    template_name = 'post-detail.html'
+
 
 class UsersList(ListView):
     model = User
@@ -60,7 +64,7 @@ class UsersList(ListView):
     context_object_name = 'users'
 
 
-class ProfileDetailView(DetailView):
+class ProfileDetail(DetailView):
     model = Profile
     template_name = 'home.html'
     context_object_name = 'profile'
@@ -74,7 +78,7 @@ class ProfileDetailView(DetailView):
     
 
 def perfil_view(request):
-    posts = request.user.post_set.all().order_by('-date')
+    posts = request.user.post_set.all().order_by('-created_at')
     return render(request, 'my_perfil.html', {'user': request.user, 'posts': posts})
 
 
@@ -95,3 +99,37 @@ class PostDelete(DeleteView):
     success_url = reverse_lazy('my-perfil')
 
 
+
+
+class CommentList(ListView):
+    model = Comment
+    template_name = 'comment-list.html'
+
+    def get_queryset(self):
+        post = get_object_or_404(Post, pk=self.kwargs['pk'])
+
+        return Comment.objects.filter(post=post)
+    
+
+class CommentUpdate(UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'comment-update.html'
+    success_url = reverse_lazy ('home')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['action'] = 'update'
+        return context 
+
+
+class CommentDelete(DeleteView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'comment-update.html'
+    success_url = reverse_lazy('home')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context ['action'] = 'delete'
+        return context 

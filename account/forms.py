@@ -11,7 +11,7 @@ class ProfileForm(forms.ModelForm):
             'class': 'form-control'
         }),
         input_formats=['%Y-%m-%d'],
-        required=True
+        required=True 
     )
 
     class Meta:

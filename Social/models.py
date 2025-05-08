@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 
 class Post(models.Model):
     author= models.ForeignKey(User, on_delete=models.CASCADE, )
-    date = models.DateTimeField(auto_now=True, auto_created=True)
+    created_at = models.DateTimeField(auto_now=True, auto_created=True)
     text = models.TextField(max_length=2000)
     photo = models.ImageField(upload_to='media_post', null=True, blank= True)
 
@@ -22,8 +22,8 @@ class Post(models.Model):
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     comment = models.TextField(max_length=1000)
-    post  = models.ForeignKey(Post, on_delete=models.CASCADE)
-
+    created_at = models.DateTimeField(auto_now=True, auto_created=True)
+    post  = models.ForeignKey(Post, on_delete=models.CASCADE,)
 
     def __str__(self):
         return f'{self.author.username} - {self.comment}'

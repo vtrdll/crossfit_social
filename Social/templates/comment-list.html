@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Comentários - {{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">{{ post.title }}</h2>
+    <p>{{ post.text|truncatewords:50 }}</p>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h3 class="card-title mb-4">Comentários</h3>
+
+            {% if object_list %}
+                <div class="list-group">
+                    {% for comment in object_list %}
+                        <div class="list-group-item d-flex">
+                            
+                            {% if comment.author.profile.photo %}
+                                <img src="{{ comment.author.profile.photo.url }}" alt="{{ comment.author.username }}"
+                                     class="rounded-circle me-3" width="48" height="48" style="object-fit: cover;">
+                            {% else %}
+                                <div class="rounded-circle bg-secondary me-3" style="width: 48px; height: 48px;"></div>
+                            {% endif %}
+
+                            
+                            <div class="flex-grow-1">
+                                <p class="mb-1"><strong>{{ comment.author.username }}</strong> comentou:</p>
+                                <p class="mb-1">{{ comment.comment }}</p>
+                                <p class="text-muted small mb-2">Publicado em {{ comment.created_at|date:"d/m/Y H:i" }}</p>
+
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a href="{% url 'comment-update' comment.pk %}" class="btn btn-sm btn-outline-primary">Editar</a>
+                                    <a href="{% url 'comment-delete' comment.pk %}" class="btn btn-sm btn-outline-danger">Deletar</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>Este post ainda não tem comentários.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Formulário para adicionar um novo comentário -->
+    <div class="card mt-4 shadow-sm">
+        <div class="card-body">
+            <h4 class="card-title">Adicionar Comentário</h4>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="id_texto" class="form-label">Seu Comentário</label>
+                    <textarea name="texto" id="id_texto" class="form-control" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Adicionar Comentário</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

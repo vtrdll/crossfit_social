@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}{{ post.titulo }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm mb-4">
+        {% if post.photo %}
+            <img src="{{ post.photo.url }}" class="card-img-top" alt="Imagem do post">
+        {% endif %}
+        <div class="card-body">
+            <h2 class="card-title">{{ post.titulo }}</h2>
+            <p class="card-text">{{ post.text }}</p>
+            <p class="text-muted mb-1">
+                Publicado por <strong>{{ post.author.username }}</strong> em {{ post.date|date:"d/m/Y H:i" }}
+            </p>
+
+            {% if user == post.author %}
+                <div class="d-flex gap-2 mt-3">
+                    <a href="{% url 'post-edit' post.pk %}" class="btn btn-sm btn-outline-primary">Editar Post</a>
+                    <a href="{% url 'post-delete' post.pk %}" class="btn btn-sm btn-outline-danger">Excluir Post</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <h4 class="mb-3">Comentários</h4>
+    <div class="list-group mb-4">
+        {% for comment in post.comment_set.all %}
+            <div class="list-group-item d-flex">
+                {% if comment.author.profile.photo %}
+                    <img src="{{ comment.author.profile.photo.url }}" alt="{{ comment.author.username }}"
+                         class="rounded-circle me-3" width="48" height="48" style="object-fit: cover;">
+                {% else %}
+                    <div class="rounded-circle bg-secondary me-3" style="width: 48px; height: 48px;"></div>
+                {% endif %}
+
+                <div>
+                    <p class="mb-1"><strong>{{ comment.author.username }}</strong> comentou:</p>
+                    <p class="mb-1">{{ comment.comment }}</p>
+                    <small class="text-muted">Publicado em {{ comment.created_at|date:"d/m/Y H:i" }}</small>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-muted">Nenhum comentário ainda.</p>
+        {% endfor %}
+    </div>
+
+    <a href="{% url 'my-perfil' %}" class="btn btn-secondary">Voltar</a>
+</div>
+{% endblock %}

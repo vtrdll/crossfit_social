@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 
 from django.contrib.auth.models import User
-from .forms import ProfileForm, UserForm, ProfileFormUpdate
+from .forms import ProfileForm, UserForm, ProfileFormUpdate,CustomCreateUser
 from .models import Profile
 from django.views.generic import UpdateView, FormView, DeleteView, DetailView
 
@@ -19,7 +19,7 @@ from django.urls import reverse_lazy
 def register_view(request):
     if request.method == "POST":
         
-        user_form = UserCreationForm(request.POST)
+        user_form = CustomCreateUser(request.POST)
         profile_form = ProfileForm(request.POST, request.FILES)
 
         if user_form.is_valid() and profile_form.is_valid():
@@ -31,7 +31,7 @@ def register_view(request):
 
             return redirect('login')
     else:
-        user_form = UserCreationForm()
+        user_form = CustomCreateUser()
         profile_form = ProfileForm()
 
     return render(request, 'register.html', {'user_form': user_form, 'profile_form': profile_form})
@@ -52,7 +52,7 @@ def login_view(request):
     return render(request, 'login.html', {'login_form': login_form})
 
 
-@method_decorator(login_required(login_url='login'), name='dispatch')
+
 def logout_view(request):
     logout(request)
     return redirect('login')

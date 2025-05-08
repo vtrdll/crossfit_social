@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import Post
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('text', 'author', 'date')
+    list_display = ('text', 'author', 'created_at')
     search_fields = ('text', 'author__username')
 
     def save_model(self, request, obj, form, change):

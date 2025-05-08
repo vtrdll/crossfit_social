@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from Social.views import PostCreateView, PostListView, UsersList,  perfil_view, HomeView, PostUpdate, PostDelete
+from Social.views import PostCreateView, PostListView, UsersList,  perfil_view, HomeView, PostUpdate, PostDelete, PostDetail, CommentList, CommentUpdate, CommentDelete
 from account.views import register_view, login_view, logout_view, UserUpdate, PasswordUpdate, UserDelete, UserDetail, PhotoUpdate, PhotoDelete
 from django.conf import settings
 from django.conf.urls.static import static
@@ -27,15 +27,26 @@ urlpatterns = [
     path('login/', login_view, name='login' ),
     path('logout/', logout_view, name='logout' ),
     
+    
+    
+    path('users/', UsersList.as_view(), name='users-list'),
+
     path('post/', PostCreateView.as_view(), name='post-create' ),
     path('pagina-inicial/', PostListView.as_view(), name='post-list'),
-    path('users/', UsersList.as_view(), name='users-list'),
     path('post/<int:pk>/editar/', PostUpdate.as_view(), name='post-edit'),
     path('post/<int:pk>/delete/', PostDelete.as_view(), name='post-delete'),
+    path('post/<int:pk>/detail/', PostDetail.as_view(), name='post-detail'),
+
+    path('post/<int:pk>/comment/', CommentList.as_view(), name='comment-list'),
+    path('comment/<int:pk>/edit/', CommentUpdate.as_view(), name='comment-update'),
+    path('comment/<int:pk>/delete/', CommentDelete.as_view(),  name='comment-delete'),
+
+
     path('user/<int:pk>/editar/', UserUpdate.as_view(), name='user-update'),
     path('user/<int:pk>/detail/', UserDetail.as_view(), name='user-detail'),
-    path('password/<int:pk>/editar/', PasswordUpdate.as_view(), name='password-change'),
+   
     path('user/<int:pk>/delete/', UserDelete.as_view(), name ='user-delete'),
+    path('password/<int:pk>/editar/', PasswordUpdate.as_view(), name='password-change'),
 
     path('photo/<int:pk>/delete/', PhotoDelete.as_view(), name='photo-delete'),
     path('photo/<int:pk>/update/', PhotoUpdate.as_view(), name='photo-update'),

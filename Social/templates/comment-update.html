@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% block title %}
+    {% if view.action == "delete" %}
+        Remover Comentário
+    {% else %}
+        Editar Comentário
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h2 class="card-title">
+                {% if view.action == "delete" %}
+                    Remover Comentário
+                {% else %}
+                    Editar Comentário
+                {% endif %}
+            </h2>
+
+            {% if view.action == "delete" %}
+                <p>Tem certeza que deseja remover este comentário?</p>
+                <form method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Confirmar Deletação</button>
+                </form>
+            {% else %}
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_texto" class="form-label">Texto do Comentário</label>
+                        {{ comment_form.texto|add_class:"form-control" }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+    <a href="{% url 'post-detail' comment.post.pk %}" class="btn btn-secondary mt-3">Voltar</a>
+</div>
+{% endblock %}
