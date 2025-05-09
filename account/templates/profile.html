@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Perfil de {{ user_profile.username }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <!-- Sidebar esquerda com dados do usuário -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm text-center">
+                <div class="card-body">
+                    {% if user_profile.profile.photo %}
+                        <img src="{{ user_profile.profile.photo.url }}" class="rounded-circle mb-3" width="100" height="100" style="object-fit: cover;" alt="Foto de perfil">
+                    {% else %}
+                        <img src="https://via.placeholder.com/100" class="rounded-circle mb-3" alt="Sem foto">
+                    {% endif %}
+                    <h5 class="card-title">{{ user_profile.username }}</h5>
+                    <p class="text-muted">Membro desde {{ user_profile.date_joined|date:"d M Y" }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conteúdo principal -->
+        <div class="col-md-9">
+            <!-- Posts -->
+            <div class="mb-4">
+                <h4 class="mb-3">Publicações de {{ user_profile.username }}</h4>
+                {% if posts %}
+                    {% for post in posts %}
+                        <div class="card mb-3 shadow-sm">
+                            {% if post.photo %}
+                                <img src="{{ post.photo.url }}" class="card-img-top" alt="Imagem do post" height="320">
+                            {% endif %}
+                            <div class="card-body d-flex align-items-start">
+                                {% if post.author.profile.photo %}
+                                    <img src="{{ post.author.profile.photo.url }}" class="rounded-circle me-3" width="40" height="40" style="object-fit: cover;" alt="Autor">
+                                {% else %}
+                                    <img src="https://via.placeholder.com/40" class="rounded-circle me-3" alt="Sem foto">
+                                {% endif %}
+                                <div>
+                                    <h5 class="card-title mb-1">{{ post.titulo }}</h5>
+                                    <p class="card-text">{{ post.text|truncatewords:30 }}</p>
+                                    <p class="text-muted mb-1">Publicado em {{ post.created_at|date:"d/m/Y H:i" }}</p>
+                                    <a href="{% url 'post-detail' post.pk %}" class="btn btn-sm btn-outline-primary">Ver mais</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">Este usuário ainda não publicou nada.</p>
+                {% endif %}
+            </div>
+
+            <!-- Comentários -->
+            <div class="mb-4">
+                <h4 class="mb-3">Comentários feitos</h4>
+                {% if comments %}
+                    {% for comment in comments %}
+                        <div class="list-group-item mb-2 border rounded p-3 shadow-sm d-flex align-items-start">
+                            {% if comment.author.profile.photo %}
+                                <img src="{{ comment.author.profile.photo.url }}" class="rounded-circle me-3" width="40" height="40" style="object-fit: cover;" alt="Autor">
+                            {% else %}
+                                <img src="https://via.placeholder.com/40" class="rounded-circle me-3" alt="Sem foto">
+                            {% endif %}
+                            <div>
+                                <p class="mb-1"><strong>Em:</strong> {{ comment.post.text|truncatewords:30 }}</p>
+                                <p>{{ comment.comment }}</p>
+                                <a href="{% url 'post-detail' comment.post.pk %}">
+                                    <small class="text-muted">Publicado em {{ comment.created_at|date:"d/m/Y H:i" }}</small>
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">Nenhum comentário feito ainda.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

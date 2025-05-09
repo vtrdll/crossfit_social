@@ -36,7 +36,14 @@
                 <div>
                     <a href="{% url 'post-detail' post.pk %}"><small class="text-muted">{{ post.created_at|date:"d/m/Y H:i" }}</small></a>
                 </div>
+                {% if post in user.post_set.all %}
+                        <div class="d-flex justify-content-end gap-2 mt-2">
+                            <a href="{% url 'post-edit' post.pk %}" class="btn btn-sm btn-outline-primary">Editar Post</a>
+                            <a href="{% url 'post-delete' post.pk %}" class="btn btn-sm btn-outline-danger">Excluir Post</a>
+                        </div>
+                    {% endif %}
                 <!-- Comentários -->
+                 
                 <div class="mt-4">
                     <h6 class="text-muted">💬 Comentários</h6>
                     {% for comment in post.comment_set.all %}
@@ -50,6 +57,12 @@
                                 <span>{{ comment.comment }}</span>
                             </div>
                         </div>
+                        {% if comment in user.comment_set.all %}
+                        <div class="d-flex justify-content-end gap-2 mt-2">
+                            <a href="{% url 'comment-update' comment.pk %}" class="btn btn-sm btn-outline-primary">Editar Comentario</a>
+                            <a href="{% url 'comment-delete' comment.pk %}" class="btn btn-sm btn-outline-danger">Deletar Comentario</a>
+                        </div>
+                    {% endif %}
                     {% empty %}
                         <p class="text-muted">Nenhum comentário ainda.</p>
                     {% endfor %}

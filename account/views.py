@@ -1,19 +1,16 @@
-
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm,SetPasswordForm
-from django.contrib.auth.mixins import LoginRequiredMixin
-
-from django.shortcuts import render, redirect
-
-from django.contrib.auth.models import User
-from .forms import ProfileForm, UserForm, ProfileFormUpdate,CustomCreateUser
 from .models import Profile
-from django.views.generic import UpdateView, FormView, DeleteView, DetailView
+from django.urls import reverse_lazy
+from Social.models import Comment, Post
+from django.contrib.auth.models import User
 
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-
-from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.forms import AuthenticationForm, SetPasswordForm
+from django.views.generic import UpdateView, FormView, DeleteView, DetailView
+from .forms import ProfileForm, UserFormUpdate, ProfileFormUpdate,CustomCreateUser
 
 
 def register_view(request):
@@ -63,7 +60,7 @@ class UserUpdate(UpdateView):
 
 
     model = User
-    form_class = UserForm
+    form_class = UserFormUpdate
     template_name = 'user-update.html'
     success_url = reverse_lazy('my-perfil')
 
@@ -139,3 +136,15 @@ class PhotoDelete(DeleteView):
 
     def get_object(self, queryset = ...):
         return self.request.user.profile
+    
+class ProfileDetail(DetailView):
+
+    def get(self, request, pk):
+        user_profile = get_object_or_404(User, pk=pk)
+        posts = Post.objects.filter(author=user_profile).order_by('-created_at')
+        comments = Comment.objects.filter(author=user_profile).order_by('-created_at')
+        return render(request, 'profile.html', {
+            'user_profile': user_profile,
+            'posts': posts,
+            'comments': comments,
+        })

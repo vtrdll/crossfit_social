@@ -14,12 +14,17 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
 from django.urls import path
-from Social.views import PostCreateView, PostListView, UsersList,  perfil_view, HomeView, PostUpdate, PostDelete, PostDetail, CommentList, CommentUpdate, CommentDelete
-from account.views import register_view, login_view, logout_view, UserUpdate, PasswordUpdate, UserDelete, UserDetail, PhotoUpdate, PhotoDelete
+from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
+from Social.views import my_profile, HomeView
+from account.views import PhotoUpdate, PhotoDelete
+from account.views import register_view, login_view, logout_view
+from Social.views import CommentList, CommentUpdate, CommentDelete
+from Social.views import PostCreateView, PostDetail, PostUpdate, PostDelete
+from account.views import  UserDetail, UserUpdate, UserDelete, PasswordUpdate, ProfileDetail
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,11 +33,9 @@ urlpatterns = [
     path('logout/', logout_view, name='logout' ),
     
     
-    
-    path('users/', UsersList.as_view(), name='users-list'),
-
     path('post/', PostCreateView.as_view(), name='post-create' ),
-    path('pagina-inicial/', PostListView.as_view(), name='post-list'),
+    path('perfil/<int:pk>/', ProfileDetail.as_view(), name='user-public-profile'),
+    
     path('post/<int:pk>/editar/', PostUpdate.as_view(), name='post-edit'),
     path('post/<int:pk>/delete/', PostDelete.as_view(), name='post-delete'),
     path('post/<int:pk>/detail/', PostDetail.as_view(), name='post-detail'),
@@ -51,6 +54,6 @@ urlpatterns = [
     path('photo/<int:pk>/delete/', PhotoDelete.as_view(), name='photo-delete'),
     path('photo/<int:pk>/update/', PhotoUpdate.as_view(), name='photo-update'),
     path('', HomeView.as_view(), name='home'),
-    path('my-perfil/', perfil_view, name='my-perfil'),
+    path('my-perfil/', my_profile, name='my-perfil'),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

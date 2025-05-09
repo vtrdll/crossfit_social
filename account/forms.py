@@ -3,6 +3,8 @@ from .models import Profile
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm, UserCreationForm
 
+
+
 class ProfileForm(forms.ModelForm):
 
     birthday = forms.DateField(
@@ -34,7 +36,7 @@ class CustomCreateUser(UserCreationForm):
 
 
 
-class UserForm(UserChangeForm):
+class UserFormUpdate(UserChangeForm):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email']
@@ -47,8 +49,6 @@ class UserForm(UserChangeForm):
             del self.fields['password']
 
 
-class PasswordForm(PasswordChangeForm):
-    pass
 
 
         
