@@ -27,3 +27,12 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'{self.author.username} - {self.comment}'
+    
+
+class PostCommentInventory(models.Model):
+    author = models.OneToOneField(User, on_delete=models.CASCADE, related_name='author_inventory')
+    post_count = models.IntegerField(default=0)
+    comment_count = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f'{self.author} - {self.post_count} - {self.comment_count}'

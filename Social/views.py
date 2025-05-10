@@ -1,11 +1,13 @@
 from .forms import CommentForm
 from .models import Post, Comment
 from django.urls import reverse_lazy
+from .models import PostCommentInventory
 from django.views.generic.edit import FormMixin
 from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
+
 
 
 @method_decorator(login_required(login_url='login'), name='dispatch')
@@ -91,8 +93,11 @@ class HomeView(FormMixin, ListView):
     
 
 def my_profile(request):
+    user = request.user
     posts = request.user.post_set.all().order_by('-created_at')
     comments = request.user.comment_set.all().order_by('-created_at')
-    return render(request, 'my_perfil.html', {'user': request.user, 'posts': posts, 'comments':comments})
+
+    inventory_post = PostCommentInventory.objects.filter(author=user).first()
+    return render(request, 'my_perfil.html', {'user': request.user, 'posts': posts, 'comments':comments, 'inventory_post': inventory_post, 'mostrar_inventory':True})
 
 
