@@ -1,0 +1,19 @@
+# Ambientes virtuais
+venv/
+.env/
+
+# Cache do Python
+__pycache__/
+*.py[cod]
+
+# Arquivos temporários
+*.log
+*.tmp
+
+# Dados brutos
+*.csv
+*.xlsx
+
+# Configurações de IDEs
+.vscode/
+.idea/

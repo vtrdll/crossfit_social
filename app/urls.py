@@ -22,7 +22,7 @@ from Social.views import my_profile, HomeView
 from account.views import PhotoUpdate, PhotoDelete
 from account.views import register_view, login_view, logout_view
 from Social.views import CommentList, CommentUpdate, CommentDelete
-from Social.views import PostCreateView, PostDetail, PostUpdate, PostDelete
+from Social.views import PostCreateView, PostDetail, PostUpdate, PostDelete, like_post
 from account.views import  UserDetail, UserUpdate, UserDelete, PasswordUpdate, ProfileDetail
 
 
@@ -39,6 +39,9 @@ urlpatterns = [
     path('post/<int:pk>/editar/', PostUpdate.as_view(), name='post-edit'),
     path('post/<int:pk>/delete/', PostDelete.as_view(), name='post-delete'),
     path('post/<int:pk>/detail/', PostDetail.as_view(), name='post-detail'),
+    
+    path('post-liked/<int:pk>/like/', like_post, name='post-like'),
+
 
     path('post/<int:pk>/comment/', CommentList.as_view(), name='comment-list'),
     path('comment/<int:pk>/edit/', CommentUpdate.as_view(), name='comment-update'),

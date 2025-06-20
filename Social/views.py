@@ -1,7 +1,10 @@
 from .forms import CommentForm
+
 from .models import Post, Comment
 from django.urls import reverse_lazy
+from django.shortcuts import redirect
 from .models import PostCommentInventory
+from django.http import HttpResponseNotAllowed
 from django.views.generic.edit import FormMixin
 from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404, render
@@ -101,3 +104,19 @@ def my_profile(request):
     return render(request, 'my_perfil.html', {'user': request.user, 'posts': posts, 'comments':comments, 'inventory_post': inventory_post, 'mostrar_inventory':True})
 
 
+def like_post(request, pk):
+
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(['POST'])
+    
+    user = request.user
+    post = get_object_or_404(Post, pk=pk)
+
+    if user in post.like.all():
+        post.like.remove(user)
+    else:
+        post.like.add(user)
+    
+
+    return redirect (reverse_lazy('home'))
+    

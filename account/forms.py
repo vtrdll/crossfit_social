@@ -1,5 +1,6 @@
 from django import forms
 from .models import Profile
+
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm, UserCreationForm
 
@@ -29,10 +30,26 @@ class ProfileFormUpdate(forms.ModelForm):
         fields = ['photo']
 
 class CustomCreateUser(UserCreationForm):
-
     class Meta:
         model = User 
         fields = ['username','first_name','last_name', 'email', 'password1', 'password2']
+
+
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        if User.objects.filter(username=username).exists():
+            raise forms.ValidationError('Usuário já existe')
+        return username
+    
+    def clean_email (self):
+        email = self.cleaned_data['email']
+        
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError('Email já existe')
+        return email
+    
+    
+
 
 
 

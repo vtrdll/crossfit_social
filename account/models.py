@@ -7,7 +7,7 @@ from django.utils import timezone
 
 class Profile (models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    photo = models.ImageField(upload_to='media_profile', null=True)
+    photo = models.ImageField(upload_to='media_profile', null=True, blank=True)
     created_at_profile =  models.DateField(auto_now=True)
     birthday = models.DateField(max_length=50, default=timezone.now)
     

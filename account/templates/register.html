@@ -31,19 +31,28 @@
 
             <div class="mb-3">
                 <label for="id_username" class="form-label">Usuário</label>
-                {{ user_form.username|add_class:"form-control" }}
+                {{ user_form.username|add_class:"form-control" }}   
+                {% if user_form.username.errors %}
+                    <div class="text-danger small">{{ user_form.username.errors.0 }}</div>
+                {% endif %}
             </div>
+
             <div class="mb-3">
                 <label for="id_username" class="form-label">Primeiro nome</label>
                 {{ user_form.first_name|add_class:"form-control" }}
             </div>
+
             <div class="mb-3">
                 <label for="id_username" class="form-label">Segundo nome</label>
                 {{ user_form.last_name|add_class:"form-control" }}
             </div>
+
             <div class="mb-3">
                 <label for="id_email" class="form-label">Email</label>
                 {{ user_form.email|add_class:"form-control" }}
+                {% if user_form.email.errors %}
+                    <div class="text-danger small">{{ user_form.email.errors.0 }}</div>
+                {% endif %}
             </div>
 
             <div class="mb-3">
