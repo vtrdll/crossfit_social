@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Resultados da Busca{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4 text-center">🔍 Resultados da Busca</h2>
+
+    <!-- Campo de pesquisa -->
+    <form method="get" action="{% url 'post-list' %}" class="mb-4 d-flex justify-content-center">
+        <input type="text" name="search" class="form-control w-50 me-2" placeholder="Buscar post..." value="{{ search_results }}">
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </form>
+
+    <!-- Resultados -->
+    {% if posts %}
+        {% for post in posts %}
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.titulo }}</h5>
+                    <p class="card-text">{{ post.text|truncatechars:150 }}</p>
+                    <a href="{% url 'post-detail' post.pk %}" class="btn btn-outline-primary btn-sm">Ver detalhes</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-muted text-center">Nenhum post encontrado para "{{ request.GET.search }}".</p>
+    {% endif %}
+</div>
+{% endblock %}

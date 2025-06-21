@@ -22,6 +22,7 @@ class Post(models.Model):
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     comment = models.TextField(max_length=1000)
+    like_comment = models.ManyToManyField(User, related_name='liked_comment')
     created_at = models.DateTimeField(auto_now=True, auto_created=True)
     post  = models.ForeignKey(Post, on_delete=models.CASCADE,)
 

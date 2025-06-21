@@ -25,9 +25,15 @@ class PostCreateView(CreateView):
         return super().form_valid(form)
 
 
+    
+
+
+
 class PostDetail(DetailView):
     model = Post
     template_name = 'post-detail.html'
+    
+    
 
 
 class PostUpdate(UpdateView):
@@ -43,6 +49,52 @@ class PostDelete(DeleteView):
     success_url = reverse_lazy('my-perfil')
 
 
+
+class HomeView(FormMixin, ListView):
+    model = Post
+    template_name = 'home.html'
+    context_object_name = 'posts'
+    queryset = Post.objects.order_by("-created_at")
+    form_class = CommentForm
+    
+    success_url = reverse_lazy('home')
+
+
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = self.get_form()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object_list = self.get_queryset()  
+        form = self.get_form()
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.author = request.user
+            comment.post_id = request.POST.get('post_id')  
+            comment.save()
+            return self.form_valid(form)
+        return self.form_invalid(form)
+    
+
+    
+class PostList (ListView):
+    model = Post 
+    template_name = 'home.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        context = Post.objects.all()
+        search = self.request.GET.get('search')
+
+        if search:
+           return Post.objects.filter(text__icontains=search)
+           
+
+        return context
+       
+    
 class CommentList(ListView):
     model = Comment
     template_name = 'comment-list.html'
@@ -68,30 +120,8 @@ class CommentDelete(DeleteView):
 
 
     
-class HomeView(FormMixin, ListView):
-    model = Post
-    template_name = 'home.html'
-    context_object_name = 'posts'
-    queryset = Post.objects.order_by("-created_at")
-    form_class = CommentForm
-    
-    success_url = reverse_lazy('home')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = self.get_form()
-        return context
-
-    def post(self, request, *args, **kwargs):
-        self.object_list = self.get_queryset()  
-        form = self.get_form()
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.author = request.user
-            comment.post_id = request.POST.get('post_id')  
-            comment.save()
-            return self.form_valid(form)
-        return self.form_invalid(form)
+        
     
     
 
@@ -120,3 +150,21 @@ def like_post(request, pk):
 
     return redirect (reverse_lazy('home'))
     
+
+
+def like_comment (request, pk):
+     
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(['POST'])
+     
+    user = request.user
+    comment = get_object_or_404(Comment, pk=pk)
+    
+    if user in comment.like_comment.all():
+        comment.like_comment.remove(user)
+    else:
+        comment.like_comment.add(user)
+
+    return redirect(reverse_lazy('home'))
+         
+

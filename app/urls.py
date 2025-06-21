@@ -22,8 +22,8 @@ from Social.views import my_profile, HomeView
 from account.views import PhotoUpdate, PhotoDelete
 from account.views import register_view, login_view, logout_view
 from Social.views import CommentList, CommentUpdate, CommentDelete
-from Social.views import PostCreateView, PostDetail, PostUpdate, PostDelete, like_post
-from account.views import  UserDetail, UserUpdate, UserDelete, PasswordUpdate, ProfileDetail
+from Social.views import PostCreateView, PostList, PostDetail, PostUpdate, PostDelete, like_post, like_comment
+from account.views import  UserConfig, UserUpdate, UserDelete, PasswordUpdate, ProfileDetail, UserList
 
 
 urlpatterns = [
@@ -36,26 +36,34 @@ urlpatterns = [
     path('post/', PostCreateView.as_view(), name='post-create' ),
     path('perfil/<int:pk>/', ProfileDetail.as_view(), name='user-public-profile'),
     
+    path('post-list/', PostList.as_view(), name ='post-list' ),
     path('post/<int:pk>/editar/', PostUpdate.as_view(), name='post-edit'),
     path('post/<int:pk>/delete/', PostDelete.as_view(), name='post-delete'),
     path('post/<int:pk>/detail/', PostDetail.as_view(), name='post-detail'),
     
     path('post-liked/<int:pk>/like/', like_post, name='post-like'),
+    path('comment-liked/<int:pk>/liked', like_comment, name='like-comment'),
 
 
     path('post/<int:pk>/comment/', CommentList.as_view(), name='comment-list'),
     path('comment/<int:pk>/edit/', CommentUpdate.as_view(), name='comment-update'),
     path('comment/<int:pk>/delete/', CommentDelete.as_view(),  name='comment-delete'),
 
-
+    path('user-list/', UserList.as_view(), name='user-list'),
     path('user/<int:pk>/editar/', UserUpdate.as_view(), name='user-update'),
-    path('user/<int:pk>/detail/', UserDetail.as_view(), name='user-detail'),
-   
+    path('user/<int:pk>/config/', UserConfig.as_view(), name='user-config'),
+
+
+
+    path('profile/<int:pk>/', ProfileDetail.as_view(), name='profile-detail'),
+
+
     path('user/<int:pk>/delete/', UserDelete.as_view(), name ='user-delete'),
     path('password/<int:pk>/editar/', PasswordUpdate.as_view(), name='password-change'),
 
     path('photo/<int:pk>/delete/', PhotoDelete.as_view(), name='photo-delete'),
     path('photo/<int:pk>/update/', PhotoUpdate.as_view(), name='photo-update'),
+
     path('', HomeView.as_view(), name='home'),
     path('my-perfil/', my_profile, name='my-perfil'),
     

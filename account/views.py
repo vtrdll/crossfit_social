@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm, SetPasswordForm
-from django.views.generic import UpdateView, FormView, DeleteView, DetailView
+from django.views.generic import UpdateView, FormView, DeleteView, DetailView, ListView
 from .forms import ProfileForm, UserFormUpdate, ProfileFormUpdate,CustomCreateUser
 
 
@@ -55,6 +55,21 @@ def logout_view(request):
     return redirect('login')
 
 
+class UserList(ListView):
+    model = User
+    template_name = 'home.html'
+    context_object_name = 'search_users'
+    
+    def get_queryset(self):
+        
+        search  = self.request.GET.get('search')
+        if search:
+            return User.objects.filter(username__icontains = search)
+        
+        return User.objects.all()
+
+
+
 @method_decorator(login_required(login_url='login'), name='dispatch')
 class UserUpdate(UpdateView):
 
@@ -92,9 +107,9 @@ class UserDelete(DeleteView):
 
     
 @method_decorator(login_required(login_url='login'), name='dispatch')
-class UserDetail(DetailView):
+class UserConfig(DetailView):
     model = Profile 
-    template_name = 'configuracao.html'
+    template_name = 'config_account.html'
     context_object_name = 'profile'
 
     def get_object(self, queryset=None):
@@ -138,7 +153,7 @@ class PhotoDelete(DeleteView):
         return self.request.user.profile
     
 class ProfileDetail(DetailView):
-
+    
     def get(self, request, pk):
         user_profile = get_object_or_404(User, pk=pk)
         posts = Post.objects.filter(author=user_profile).order_by('-created_at')

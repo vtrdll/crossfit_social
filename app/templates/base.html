@@ -2,6 +2,12 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
+<style>
+    .no-link-style {
+        text-decoration: none;
+        color: inherit;
+    }
+</style>
 <head>
    
     <meta charset="UTF-8">
@@ -36,7 +42,7 @@
                         <a class="nav-link" href=https://www.linkedin.com/in/jo%C3%A3o-vitor-xavier-532191279/>Contato</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'user-detail' user.pk%}">Configurações</a>
+                        <a class="nav-link" href="{% url 'my-perfil'%}">Perfil</a>
                     </li> 
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">sair</a>
@@ -80,8 +86,6 @@
                     <h5 class="card-title">{{ user.username }}</h5>
                     <p class="text-muted">Bem-vindo de volta!</p>
 
-                    
-
 
                     <p class="text-muted">{{ user.email }}</p>
                     <p class="text-muted">Usuario desde: {{ user.profile.created_at_profile}}</p>
@@ -91,8 +95,14 @@
                             <small><strong>Posts:</strong> {{ inventory_post.post_count }}</small><br>
                             <small><strong>Comentários:</strong> {{ inventory_post.comment_count }}</small>
                         </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            
+                            <a href="{% url 'user-config' user.pk %}" style="text-decoration: none; color: #333;">
+                                <strong>Editar Perfil ⚙️</strong>  
+                            </a>
+                        </div>
                     {% endif %}
-                   
+                        
                     {% if request.resolver_match.url_name != 'my-perfil' %}
                         <a href="{% url 'my-perfil' %}" class="btn btn-outline-primary btn-sm w-100">Meu Perfil</a>
                     {% endif %}
