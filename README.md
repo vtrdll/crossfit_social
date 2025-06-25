@@ -78,9 +78,12 @@ Como Executar Localmente
 
 
 🖼 Capturas de Tela
-![HOME](https://github.com/user-attachments/assets/9d9fa2ee-85d1-4808-884a-18920d9f592d)
+![login](https://github.com/user-attachments/assets/ededc810-df8b-4e27-aeb8-d9d005c7fa9e)
+![home](https://github.com/user-attachments/assets/60e5a652-a329-4702-b254-d3ad021906ee)
 ![Comments](https://github.com/user-attachments/assets/d6bf5c9f-90d4-46a7-987e-52b3de7f99e8)
+![Meu-Perfil](https://github.com/user-attachments/assets/af4df200-59bb-41a7-8ce4-6f69c5ec1ac7)
 ![ConfigAccount](https://github.com/user-attachments/assets/e45d6a8c-de2e-480a-b82c-4f050a5c0267)
+
 
 
 
