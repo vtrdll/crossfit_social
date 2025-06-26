@@ -83,12 +83,12 @@
                     {% else %}
                         <img src="https://via.placeholder.com/100" class="rounded-circle mb-3" alt="Sem foto">
                     {% endif %}
-                    <h5 class="card-title">{{ user.username }}</h5>
+                    <h5 class="card-title">{{ user.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="24"> </h5>
                     <p class="text-muted">Bem-vindo de volta!</p>
 
 
                     <p class="text-muted">{{ user.email }}</p>
-                    <p class="text-muted">Usuario desde: {{ user.profile.created_at_profile}}</p>
+                    <p class="text-muted">Usuario desde: {{ user.profile.created_at_profile}} <img src="{% static 'schedule.png' %}" alt="Calendario" width="18"></p>
                     {% if mostrar_inventory and inventory_post %}
                         <hr>
                             <div class="text-start">

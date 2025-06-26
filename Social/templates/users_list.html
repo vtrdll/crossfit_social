@@ -10,7 +10,7 @@
 
     <ul>
     {% for user in users %}
-        <li>{{ user.username }} - {{ post.text }}</li>
+        <li>{{ user.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="24"> - {{ post.text }}</li>
         {% with user.profile as profile %}
             {% if profile.photo and profile.photo.name %}
                 <img src="{{ profile.photo.url }}" class="img-thumbnail" alt="Foto de Perfil" style="max-width: 200px;">

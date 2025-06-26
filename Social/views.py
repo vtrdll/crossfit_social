@@ -24,17 +24,9 @@ class PostCreateView(CreateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
-
-    
-
-
-
 class PostDetail(DetailView):
     model = Post
     template_name = 'post-detail.html'
-    
-    
-
 
 class PostUpdate(UpdateView):
     model = Post
@@ -48,8 +40,6 @@ class PostDelete(DeleteView):
     template_name = 'post-delete.html'
     success_url = reverse_lazy('my-perfil')
 
-
-
 class HomeView(FormMixin, ListView):
     model = Post
     template_name = 'home.html'
@@ -58,8 +48,6 @@ class HomeView(FormMixin, ListView):
     form_class = CommentForm
     
     success_url = reverse_lazy('home')
-
-
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -77,8 +65,6 @@ class HomeView(FormMixin, ListView):
             return self.form_valid(form)
         return self.form_invalid(form)
     
-
-    
 class PostList (ListView):
     model = Post 
     template_name = 'home.html'
@@ -93,7 +79,6 @@ class PostList (ListView):
            
 
         return context
-       
     
 class CommentList(ListView):
     model = Comment
@@ -103,7 +88,6 @@ class CommentList(ListView):
         post = get_object_or_404(Post, pk=self.kwargs['pk'])
 
         return Comment.objects.filter(post=post)
-    
 
 class CommentUpdate(UpdateView):
     model = Comment
@@ -111,19 +95,10 @@ class CommentUpdate(UpdateView):
     template_name = 'comment-update.html'
     success_url = reverse_lazy ('home')
 
-
 class CommentDelete(DeleteView):
     model = Comment
     template_name = 'comment-delete.html'
     success_url = reverse_lazy('home')
-
-
-
-    
-
-        
-    
-    
 
 def my_profile(request):
     user = request.user
@@ -132,7 +107,6 @@ def my_profile(request):
 
     inventory_post = PostCommentInventory.objects.filter(author=user).first()
     return render(request, 'my_perfil.html', {'user': request.user, 'posts': posts, 'comments':comments, 'inventory_post': inventory_post, 'mostrar_inventory':True})
-
 
 def like_post(request, pk):
 
@@ -149,14 +123,12 @@ def like_post(request, pk):
     
 
     return redirect (reverse_lazy('home'))
-    
-
 
 def like_comment (request, pk):
      
     if request.method != 'POST':
         return HttpResponseNotAllowed(['POST'])
-     
+    
     user = request.user
     comment = get_object_or_404(Comment, pk=pk)
     
@@ -164,7 +136,6 @@ def like_comment (request, pk):
         comment.like_comment.remove(user)
     else:
         comment.like_comment.add(user)
-
     return redirect(reverse_lazy('home'))
          
 

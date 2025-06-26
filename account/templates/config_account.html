@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block profile_sidebar %}
     <!-- Substitui o layout padrão com apenas um container centralizado -->
     <div class="container">
@@ -15,7 +15,7 @@
                             <span style="font-size: 40px;">{{ user.username|slice:":1"|upper }}</span>
                         </div>
                     {% endif %}
-                    <h3 class="mb-4">{{ user.username }}</h3>
+                    <h3 class="mb-4">{{ user.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="24"></h3>
                 </div>
 
                 <div class="list-group">

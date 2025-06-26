@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{%  load static  %}
 {% block title %}FEED{% endblock %}
 
 {% block content %}
@@ -43,8 +43,8 @@
                             <div class="rounded-circle bg-secondary me-3" style="width: 60px; height: 60px;"></div>
                         {% endif %}
                         <div>
-                            <a href="{% url 'profile' user.pk %}" 4class="no-link-style"><h5 class="mb-0">{{ user.username }}</h5></a>
-                            <small class="text-muted">Entrou em {{ user.profile.created_at_profile|date:"d/m/Y" }}</small>
+                            <a href="{% url 'profile' user.pk %}" 4class="no-link-style"><h5 class="mb-0">{{ user.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="24"> </h5> </a>
+                            <small class="text-muted">Entrou em {{ user.profile.created_at_profile|date:"d/m/Y" }} <img src="{% static 'schedule.png' %}" alt="Calendario" width="24"> </small>
                         </div>
                     </div>
                 </div>
@@ -67,7 +67,7 @@
                         <div class="rounded-circle bg-secondary me-3" style="width:50px; height:50px;"></div>
                     {% endif %}
                     <div>
-                    <a href="{% url 'profile-detail' post.author.pk %}"  class="no-link-style" ><h6 class="mb-0">{{ post.author.username }}</h6></a>
+                    <a href="{% url 'profile-detail' post.author.pk %}"  class="no-link-style" ><h6 class="mb-0">{{ post.author.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="24"></h6></a>
                     </div>
                 </div>
 
@@ -122,7 +122,7 @@
                                      class="rounded-circle me-2" width="32" height="32" style="object-fit: cover;">
                             {% endif %}
                             <div class="bg-light rounded px-3 py-2">
-                                <strong>{{ comment.author.username }}:</strong>
+                                <strong>{{ comment.author.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="24">:</strong>
                                 <span>{{ comment.comment }}</span>
                             </div>
                             <a><small class="text-muted">{{ comment.like_comment.count }}</small> Curtidas</a>

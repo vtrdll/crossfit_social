@@ -1,10 +1,11 @@
 {% extends "base.html" %}
+{% load static %}
 {% block profile_sidebar %}
 <!-- Este bloco está sobrescrevendo o sidebar do base.html -->
 <div class="container">
     <div class="row">
 {% endblock %}
-{% block title %}Perfil de {{ user_profile.username }}{% endblock %}
+{% block title %}Perfil de {{ user_profile.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="24"> {% endblock %}
 
 {% block content %}
 <div class="container">
@@ -18,7 +19,7 @@
                     {% else %}
                         <img src="https://via.placeholder.com/100" class="rounded-circle mb-3" alt="Sem foto">
                     {% endif %}
-                    <h5 class="card-title">{{ user_profile.username }}</h5>
+                    <h5 class="card-title">{{ user.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="24"></h5>
                     <p class="text-muted">Membro desde {{ user_profile.date_joined|date:"d M Y" }}</p>
                     {% if mostrar_inventory and inventory_post %}
                         <hr>
@@ -35,7 +36,7 @@
         <div class="col-md-9">
             <!-- Posts -->
             <div class="mb-4">
-                <h4 class="mb-3">Publicações de {{ user_profile.username }}</h4>
+                <h4 class="mb-3">Publicações de {{ user_profile.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="24"></h4>
                 {% if posts %}
                     {% for post in posts %}
                         <div class="card mb-3 shadow-sm">

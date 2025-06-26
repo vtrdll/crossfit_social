@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-
+{%  load static  %}
 {% load widget_tweaks %}
 <html lang="pt-br">
 <head>
@@ -89,7 +89,7 @@
             {% if user.profile.photo %}
                 <img src="{{ user.profile.photo.url }}" alt="Foto de perfil" class="profile-pic">
             {% endif %}
-            <h5 class="mb-0">{{ user.username }}</h5>
+            <h5 class="mb-0">{{ user.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="24"></h5>
         </div>
 
         <form method="post" enctype="multipart/form-data">

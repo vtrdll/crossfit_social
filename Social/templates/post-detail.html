@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block title %}{{ post.titulo }}{% endblock %}
+{%  load static  %}
 
 {% block content %}
 <div class="container mt-5">
@@ -18,7 +19,7 @@
                 <h2 class="card-title">{{ post.titulo }}</h2>
                 <p class="card-text">{{ post.text }}</p>
                 <p class="text-muted mb-1">
-                    Publicado por <strong>{{ post.author.username }}</strong> em {{ post.created_at|date:"d/m/Y H:i" }}
+                    Publicado por <strong>{{ post.author.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="24"></strong> em {{ post.created_at|date:"d/m/Y H:i" }}
                 </p>
 
                 {% if user == post.author %}
@@ -43,7 +44,7 @@
                 {% endif %}
 
                 <div>
-                    <p class="mb-1"><strong>{{ comment.author.username }}</strong> comentou:</p>
+                    <p class="mb-1"><strong>{{ comment.author.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="24"> </strong> comentou:</p>
                     <p class="mb-1">{{ comment.comment }}</p>
                     <small class="text-muted">Publicado em {{ comment.created_at|date:"d/m/Y H:i" }}</small>
 
