@@ -48,6 +48,16 @@
             </div>
 
             <div class="mb-3">
+                <label for="id_username" class="form-label">Box Traning</label>
+                {{ profile_form.box|add_class:"form-control" }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_username" class="form-label">Categoria</label>
+                {{ profile_form.category|add_class:"form-control" }}
+            </div>
+
+            <div class="mb-3">
                 <label for="id_email" class="form-label">Email</label>
                 {{ user_form.email|add_class:"form-control" }}
                 {% if user_form.email.errors %}

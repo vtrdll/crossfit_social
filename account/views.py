@@ -31,7 +31,7 @@ def register_view(request):
         user_form = CustomCreateUser()
         profile_form = ProfileForm()
 
-    return render(request, 'register.html', {'user_form': user_form, 'profile_form': profile_form})
+    return render(request, 'login.html', {'user_form': user_form, 'profile_form': profile_form})
 
 
 def login_view(request):
