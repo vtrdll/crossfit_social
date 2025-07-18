@@ -4,30 +4,12 @@
 
 {% block content %}
 
-<script>
-    function updateFormAction(form) {
-        const selected = form.querySelector('select[name="type"]').value;
-        if (selected === 'post') {
-            form.action = "{% url 'post-list' %}";
-        } else if (selected === 'user') {
-            form.action = "{% url 'user-list' %}";
-        }
-        return true;
-    }
-</script>
+
 
 <div class="container py-4">
     <h1 class="mb-4 text-center">🌐 Community Feed</h1>
 
-    <!-- Formulário de busca -->
-    <form method="get" action="" class="mb-4 d-flex justify-content-center" onsubmit="return updateFormAction(this)">
-        <input type="text" name="search" class="form-control w-50 me-2" placeholder="Buscar..." value="{{ request.GET.search }}">
-        <select name="type" class="form-select w-auto me-2">
-            <option value="post" {% if request.path == "/post-list/" %}selected{% endif %}>Post</option>
-            <option value="user" {% if request.path == "/user-list/" %}selected{% endif %}>Usuário</option>
-        </select>
-        <button type="submit" class="btn btn-primary">Buscar</button>
-    </form>
+   
 
     <!--  busca por usuário -->
     {% if request.path == '/user-list/' %}

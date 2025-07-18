@@ -1,8 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import User
+
 
 from django.utils import timezone
-
+from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
 # Create your models here.
 
 
@@ -17,6 +18,8 @@ class Profile (models.Model):
     photo = models.ImageField(upload_to='media_profile', null=True, blank=True)
     created_at_profile =  models.DateField(auto_now=True)
     birthday = models.DateField(max_length=50, default=timezone.now)
+    weight = models.DecimalField(max_digits= 5, decimal_places = 2, validators=[MaxValueValidator (300), MinValueValidator(0)], default=0)
+    height = models.DecimalField(max_digits= 5, decimal_places = 2, validators=[MaxValueValidator (2), MinValueValidator(0)], default=0)
     category = models.CharField(choices= CATEGORY_CHOICES, default= 'EXPERIMENTAL')
     box = models.CharField(choices = BOX_CHOICES, default = 'DEFAULT')
 

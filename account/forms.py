@@ -2,6 +2,8 @@ from django import forms
 from .models import Profile
 
 from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
+
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm, UserCreationForm
 
 
@@ -54,11 +56,14 @@ class CustomCreateUser(UserCreationForm):
 
 
 class UserFormUpdate(UserChangeForm):
+
     box = forms.ChoiceField(choices=Profile.BOX_CHOICES, required=False)
     category = forms.ChoiceField(choices=Profile.CATEGORY_CHOICES, required=False)
+    weight = forms.DecimalField(max_digits= 5, decimal_places = 2, validators=[MaxValueValidator (300), MinValueValidator(0)])
+    height = forms.DecimalField(max_digits= 5, decimal_places = 2, validators=[MaxValueValidator (2), MinValueValidator(0)])
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email']
+        fields = ['username', 'first_name', 'last_name', ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -66,20 +71,25 @@ class UserFormUpdate(UserChangeForm):
         if 'password' in self.fields:
             del self.fields['password']
 
-        # Se o perfil já existe, preenche o campo box com o valor atual
+        
         if self.instance and hasattr(self.instance, 'profile'):
             self.fields['box' ].initial = self.instance.profile.box
             self.fields['category' ].initial = self.instance.profile.category
+            self.fields['weight'].initial = self.instance.profile.weight
+            self.fields['height'].initial = self.instance.profile.height
 
     def save(self, commit= True):
         user = super().save(commit = commit)
         box = self.cleaned_data['box']
         category = self.cleaned_data['category']
-
+        weight = self.cleaned_data['weight']
+        height = self.cleaned_data['height']
         if commit:
             profile, created = Profile.objects.get_or_create(user=user)
             profile.box = box
-            profile.box = category
+            profile.category = category
+            profile.weight = weight
+            profile.height = height
             profile.save()
         return user
 

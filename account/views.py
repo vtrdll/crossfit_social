@@ -82,6 +82,18 @@ class UserUpdate(UpdateView):
     def get_object(self):
         return self.request.user
     
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        # Atualiza também o perfil
+        profile = self.request.user.profile
+        profile.box = self.request.POST.get('box')
+        profile.category = self.request.POST.get('category')
+        profile.weight = self.request.POST.get('weight')
+        profile.save()
+
+        return response
+    
 
 @method_decorator(login_required(login_url='login'), name='dispatch')
 class PasswordUpdate(LoginRequiredMixin, FormView):
