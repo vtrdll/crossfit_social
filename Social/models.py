@@ -12,7 +12,7 @@ class Post(models.Model):
     text = models.TextField(max_length=2000)
     photo = models.ImageField(upload_to='media_post', null=True, blank= True)
     like = models.ManyToManyField(User,  related_name= 'liked_post')
-
+    video = models.FileField(upload_to='media_post', null = True, blank=True)
 
     def __str__(self):
         return f'{self.author.username} - {self.text}'

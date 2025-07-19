@@ -62,6 +62,12 @@
                     </a>
                 {% endif %}
 
+                {% if post.video %}
+                    <a href="{% url 'post-detail' post.pk %}">
+                        <video controls autoplay loop muted src="{{ post.video.url }}" alt="Video do post" class="img-fluid rounded mb-3" style="max-height: 1920px; object-fit: cover;">
+                    </a>
+                {% endif %}
+
                 <div>
                     <a href="{% url 'post-detail' post.pk %}" class="no-link-style">
                     <small class="text-muted">{{ post.created_at|date:"d/m/Y H:i" }}</small></a> — 

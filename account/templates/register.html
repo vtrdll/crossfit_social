@@ -30,7 +30,7 @@
             {% csrf_token %}
 
             <div class="mb-3">
-                <label for="id_username" class="form-label">Usuário</label>
+                <label for="id_username" class="form-label">User/Apelido</label>
                 {{ user_form.username|add_class:"form-control" }}   
                 {% if user_form.username.errors %}
                     <div class="text-danger small">{{ user_form.username.errors.0 }}</div>
@@ -45,16 +45,6 @@
             <div class="mb-3">
                 <label for="id_username" class="form-label">Segundo nome</label>
                 {{ user_form.last_name|add_class:"form-control" }}
-            </div>
-
-            <div class="mb-3">
-                <label for="id_username" class="form-label">Box Traning</label>
-                {{ profile_form.box|add_class:"form-control" }}
-            </div>
-
-            <div class="mb-3">
-                <label for="id_username" class="form-label">Categoria</label>
-                {{ profile_form.category|add_class:"form-control" }}
             </div>
 
             <div class="mb-3">

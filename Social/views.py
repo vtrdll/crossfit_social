@@ -1,9 +1,10 @@
-from .forms import CommentForm
+
 
 from .models import Post, Comment
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from .models import PostCommentInventory
+from .forms import CommentForm, PostForm
 from django.http import HttpResponseNotAllowed
 from django.views.generic.edit import FormMixin
 from django.utils.decorators import method_decorator
@@ -16,7 +17,8 @@ from django.views.generic import CreateView, ListView, DetailView, UpdateView, D
 @method_decorator(login_required(login_url='login'), name='dispatch')
 class PostCreateView(CreateView):
     model = Post
-    fields = ['text','photo']
+
+    form_class = PostForm 
     template_name = 'post-create.html'
     success_url = reverse_lazy('home')
 
