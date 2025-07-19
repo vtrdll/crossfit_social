@@ -25,7 +25,8 @@ class PostForm(forms.ModelForm):
             ext = os.path.splitext(photo.name)[1].lower()
             if ext != '.png':
                 raise forms.ValidationError("Formatação não aceita. ")
-
+            if photo.size >  5 * 1024 * 1024: #5MB
+                raise forms.ValidationError(f"O arquivo é muito grande. O tamanho máximo permitido é 5 MB.")
         return photo 
     
 
@@ -38,7 +39,7 @@ class PostForm(forms.ModelForm):
                 raise forms.ValidationError("Apenas arquivos .mp4 são permitidos.")
                                             
             file_size = video.size
-            max_size = 10 ** 9 # 1GB em bytes
+            max_size = 500 * 1024 * 1024 # 500MB 
             if file_size > max_size:
                 raise ValidationError(f"O arquivo é muito grande. O tamanho máximo permitido é 1 GB.")
         return video
