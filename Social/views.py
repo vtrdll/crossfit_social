@@ -1,10 +1,10 @@
 
-
-from .models import Post, Comment
+import random 
+from .models import Post, Comment, PostImage, PostVideo
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from .models import PostCommentInventory
-from .forms import CommentForm, PostForm
+from .forms import CommentForm, PostForm, ImageForm, VideoForm
 from django.http import HttpResponseNotAllowed
 from django.views.generic.edit import FormMixin
 from django.utils.decorators import method_decorator
@@ -22,9 +22,38 @@ class PostCreateView(CreateView):
     template_name = 'post-create.html'
     success_url = reverse_lazy('home')
 
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        return super().form_valid(form)
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        form = self.get_form()
+        image_form = ImageForm(request.POST, request.FILES)
+        video_form = VideoForm(request.POST, request.FILES)
+
+        if form.is_valid() and image_form.is_valid() and video_form.is_valid():
+            # Save the main Post object
+
+            form.instance.author = self.request.user
+            post = form.save(commit=False)
+            post.author = request.user
+            
+            post.save()
+
+            # Save images
+            for uploaded_file in request.FILES.getlist('photo'):
+                PostImage.objects.create(post=post, photo=uploaded_file)
+
+            for uploaded_file in request.FILES.getlist('video'):
+                PostVideo.objects.create(post=post, video=uploaded_file)   
+
+            return self.form_valid(form)
+        else:
+            return self.render_to_response(self.get_context_data(form=form, image_form=image_form))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['image_form'] = kwargs.get('image_form', ImageForm())
+        context['video_form'] = kwargs.get('video_form', VideoForm())
+        return context
+
 
 class PostDetail(DetailView):
     model = Post
@@ -32,7 +61,7 @@ class PostDetail(DetailView):
 
 class PostUpdate(UpdateView):
     model = Post
-    fields = ['text', 'photo']
+    fields = ['text' ]
     template_name ='post-update.html'
     context_object_name = 'post_update'
     success_url =reverse_lazy('my-perfil')
@@ -54,7 +83,24 @@ class HomeView(FormMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = self.get_form()
+
+        context['imagens'] = PostImage.objects.all()  # <-- ESSENCIAL
+        context['videos'] = PostImage.objects.all()
+
+        posts  = context['posts']
+
+        
+        for post in posts:
+            imagens = [img.photo.url for img in post.images.all() if img.photo]
+            videos = [vid.video.url for vid in post.videos.all() if vid.video]
+            post.media_dict = {
+                'imagens': imagens,
+                'videos': videos,
+            }
+        print(imagens)
+        
         return context
+
 
     def post(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()  
@@ -66,6 +112,10 @@ class HomeView(FormMixin, ListView):
             comment.save()
             return self.form_valid(form)
         return self.form_invalid(form)
+     
+    
+    
+  
     
 class PostList (ListView):
     model = Post 
@@ -81,6 +131,10 @@ class PostList (ListView):
            
 
         return context
+    
+    
+
+    
     
 class CommentList(ListView):
     model = Comment
@@ -140,4 +194,11 @@ def like_comment (request, pk):
         comment.like_comment.add(user)
     return redirect(reverse_lazy('home'))
          
+
+
+
+
+
+
+
 

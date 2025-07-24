@@ -112,17 +112,22 @@
                 {{ form.text.label_tag }}
                 {{ form.text|add_class:"form-control" }}
             </div>
-            <div class="mb-3">
-                {{ form.photo.label_tag }}
-                {{ form.photo|add_class:"form-control" }}
-                {% if form.photo.errors %}
-                    <div class="text-danger small">{{ form.photo.errors.0 }}</div>
-                {% endif %}
+
+
+            <div class="mb-3" >
+                {{ image_form.photo.label_tag }}
+                <input type="file" name="photo" multiple class="form-control">
+               
+                {% for err in image_form.photo.errors %}
+                    <div class="text-danger small">{{ err }}</div>
+                {% endfor %}
             </div>
+
+
             <div class="mb-3">
-                {{ form.video.label_tag }}
-                {{ form.video|add_class:"form-control" }}
-                {% if form.video.errors %}
+                {{ video_form.video.label_tag }}
+                <input type="file" name="video" multiple class="form-control">
+                {% if video_form.video.errors %}
                     <div class="text-danger small">{{ form.video.errors.0 }}</div>
                 {% endif %}
                

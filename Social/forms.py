@@ -1,5 +1,6 @@
 from django import forms 
-from Social.models import Comment, Post
+from Social.models import Comment, Post, PostImage, PostVideo
+from django.forms.widgets import FileInput
 from django.core.exceptions import ValidationError
 import os
 
@@ -10,37 +11,75 @@ class CommentForm(forms.ModelForm):
 
 
 class PostForm(forms.ModelForm):
+    
 
     class Meta():
         model = Post
-        fields = ['text', 'photo','video']
-        
-        
-    
+        fields = ['text']
 
-    def clean_photo (self):
-        photo = self.cleaned_data.get('photo')
-        
-        if photo:
-            ext = os.path.splitext(photo.name)[1].lower()
-            if ext != '.png':
-                raise forms.ValidationError("Formatação não aceita. ")
-            if photo.size >  5 * 1024 * 1024: #5MB
-                raise forms.ValidationError(f"O arquivo é muito grande. O tamanho máximo permitido é 5 MB.")
-        return photo 
+
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
+class MultipleFileField(forms.FileField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", MultipleFileInput())
+        super().__init__(*args, **kwargs)
+
+    def clean(self, data, initial=None):
+        single_file_clean = super().clean
+        if isinstance(data, (list, tuple)):
+            result = [single_file_clean(d, initial) for d in data]
+        else:
+            result = single_file_clean(data, initial)
+        return result
+
+class ImageForm(forms.ModelForm):
+    photo = MultipleFileField(label='Imagem', required=False)
+
+    class Meta:
+        model = PostImage
+        fields = ['photo']
+
+
+    def clean(self):
+        cleaned_data = super().clean()
+        photos = cleaned_data.get('photo')
+
+        if photos:
+            errors = []
+            for photo in photos:
+                ext = os.path.splitext(photo.name)[1].lower()
+                if ext not in ['.jpg', '.jpeg', '.png']:
+                    errors.append(f"{photo.name}: extensão '{ext}' não é aceita.")
+                if photo.size > 5 * 1024 * 1024:
+                    errors.append(f"{photo.name}: arquivo muito grande (limite 5MB).")
+
+            if errors:
+                raise forms.ValidationError({'photo': errors})
+
+        return cleaned_data
     
+class VideoForm(forms.ModelForm):
+    photo = MultipleFileField(label='Vídeo', required=False)
+
+    class Meta:
+        model = PostVideo
+        fields = ['video']
+
 
     def clean_video(self):
-        video = self.cleaned_data.get('video')
+        files = self.files.getlist('video')
+        errors = []
 
-        if video:
-            ext = os.path.splitext(video.name)[1].lower()  
+        for file in files:
+            ext = os.path.splitext(file.name)[1].lower()
             if ext != '.mp4':
-                raise forms.ValidationError("Apenas arquivos .mp4 são permitidos.")
-                                            
-            file_size = video.size
-            max_size = 500 * 1024 * 1024 # 500MB 
-            if file_size > max_size:
-                raise ValidationError(f"O arquivo é muito grande. O tamanho máximo permitido é 1 GB.")
-        return video
-    
+                errors.append(f"{file.name}: extensão '{ext}' não é aceita. Apenas vídeos .mp4 são permitidos.")
+            if file.size > 20 * 1024 * 1024:  # 20MB por exemplo
+                errors.append(f"{file.name}: arquivo muito grande (máximo 20MB).")
+
+        if errors:
+            raise forms.ValidationError(errors)
+
+        return files
