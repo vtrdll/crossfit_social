@@ -122,9 +122,16 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'home' %}">Início</a>
                     </li>
+                        {% if user.profile.is_coach %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'post-wod-create' %}">Postar Wod</a>
+                            </li>
+                        {% endif %}
+
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'post-create' %}">Postar</a>
                     </li>
+                    
                     <li class="nav-item">
                         <a class="nav-link" href="https://www.linkedin.com/in/jo%C3%A3o-vitor-xavier-532191279/">Contato</a>
                     </li>
@@ -144,6 +151,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'register' %}">Cadastro</a>
                     </li>
+                    
                     {% endif %}
                 </ul>
             </div>

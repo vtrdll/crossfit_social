@@ -104,34 +104,62 @@
 
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="mb-3">
-                {{ form.titulo.label_tag }}  
-                {{ form.titulo|add_class:"form-control" }}
-            </div>
-            <div class="mb-3">
-                {{ form.text.label_tag }}
-                {{ form.text|add_class:"form-control" }}
-            </div>
+
+            {% if user.profile.is_coach %}
+                <div class="mb-3">
+                    {{ form.title.label_tag }}
+                    {{ form.title|add_class:"form-control" }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.text.label_tag }}
+                    {{ form.text|add_class:"form-control" }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.warmup.label_tag }}
+                    {{ form.warmup|add_class:"form-control" }}
+                </div>
+                
+                <div class="mb-3">
+                    {{ form.skill.label_tag }}
+                    {{ form.skill|add_class:"form-control" }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.pined }}
+                </div>
+
+            {% else %}
+                <div class="mb-3">
+                    {{ form.titulo.label_tag }}  
+                    {{ form.titulo|add_class:"form-control" }}
+                </div>
+                <div class="mb-3">
+                    {{ form.text.label_tag }}
+                    {{ form.text|add_class:"form-control" }}
+                </div>
 
 
-            <div class="mb-3" >
-                {{ image_form.photo.label_tag }}
-                <input type="file" name="photo" multiple class="form-control">
-               
-                {% for err in image_form.photo.errors %}
-                    <div class="text-danger small">{{ err }}</div>
-                {% endfor %}
-            </div>
+                <div class="mb-3" >
+                    {{ image_form.photo.label_tag }}
+                    <input type="file" name="photo" multiple class="form-control">
+                
+                    {% for err in image_form.photo.errors %}
+                        <div class="text-danger small">{{ err }}</div>
+                    {% endfor %}
+                </div>
 
 
-            <div class="mb-3">
-                {{ video_form.video.label_tag }}
-                <input type="file" name="video" multiple class="form-control">
-                {% if video_form.video.errors %}
-                    <div class="text-danger small">{{ form.video.errors.0 }}</div>
-                {% endif %}
-               
-            </div>
+                <div class="mb-3">
+                    {{ video_form.video.label_tag }}
+                    <input type="file" name="video" multiple class="form-control">
+                    {% if video_form.video.errors %}
+                        <div class="text-danger small">{{ form.video.errors.0 }}</div>
+                    {% endif %}
+                
+                </div>
+            {% endif %}
             <button type="submit" class="btn btn-primary">Publicar</button>
         </form>
     </div>

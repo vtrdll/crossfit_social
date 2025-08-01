@@ -22,6 +22,6 @@ class Profile (models.Model):
     height = models.DecimalField(max_digits= 5, decimal_places = 2, validators=[MaxValueValidator (2), MinValueValidator(0)], default=0)
     category = models.CharField(choices= CATEGORY_CHOICES, default= 'EXPERIMENTAL')
     box = models.CharField(choices = BOX_CHOICES, default = 'DEFAULT')
-
+    is_coach = models.BooleanField(default=False,)
     def __str__(self):
         return f'Perfil de {self.user.username}'

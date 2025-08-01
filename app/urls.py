@@ -22,7 +22,7 @@ from Social.views import my_profile, HomeView
 from account.views import PhotoUpdate, PhotoDelete
 from account.views import register_view, login_view, logout_view
 from Social.views import CommentList, CommentUpdate, CommentDelete
-from Social.views import PostCreateView, PostList, PostDetail, PostUpdate, PostDelete, like_post, like_comment
+from Social.views import PostCreateView, PostList, PostDetail, PostUpdate, PostDelete, like_post, like_comment, PostWodCreate
 from account.views import  UserConfig, UserUpdate, UserDelete, PasswordUpdate, ProfileDetail, UserList
 
 
@@ -34,6 +34,7 @@ urlpatterns = [
     
     
     path('post/', PostCreateView.as_view(), name='post-create' ),
+    path('post/create_wod', PostWodCreate.as_view(), name='post-wod-create' ),
     path('perfil/<int:pk>/', ProfileDetail.as_view(), name='user-public-profile'),
     
     path('post-list/', PostList.as_view(), name ='post-list' ),
