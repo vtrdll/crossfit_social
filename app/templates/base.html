@@ -52,7 +52,7 @@
 
     /* Cards e botões */
     .card {
-        border-radius: 10px;
+        border-radius: 20px;
         box-shadow: 0 3px 8px rgba(106,13,173,0.2);
     }
 
@@ -80,7 +80,22 @@
   font-size: 1rem;
   color: #8e44ad;
 }
+ 
+    .feed-col {
+  position: absolute;
+  left: calc(25% - 10px); /* 25% = col-md-3, -10px = sobreposição */
+  width: 75%;
+  z-index: 10;
+}
 
+.sidebar-col {
+  position: relative;
+  z-index: 1;
+}
+.feed-col {
+  flex: 0 0 55% !important;
+  max-width: 55% !important;
+}
    
 </style>
 <head>
@@ -161,79 +176,89 @@
 
     <!-- Main content -->
     {% block profile_sidebar %}
-    <div class="container">
-        <div class="row">
-            {% if user.is_authenticated %}
-            <div class="col-md-3 mb-4">
-                <div class="card shadow-sm">
-                    <div class="card-body text-center">
-                        {% if user.profile.photo %}
-                            <img src="{{ user.profile.photo.url }}" alt="Foto de perfil"
-                                 class="rounded-circle mb-3" width="100" height="100" style="object-fit: cover;">
-                        {% else %}
-                            <img src="https://via.placeholder.com/100" class="rounded-circle mb-3" alt="Sem foto">
-                        {% endif %}
-                        <h5 class="card-title">{{ user.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="24"> </h5>
-                        <p class="text-muted">Bem-vindo de volta!</p>
-                        <p class="text-muted">{{ user.email }}</p>
-                        <p class="text-muted">{{ user.profile.weight}} Kg</p>
-                        
-                        <p class="text-muted">Usuário desde: {{ user.profile.created_at_profile}} <img src="{% static 'schedule.png' %}" alt="Calendário" width="18"></p>
-                        
-                        
-                        <div id="calendar" class="mt-3"></div>
-                        <div class="d-flex justify-content-start align-items-center mb-2">
-                            <select id="mesSelect" class="form-select me-2" style="width: auto;">
-                                <option value="0">Janeiro</option>
-                                <option value="1">Fevereiro</option>
-                                <option value="2">Março</option>
-                                <option value="3">Abril</option>
-                                <option value="4">Maio</option>
-                                <option value="5">Junho</option>
-                                <option value="6">Julho</option>
-                                <option value="7">Agosto</option>
-                                <option value="8">Setembro</option>
-                                <option value="9">Outubro</option>
-                                <option value="10">Novembro</option>
-                                <option value="11">Dezembro</option>
-                            </select>
+<div class="container-fluid">
+  <div class="row g-0 d-flex align-items-stretch">
+    
+    {% if user.is_authenticated %}
+    <!-- Sidebar -->
+    <div class="col-md-3 p-0" style="min-height: 100vh;">
+      <div class="card shadow-sm h-100 rounded-0 d-flex flex-column">
+        <div class="card-body text-center">
+          {% if user.profile.photo %}
+            <img src="{{ user.profile.photo.url }}" alt="Foto de perfil"
+                 class="rounded-circle mb-3" width="100" height="100" style="object-fit: cover;">
+          {% else %}
+            <img src="https://via.placeholder.com/100" class="rounded-circle mb-3" alt="Sem foto">
+          {% endif %}
+          <h5 class="card-title">
+            {{ user.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="24">
+          </h5>
+          <p class="text-muted">Bem-vindo de volta!</p>
+          <p class="text-muted">{{ user.email }}</p>
+          <p class="text-muted">{{ user.profile.weight }} Kg</p>
+          <p class="text-muted">
+            Usuário desde: {{ user.profile.created_at_profile }}
+            <img src="{% static 'schedule.png' %}" alt="Calendário" width="18">
+          </p>
 
-                            <select id="anoSelect" class="form-select" style="width: auto;">
-                                <option value="2024">2024</option>
-                                <option value="2025" selected>2025</option>
-                                <option value="2026">2026</option>
-                            </select>
-                        </div>
+          <div id="calendar" class="mt-3"></div>
 
-                        {% if mostrar_inventory and inventory_post %}
-                            <hr>
-                            <div class="text-start">
-                                <small><strong>Posts:</strong> {{ inventory_post.post_count }}</small><br>
-                                <small><strong>Comentários:</strong> {{ inventory_post.comment_count }}</small>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                                <a href="{% url 'user-config' user.pk %}" style="text-decoration: none; color: #3a0ca3;">
-                                    <strong>Editar Perfil ⚙️</strong>  
-                                </a>
-                            </div>
-                        {% endif %}
-                            
-                        {% if request.resolver_match.url_name != 'my-perfil' %}
-                            <a href="{% url 'my-perfil' %}" class="btn btn-outline-primary btn-sm w-100" style="border-color: var(--cor-roxo); color: var(--cor-roxo);">Meu Perfil</a>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-    {% endblock %}
+          <div class="d-flex justify-content-start align-items-center mb-2">
+            <select id="mesSelect" class="form-select me-2" style="width: auto;">
+              <option value="0">Janeiro</option>
+              <option value="1">Fevereiro</option>
+              <option value="2">Março</option>
+              <option value="3">Abril</option>
+              <option value="4">Maio</option>
+              <option value="5">Junho</option>
+              <option value="6">Julho</option>
+              <option value="7">Agosto</option>
+              <option value="8">Setembro</option>
+              <option value="9">Outubro</option>
+              <option value="10">Novembro</option>
+              <option value="11">Dezembro</option>
+            </select>
+            <select id="anoSelect" class="form-select" style="width: auto;">
+              <option value="2024">2024</option>
+              <option value="2025" selected>2025</option>
+              <option value="2026">2026</option>
+            </select>
+          </div>
 
-            <div class="{% if user.is_authenticated %}col-md-9{% else %}col-12{% endif %}">
-                {% block content %}
-                <!-- Conteúdo da página será inserido aqui -->
-                {% endblock %}
-            </div>
+          {% if mostrar_inventory and inventory_post %}
+          <hr>
+          <div class="text-start">
+            <small><strong>Posts:</strong> {{ inventory_post.post_count }}</small><br>
+            <small><strong>Comentários:</strong> {{ inventory_post.comment_count }}</small>
+          </div>
+          <div class="mt-2">
+            <a href="{% url 'user-config' user.pk %}" class="text-decoration-none" style="color: #3a0ca3;">
+              <strong>Editar Perfil ⚙️</strong>
+            </a>
+          </div>
+          {% endif %}
+
+          {% if request.resolver_match.url_name != 'my-perfil' %}
+          <a href="{% url 'my-perfil' %}" class="btn btn-outline-primary btn-sm w-100"
+             style="border-color: var(--cor-roxo); color: var(--cor-roxo);">
+            Meu Perfil
+          </a>
+          {% endif %}
         </div>
+      </div>
     </div>
+    {% endif %}
+
+    <!-- Conteúdo principal -->
+    <div class="{% if user.is_authenticated %}col-md-9 feed-col{% else %}col-12{% endif %}">
+      {% block content %}
+      <!-- Conteúdo da página será inserido aqui -->
+      {% endblock %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}
 
     <!-- Footer -->
     <footer class="bg-light text-center text-muted py-3 mt-4 border-top">
