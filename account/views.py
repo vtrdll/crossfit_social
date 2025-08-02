@@ -1,6 +1,6 @@
 from .models import Profile
 from django.urls import reverse_lazy
-from Social.models import Comment, Post
+from Social.models import Comment, Post, PostWod
 from django.contrib.auth.models import User
 
 from django.utils.decorators import method_decorator
@@ -168,10 +168,12 @@ class ProfileDetail(DetailView):
     
     def get(self, request, pk):
         user_profile = get_object_or_404(User, pk=pk)
+        
         posts = Post.objects.filter(author=user_profile).order_by('-created_at')
         comments = Comment.objects.filter(author=user_profile).order_by('-created_at')
         return render(request, 'profile.html', {
             'user_profile': user_profile,
+            
             'posts': posts,
             'comments': comments,
         })

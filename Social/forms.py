@@ -1,5 +1,5 @@
 from django import forms 
-from Social.models import Comment, Post, PostImage, PostVideo
+from Social.models import Comment, Post, PostImage, PostVideo, PostWod
 from django.forms.widgets import FileInput
 from django.core.exceptions import ValidationError
 import os
@@ -10,12 +10,46 @@ class CommentForm(forms.ModelForm):
         fields = ['comment']
 
 
-class PostForm(forms.ModelForm):
-    
+class PostWodForm(forms.ModelForm):
 
+    class Meta():
+        model = PostWod
+        fields = ['text','title','warmup','skill','pined', 'title'] 
+
+        labels = {
+            'text': 'Texto',  
+        }
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'rows': 5,
+                'cols': 60,
+                'placeholder': 'Digite o conteúdo aqui...',
+                'class': 'form-control',
+            }),
+            'warmup': forms.Textarea(attrs={
+                'rows': 5,
+                'cols': 60,
+                'placeholder': 'Digite o conteúdo aqui...',
+                'class': 'form-control',
+            }),
+
+            'skill': forms.Textarea(attrs={
+                'rows': 5,
+                'cols': 60,
+                'placeholder': 'Digite o conteúdo aqui...',
+                'class': 'form-control',
+            }),
+        }
+        labels = {
+            'text': 'Texto',
+        }
+class PostForm(forms.ModelForm):
+    pined = forms.BooleanField(required=False, label='Fixar treino no topo')
+    
     class Meta():
         model = Post
         fields = ['text']
+
 
 
 class MultipleFileInput(forms.ClearableFileInput):

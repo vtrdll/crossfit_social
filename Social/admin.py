@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post
+from .models import Post, PostWod
 
 class PostAdmin(admin.ModelAdmin):
     list_display = ('text', 'author', 'created_at')
@@ -10,4 +10,9 @@ class PostAdmin(admin.ModelAdmin):
             obj.author = request.user  # Preenche com o usuário logado
         super().save_model(request, obj, form, change)
 
+
+
+
+admin.site.site_header = "Administração CF4Time"
 admin.site.register(Post, PostAdmin)
+admin.site.register(PostWod)

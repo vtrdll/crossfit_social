@@ -1,15 +1,16 @@
 
 import random 
-from .models import Post, Comment, PostImage, PostVideo
+from .models import Post, Comment, PostImage, PostVideo, PostWod
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from .models import PostCommentInventory
-from .forms import CommentForm, PostForm, ImageForm, VideoForm
+from .forms import CommentForm, PostForm, ImageForm, VideoForm, PostWodForm
 from django.http import HttpResponseNotAllowed
 from django.views.generic.edit import FormMixin
 from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 
 
@@ -22,6 +23,7 @@ class PostCreateView(CreateView):
     template_name = 'post-create.html'
     success_url = reverse_lazy('home')
 
+  
     def post(self, request, *args, **kwargs):
         self.object = None
         form = self.get_form()
@@ -34,8 +36,8 @@ class PostCreateView(CreateView):
             form.instance.author = self.request.user
             post = form.save(commit=False)
             post.author = request.user
-            
             post.save()
+
 
             # Save images
             for uploaded_file in request.FILES.getlist('photo'):
@@ -53,6 +55,9 @@ class PostCreateView(CreateView):
         context['image_form'] = kwargs.get('image_form', ImageForm())
         context['video_form'] = kwargs.get('video_form', VideoForm())
         return context
+
+
+
 
 
 class PostDetail(DetailView):
@@ -75,21 +80,30 @@ class HomeView(FormMixin, ListView):
     model = Post
     template_name = 'home.html'
     context_object_name = 'posts'
-    queryset = Post.objects.order_by("-created_at")
     form_class = CommentForm
-    
     success_url = reverse_lazy('home')
-    
+    ordering = ['-created_at'] 
+
+
+
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = self.get_form()
 
-        context['imagens'] = PostImage.objects.all()  # <-- ESSENCIAL
-        context['videos'] = PostImage.objects.all()
+        # Post do coach fixado (pined=True)
+       
 
+        context['imagens'] = PostImage.objects.all()  # <-- ESSENCIAL
+        context['videos'] = PostVideo.objects.all()
         posts  = context['posts']
 
-        
+        pined_wod = PostWod.objects.filter(pined=True).order_by('-date').first()
+        context['pined_wod'] = pined_wod
+        if pined_wod:
+            context['coach_profile'] = pined_wod.coach.profile
+            
+            
         for post in posts:
             imagens = [img.photo.url for img in post.images.all() if img.photo]
             videos = [vid.video.url for vid in post.videos.all() if vid.video]
@@ -201,4 +215,18 @@ def like_comment (request, pk):
 
 
 
+class PostWodCreate(LoginRequiredMixin, CreateView):
+    model = PostWod
+    form_class = PostWodForm
+    template_name  = 'post-create.html'
+    success_url = reverse_lazy ('home')
+    
 
+    def form_valid(self, form):
+        
+        form.instance.coach = self.request.user
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        print("Formulário inválido:", form.errors)
+        return super().form_invalid(form)
