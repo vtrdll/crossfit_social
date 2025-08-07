@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     
     'django.contrib.staticfiles',
     
-    'Social', 'account','widget_tweaks'
+    'Social', 'account','widget_tweaks', 'Event'
     
 ]
 

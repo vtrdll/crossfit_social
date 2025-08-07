@@ -19,6 +19,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from Social.views import my_profile, HomeView
+from Event.views import EventCreate, EventList
 from account.views import PhotoUpdate, PhotoDelete
 from account.views import register_view, login_view, logout_view
 from Social.views import CommentList, CommentUpdate, CommentDelete
@@ -64,6 +65,9 @@ urlpatterns = [
 
     path('photo/<int:pk>/delete/', PhotoDelete.as_view(), name='photo-delete'),
     path('photo/<int:pk>/update/', PhotoUpdate.as_view(), name='photo-update'),
+    
+    path('event_create/', EventCreate.as_view(), name= 'event_create '),
+    path('event_list/',  EventList.as_view(),  name='events'),
 
     path('', HomeView.as_view(), name='home'),
     path('my-perfil/', my_profile, name='my-perfil'),

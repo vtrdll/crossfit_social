@@ -1,350 +1,162 @@
-<!-- templates/base.html -->
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
-<style>
-    .no-link-style {
-        text-decoration: none;
-        color: inherit;
-    }
-
-    /* Cores roxo para rosa */
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}SOCIAL{% endblock %}</title>
+  <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+  
+  <style>
     :root {
-        --cor-roxo: #0c0113;      /* roxo escuro */
-        --cor-rosa: #36152b;      /* rosa vibrante */
-        --cor-roxo-claro: #343235;
+      --cor-roxo: #000000;
+      --cor-rosa: #000000;
     }
 
     body {
-        background-color: #f8f0fc; /* fundo lilás claro */
-        color: #3a0ca3;
+      background-color: #ffffff;
+      color: #000000;
     }
 
-    /* Navbar roxo escuro */
     .navbar {
-        background: var(--cor-roxo);
+      background: var(--cor-roxo);
     }
 
-    .navbar-brand, 
+    .navbar-brand,
     .navbar-nav .nav-link {
-        color: #fff;
-        font-weight: 600;
+      color: #ffffff;
+      font-weight: 600;
     }
 
-    .navbar-brand:hover, 
+    .navbar-brand:hover,
     .navbar-nav .nav-link:hover {
-        color: var(--cor-rosa);
+      color: var(--cor-rosa);
     }
 
-    /* Botão toggler branco */
     .navbar-toggler {
-        border-color: #fff;
+      border-color: #ffffff;
     }
 
     .navbar-toggler-icon {
-  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='white' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 100% 100%;
-  width: 1.5em;
-  height: 1.5em;
-}
+      background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='white' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+    }
 
-    /* Cards e botões */
     .card {
-        border-radius: 20px;
-        box-shadow: 0 3px 8px rgba(106,13,173,0.2);
+      border-radius: 20px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
     }
 
     .btn-outline-primary {
-        color: var(--cor-roxo);
-        border-color: var(--cor-roxo);
+      color: var(--cor-roxo);
+      border-color: var(--cor-roxo);
     }
+
     .btn-outline-primary:hover {
-        background-color: var(--cor-rosa);
-        border-color: var(--cor-rosa);
-        color: #fff;
+      background-color: var(--cor-rosa);
+      border-color: var(--cor-rosa);
+      color: #fff;
     }
 
-    /* Mascote gorila - navbar brand image */
-    .navbar-brand img {
-        height: 40px;
-        width: auto;
-        margin-right: 10px;
-        vertical-align: middle;
+    .no-link-style {
+      text-decoration: none;
+      color: inherit;
     }
+  </style>
 
-    /*calendario */
-    h6.text-muted {
-  font-weight: 600;
-  font-size: 1rem;
-  color: #8e44ad;
-}
- 
-    .feed-col {
-  position: absolute;
-  left: calc(25% - 10px); /* 25% = col-md-3, -10px = sobreposição */
-  width: 75%;
-  z-index: 10;
-}
-
-.sidebar-col {
-  position: relative;
-  z-index: 1;
-}
-.feed-col {
-  flex: 0 0 55% !important;
-  max-width: 55% !important;
-}
-   
-</style>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}SOCIAL{% endblock %}</title>
-    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
-
-    <!-- Bootstrap 5 CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
-    {% block extra_head %}{% endblock %}
+  {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'home' %}">
-                 SOCIAL
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-  <span class="navbar-toggler-icon"></span>
-</button>
-          
-            <div class="collapse navbar-collapse" id="navbarNav">
-                {% if user.is_authenticated %}
-                    <form method="get" action="{% url 'post-list' %}" onsubmit="return updateFormAction(this)" class="d-flex ms-3" style="max-width: 400px;">
-                    <input type="text" name="search" class="form-control me-2" placeholder="Buscar..." value="{{ request.GET.search }}">
-                    <select name="type" class="form-select me-2">
-                        <option value="post" {% if request.path == "/post-list/" %}selected{% endif %}>Post</option>
-                        <option value="user" {% if request.path == "/user-list/" %}selected{% endif %}>Usuário</option>
-                    </select>
-                    <button type="submit" class="btn btn-outline-light">🔍</button>
-                    </form>
-                {% endif %}
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'home' %}">SOCIAL</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-                <ul class="navbar-nav ms-auto">
-                    {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home' %}">Início</a>
-                    </li>
-                        {% if user.profile.is_coach %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'post-wod-create' %}">Postar Wod</a>
-                            </li>
-                        {% endif %}
+      <div class="collapse navbar-collapse" id="navbarNav">
+        {% if user.is_authenticated %}
+        <form method="get" action="{% url 'post-list' %}" class="d-flex ms-3" style="max-width: 400px;">
+          <input type="text" name="search" class="form-control me-2" placeholder="Buscar..." value="{{ request.GET.search }}">
+          <select name="type" class="form-select me-2">
+            <option value="post" {% if request.path == "/post-list/" %}selected{% endif %}>Post</option>
+            <option value="user" {% if request.path == "/user-list/" %}selected{% endif %}>Usuário</option>
+          </select>
+          <button type="submit" class="btn btn-outline-light">🔍</button>
+        </form>
+        {% endif %}
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'post-create' %}">Postar</a>
-                    </li>
-                    
-                    <li class="nav-item">
-                        <a class="nav-link" href="https://www.linkedin.com/in/jo%C3%A3o-vitor-xavier-532191279/">Contato</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'my-perfil' %}">Perfil</a>
-                    </li> 
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Sair</a>
-                    </li>   
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home' %}">Início</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'register' %}">Cadastro</a>
-                    </li>
-                    
-                    {% endif %}
-                </ul>
-            </div>
-        
-        </div>
-    </nav>
+        <ul class="navbar-nav ms-auto">
+          {% if user.is_authenticated %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Início</a></li>
+          {% if user.profile.is_coach %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'post-wod-create' %}">Postar Wod</a></li>
+          {% endif %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'post-create' %}">Postar</a></li>
+          <li class="nav-item"><a class="nav-link" href="https://www.linkedin.com/in/jo%C3%A3o-vitor-xavier-532191279/">Contato</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'my-perfil' %}">Perfil</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Sair</a></li>
+          {% else %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Início</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Cadastro</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-    <!-- Main content -->
-    {% block profile_sidebar %}
-<div class="container-fluid">
-  <div class="row g-0 d-flex align-items-stretch">
-    
-    {% if user.is_authenticated %}
-    <!-- Sidebar -->
-    <div class="col-md-3 p-0" style="min-height: 100vh;">
-      <div class="card shadow-sm h-100 rounded-0 d-flex flex-column">
-        <div class="card-body text-center">
+  <!-- Conteúdo principal -->
+  <div class="container">
+    <div class="row">
+      {% if user.is_authenticated %}
+      <!-- Sidebar do perfil -->
+      <div class="col-md-3 mb-4">
+        <div class="card shadow-sm p-3 text-center">
           {% if user.profile.photo %}
-            <img src="{{ user.profile.photo.url }}" alt="Foto de perfil"
-                 class="rounded-circle mb-3" width="100" height="100" style="object-fit: cover;">
+            <img src="{{ user.profile.photo.url }}" class="rounded-circle mb-3" width="100" height="100" style="object-fit: cover;">
           {% else %}
             <img src="https://via.placeholder.com/100" class="rounded-circle mb-3" alt="Sem foto">
           {% endif %}
-          <h5 class="card-title">
-            {{ user.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="24">
-          </h5>
-          <p class="text-muted">Bem-vindo de volta!</p>
+          <h5>{{ user.username }} <img src="{% static 'verified.png' %}" width="20"></h5>
           <p class="text-muted">{{ user.email }}</p>
           <p class="text-muted">{{ user.profile.weight }} Kg</p>
-          <p class="text-muted">
-            Usuário desde: {{ user.profile.created_at_profile }}
-            <img src="{% static 'schedule.png' %}" alt="Calendário" width="18">
-          </p>
-
-          <div id="calendar" class="mt-3"></div>
-
-          <div class="d-flex justify-content-start align-items-center mb-2">
-            <select id="mesSelect" class="form-select me-2" style="width: auto;">
-              <option value="0">Janeiro</option>
-              <option value="1">Fevereiro</option>
-              <option value="2">Março</option>
-              <option value="3">Abril</option>
-              <option value="4">Maio</option>
-              <option value="5">Junho</option>
-              <option value="6">Julho</option>
-              <option value="7">Agosto</option>
-              <option value="8">Setembro</option>
-              <option value="9">Outubro</option>
-              <option value="10">Novembro</option>
-              <option value="11">Dezembro</option>
-            </select>
-            <select id="anoSelect" class="form-select" style="width: auto;">
-              <option value="2024">2024</option>
-              <option value="2025" selected>2025</option>
-              <option value="2026">2026</option>
-            </select>
-          </div>
+          <p class="text-muted">Desde: {{ user.profile.created_at_profile }}</p>
 
           {% if mostrar_inventory and inventory_post %}
           <hr>
-          <div class="text-start">
-            <small><strong>Posts:</strong> {{ inventory_post.post_count }}</small><br>
-            <small><strong>Comentários:</strong> {{ inventory_post.comment_count }}</small>
-          </div>
+          <small><strong>Posts:</strong> {{ inventory_post.post_count }}</small><br>
+          <small><strong>Comentários:</strong> {{ inventory_post.comment_count }}</small>
           <div class="mt-2">
             <a href="{% url 'user-config' user.pk %}" class="text-decoration-none" style="color: #3a0ca3;">
               <strong>Editar Perfil ⚙️</strong>
             </a>
           </div>
           {% endif %}
-
-          {% if request.resolver_match.url_name != 'my-perfil' %}
-          <a href="{% url 'my-perfil' %}" class="btn btn-outline-primary btn-sm w-100"
-             style="border-color: var(--cor-roxo); color: var(--cor-roxo);">
-            Meu Perfil
-          </a>
-          {% endif %}
         </div>
       </div>
-    </div>
-    {% endif %}
+      {% endif %}
 
-    <!-- Conteúdo principal -->
-    <div class="{% if user.is_authenticated %}col-md-9 feed-col{% else %}col-12{% endif %}">
-      {% block content %}
-      <!-- Conteúdo da página será inserido aqui -->
-      {% endblock %}
+      <!-- Feed de conteúdo -->
+      <div class="{% if user.is_authenticated %}col-md-9{% else %}col-12{% endif %}">
+        {% block content %}
+        {% endblock %}
+      </div>
     </div>
-
   </div>
-</div>
-{% endblock %}
 
-    <!-- Footer -->
-    <footer class="bg-light text-center text-muted py-3 mt-4 border-top">
-        <div class="container">
-            <small>&copy; {{ year|default:2025 }} CF4TIME. Todos os direitos reservados.</small>
-        </div>
-    </footer>
+  <!-- Rodapé -->
+  <footer class="bg-light text-center text-muted py-3 mt-4 border-top">
+    <div class="container">
+      <small>&copy; {{ year|default:2025 }} CF4TIME. Todos os direitos reservados.</small>
+    </div>
+  </footer>
 
-    <!-- Bootstrap JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
-
-        function updateFormAction(form) {
-        const selected = form.querySelector('select[name="type"]').value;
-        if (selected === 'post') {
-            form.action = "{% url 'post-list' %}";
-        } else if (selected === 'user') {
-            form.action = "{% url 'user-list' %}";
-        }
-        return true;
-    }
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const calendarEl = document.getElementById('calendar');
-
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth();
-
-    function gerarEventosAleatorios(ano, mes) {
-      const diasGerados = new Set();
-      while (diasGerados.size < 8) {
-        const dia = Math.floor(Math.random() * 28) + 1;
-        diasGerados.add(dia);
-      }
-
-      return Array.from(diasGerados).map(dia => {
-        const data = new Date(ano, mes, dia);
-        const dataFormatada = data.toISOString().split('T')[0];
-        return { title: 'Check-in', start: dataFormatada };
-      });
-    }
-
-    const eventosIniciais = gerarEventosAleatorios(year, month);
-
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-  initialView: 'dayGridMonth',
-  locale: 'pt-br',
-  height: 280,
-  headerToolbar: {
-    left: '',
-    center: 'title',
-    right: ''
-  },
-  events: eventosIniciais,
-  eventColor: '#8e44ad',
-  viewDidMount: function () {
-    const titulo = document.querySelector('.fc-toolbar-title');
-    if (titulo) {
-      titulo.textContent = 'Check-ins';
-    }
-  }
-});
-
-    calendar.render();
-
-    document.getElementById('mesSelect').value = month;
-    document.getElementById('anoSelect').value = year;
-
-    function atualizarCalendario() {
-      const mes = parseInt(document.getElementById('mesSelect').value);
-      const ano = parseInt(document.getElementById('anoSelect').value);
-
-      const novosEventos = gerarEventosAleatorios(ano, mes);
-      calendar.removeAllEvents();
-      calendar.addEventSource(novosEventos);
-      calendar.gotoDate(new Date(ano, mes, 1));
-    }
-
-    document.getElementById('mesSelect').addEventListener('change', atualizarCalendario);
-    document.getElementById('anoSelect').addEventListener('change', atualizarCalendario);
-  });
-  
-</script>
-    {% block extra_js %}{% endblock %}
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+  {% block extra_js %}{% endblock %}
 </body>
 </html>
