@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .forms import EventForm
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from .models import Event
 from django.urls import reverse_lazy
 # Create your views here.
@@ -32,3 +32,14 @@ class EventList(ListView):
     template_name  ='event_list.html'
     fields  = ['date_initial','date_end', 'text','link', 'title','local']
    
+
+class EventUpdate(UpdateView):
+    model = Event
+    template_name  = 'update_event.html'
+    fields  =  ['date_initial','date_end', 'text','link', 'title','local']
+    success_url=reverse_lazy('event_list')
+
+class EventDelete(DeleteView):
+    model  = Event
+    template_name  = 'delete_event.html'
+    success_url=reverse_lazy('event_list')

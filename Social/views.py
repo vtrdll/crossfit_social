@@ -90,14 +90,16 @@ class HomeView(FormMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = self.get_form()
+        
+        inventory = PostCommentInventory.objects.get(author=self.request.user)
+        context['mostrar_inventory'] = True
+        context['inventory_post'] = inventory
 
         # Post do coach fixado (pined=True)
-       
-
         context['imagens'] = PostImage.objects.all()  # <-- ESSENCIAL
         context['videos'] = PostVideo.objects.all()
         posts  = context['posts']
-
+    
         pined_wod = PostWod.objects.filter(pined=True).order_by('-date').first()
         context['pined_wod'] = pined_wod
         if pined_wod:
@@ -113,6 +115,8 @@ class HomeView(FormMixin, ListView):
             }
         print(imagens)
         
+       
+
         return context
 
 

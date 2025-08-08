@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Confirmar Exclusão{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 600px;">
+    <div class="card shadow">
+        <div class="card-body text-center">
+            <h3 class="mb-4 text-danger">Tem certeza que deseja excluir este evento ?</h3>
+            
+            
+            <div class="mb-3">
+                   
+                    {{ object.title }}
+                </div>
+
+                <div class="mb-3">
+                  
+                    {{ object.text}}
+                </div>
+
+                <div class="mb-3">
+                    
+                    {{ object.date_initial }}
+                </div>
+                <div class="mb-3">
+                    
+                    {{ object.date_end }}
+                </div>
+
+                <div class="mb-3">
+                   
+                    {{ object.link }}
+                </div>
+                
+                <div class="mb-3">
+                    
+                    {{ object.local }}
+                </div>
+                
+                <div class="mb-3">
+                 
+                    {{ object.price }}
+                </div>
+            
+
+            <form method="post" class="mt-4">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Sim, Excluir</button>
+                <a href="{% url 'my-perfil' %}" class="btn btn-secondary ms-2">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

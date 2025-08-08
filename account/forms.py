@@ -21,7 +21,7 @@ class ProfileForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ['photo','birthday', 'category', 'box']
+        fields = ['photo','birthday', 'category', 'box', 'genre']
 
 
 class ProfileFormUpdate(forms.ModelForm):
@@ -59,8 +59,11 @@ class UserFormUpdate(UserChangeForm):
 
     box = forms.ChoiceField(choices=Profile.BOX_CHOICES, required=False)
     category = forms.ChoiceField(choices=Profile.CATEGORY_CHOICES, required=False)
+    genre =  forms.ChoiceField(choices=Profile.GENRE_CHOICES, required= True)
     weight = forms.DecimalField(max_digits= 5, decimal_places = 2, validators=[MaxValueValidator (300), MinValueValidator(0)])
-    height = forms.DecimalField(max_digits= 5, decimal_places = 2, validators=[MaxValueValidator (2), MinValueValidator(0)])
+    height = forms.DecimalField(max_digits= 5, decimal_places = 2, )
+
+    
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', ]
@@ -77,6 +80,7 @@ class UserFormUpdate(UserChangeForm):
             self.fields['category' ].initial = self.instance.profile.category
             self.fields['weight'].initial = self.instance.profile.weight
             self.fields['height'].initial = self.instance.profile.height
+            self.fields['genre'].initial =  self.instance.profile.genre
 
     def save(self, commit= True):
         user = super().save(commit = commit)
@@ -84,6 +88,9 @@ class UserFormUpdate(UserChangeForm):
         category = self.cleaned_data['category']
         weight = self.cleaned_data['weight']
         height = self.cleaned_data['height']
+        
+
+        
         if commit:
             profile, created = Profile.objects.get_or_create(user=user)
             profile.box = box
@@ -92,8 +99,6 @@ class UserFormUpdate(UserChangeForm):
             profile.height = height
             profile.save()
         return user
-
-
 
         
 

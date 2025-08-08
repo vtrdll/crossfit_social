@@ -79,10 +79,13 @@ class UserUpdate(UpdateView):
     template_name = 'user-update.html'
     success_url = reverse_lazy('my-perfil')
 
-    def get_object(self):
-        return self.request.user
     
+    def get_object(self):
+        
+        return self.request.user
+
     def form_valid(self, form):
+        print("Dados recebidos no POST:", self.request.POST)
         response = super().form_valid(form)
 
         # Atualiza também o perfil
@@ -90,10 +93,21 @@ class UserUpdate(UpdateView):
         profile.box = self.request.POST.get('box')
         profile.category = self.request.POST.get('category')
         profile.weight = self.request.POST.get('weight')
+        profile.height =  self.request.POST.get('height')
+        profile.genre = self.request.POST.get('genre')
+        
+        
         profile.save()
 
         return response
     
+    def form_invalid(self, form):
+        print("Dados recebidos no POST:", self.request.POST)
+        # You can print the errors to debug
+        print(form.errors)
+
+        # You can log or customize the response here
+        return super().form_invalid(form)
 
 @method_decorator(login_required(login_url='login'), name='dispatch')
 class PasswordUpdate(LoginRequiredMixin, FormView):

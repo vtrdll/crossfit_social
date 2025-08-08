@@ -1,78 +1,12 @@
 {% extends "base.html" %}
-{%  load static  %}
+{% load static %}
 {% block title %}FEED{% endblock %}
 
 {% block content %}
-
-
-
 <div class="container py-4">
     <h1 class="mb-4 text-center">🌐 Community Feed</h1>
     
-
-    <!--  busca por usuário -->
-    {% if request.path == '/user-list/' %}
-        <h3 class="text-center">👤 Usuários encontrados</h3>
-
-        {% if search_users %}
-            {% for user in search_users %}
-                <div class="card mb-3 shadow-sm">
-                    <div class="card-body d-flex align-items-center">
-                        {% if user.profile.photo %}
-                            <img src="{{ user.profile.photo.url }}" alt="Foto de {{ user.username }}" class="rounded-circle me-3" width="60" height="60" style="object-fit: cover;">
-                        {% else %}
-                            <div class="rounded-circle bg-secondary me-3" style="width: 60px; height: 60px;"></div>
-                        {% endif %}
-                        <div>
-                            <a href="{% url 'profile' user.pk %}" 4class="no-link-style"><h5 class="mb-0">{{ user.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="24"> </h5> </a>
-                            <small class="text-muted">Entrou em {{ user.profile.created_at_profile|date:"d/m/Y" }} <img src="{% static 'schedule.png' %}" alt="Calendario" width="24"> </small>
-                            
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p class="text-muted text-center">Nenhum usuário encontrado para "{{ request.GET.search }}".</p>
-        {% endif %}
-    {% endif %}
-{% if pined_wod %}
-    <div class="card shadow mb-4 border-success position-relative">
-        <!-- Selo fixado no canto superior esquerdo -->
-        <div class="position-absolute top-0 end-0 bg-success text-white px-3 py-1 rounded-start">
-            📌 FIXADO
-        </div> 
-        <div class="card-body">
-
-            <!-- Autor -->
-            <div class="d-flex align-items-center mb-3">
-                {% if coach_profile.photo %}
-                    <img src="{{ coach_profile.photo.url }}" alt="Foto de {{ post_coach.post.author.username }}"
-                         class="rounded-circle me-3" width="50" height="50" style="object-fit: cover;">
-                {% else %}
-                    <div class="rounded-circle bg-secondary me-3" style="width:50px; height:50px;"></div>
-                {% endif %}
-                <div>
-                    <a href="{% url 'profile-detail' coach_profile.pk %}" class="no-link-style">
-                        <h6 class="mb-0 text-success">{{ coach_profile.user.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="20"></h6>
-                    </a>
-                    <small class="text-muted">Treino fixado do coach</small>
-                </div>
-            </div>
-
-            <!-- Título e texto -->
-            <h4 class="card-title">{{ pined_wod.title }}</h4>
-            <p class="card-text">{{ pined_wod.text }}</p>
-            <p class="card-text">{{ pined_wod.warmup }}</p>
-
-            <!-- Infos -->
-            <div>
-                <small class="text-muted">{{ post_coach.post.created_at|date:"d/m/Y H:i" }}</small> —
-                <small class="text-muted">{{ post_coach.post.like.count }} Curtidas</small>
-            </div>
-        </div>
-    </div>
-{% endif %}
-
+    <!-- ... seu código para usuários, pined_wod e etc ... -->
 
     <!-- Resultados de posts -->
     {% for post in posts %}
@@ -87,37 +21,68 @@
                         <div class="rounded-circle bg-secondary me-3" style="width:50px; height:50px;"></div>
                     {% endif %}
                     <div>
-                    <a href="{% url 'profile-detail' post.author.pk %}"  class="no-link-style" ><h6 class="mb-0">{{ post.author.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="24"></h6></a>
+                        <a href="{% url 'profile-detail' post.author.pk %}" class="no-link-style">
+                            <h6 class="mb-0">{{ post.author.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="24"></h6>
+                        </a>
                     </div>
                 </div>
 
                 <h4 class="card-title">{{ post.titulo }}</h4>
                 <p class="card-text">{{ post.text }}</p>
 
-                <div class="row">
-      
-                {% if post.media_dict %}
-                    {% for imagem in post.media_dict.imagens %}
-                        <img src="{{ imagem }}" alt="Imagem do post" style="max-width: 640px; max-height: 900px;">
-                    {% endfor %}
-                {% endif %}
-                
-
-                {% for vid in post.media_dict.videos %}
-                    <div class="col-md-6 mb-3">
-                        <a href="{% url 'post-detail' post.pk %}">
-                             <video controls autoplay loop muted src="{{ vid }}" alt="Video do post"  class="rounded mb-3" style="width: 100%; max-width: 1000px; max-height: 900px; object-fit: cover;">
-                                
-                                Seu navegador não suporta vídeo.
-                            </video>
-                        </a>
+                {% if post.media_dict.imagens|length > 0 or post.media_dict.videos|length > 0 %}
+    <div style="max-width: 470px; margin: auto;">
+        <div id="carouselPost{{ post.id }}" class="carousel slide" data-bs-ride="false">
+            <div class="carousel-inner">
+                {% for imagem in post.media_dict.imagens %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <img 
+                            src="{{ imagem }}" 
+                            class="d-block w-100" 
+                            alt="Imagem do post" 
+                            style="max-height: 900px; object-fit: cover; cursor: pointer;"
+                            data-bs-toggle="modal" 
+                            data-bs-target="#mediaModal" 
+                            data-type="image" 
+                            data-src="{{ imagem }}"
+                        >
                     </div>
                 {% endfor %}
-</div>
+                {% for vid in post.media_dict.videos %}
+                    <div class="carousel-item {% if forloop.first and not post.media_dict.imagens %}active{% endif %}">
+                        <video 
+                            class="d-block w-100" 
+                            muted 
+                            preload="metadata" 
+                            style="max-height: 900px; object-fit: cover; cursor: pointer;"
+                            data-bs-toggle="modal" 
+                            data-bs-target="#mediaModal" 
+                            data-type="video" 
+                            data-src="{{ vid }}"
+                        >
+                            <source src="{{ vid }}" type="video/mp4" />
+                            Seu navegador não suporta vídeo.
+                        </video>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="d-flex justify-content-center gap-3 mt-3">
+                <button class="btn btn-primary btn-sm" type="button" data-bs-target="#carouselPost{{ post.id }}" data-bs-slide="prev">
+                    ← Anterior
+                </button>
+                <button class="btn btn-primary btn-sm" type="button" data-bs-target="#carouselPost{{ post.id }}" data-bs-slide="next">
+                    Próximo →
+                </button>
+            </div>
+        </div>
+    </div>
+{% endif %}
 
                 <div>
                     <a href="{% url 'post-detail' post.pk %}" class="no-link-style">
-                    <small class="text-muted">{{ post.created_at|date:"d/m/Y H:i" }}</small></a> — 
+                        <small class="text-muted">{{ post.created_at|date:"d/m/Y H:i" }}</small>
+                    </a> — 
                     <small class="text-muted">{{ post.like.count }} Curtidas</small>
                 </div>
 
@@ -180,10 +145,60 @@
                         <p class="text-muted">Nenhum comentário ainda.</p>
                     {% endfor %}
                 </div>
+
             </div>
         </div>
     {% empty %}
         <p class="text-center text-muted">Nenhum post encontrado.</p>
     {% endfor %}
 </div>
+
+<!-- Modal para mostrar mídia -->
+<div class="modal fade" id="mediaModal" tabindex="-1" aria-labelledby="mediaModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content bg-transparent border-0">
+      <div class="modal-body p-0 position-relative">
+        <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        <img id="modalImage" src="" alt="Imagem ampliada" class="img-fluid w-100 d-none" />
+        <video id="modalVideo" controls class="w-100 d-none">
+          <source src="" type="video/mp4" />
+          Seu navegador não suporta vídeo.
+        </video>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const mediaModal = document.getElementById('mediaModal');
+  const modalImage = document.getElementById('modalImage');
+  const modalVideo = document.getElementById('modalVideo');
+
+  mediaModal.addEventListener('show.bs.modal', function (event) {
+    const triggerElement = event.relatedTarget;
+    const type = triggerElement.getAttribute('data-type');
+    const src = triggerElement.getAttribute('data-src');
+
+    if(type === 'image') {
+      modalImage.src = src;
+      modalImage.classList.remove('d-none');
+      modalVideo.classList.add('d-none');
+      modalVideo.pause();
+      modalVideo.removeAttribute('src');
+      modalVideo.load();
+    } else if(type === 'video') {
+      modalVideo.src = src;
+      modalVideo.classList.remove('d-none');
+      modalImage.classList.add('d-none');
+      modalVideo.load();
+    }
+  });
+
+  mediaModal.addEventListener('hidden.bs.modal', function () {
+    modalImage.src = '';
+    modalVideo.pause();
+    modalVideo.src = '';
+  });
+</script>
+
 {% endblock %}
