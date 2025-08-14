@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+{% load widget_tweaks %}
+{%  load static  %}
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>POSTAR PR</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: #3b5998;
+            font-size: 1.5rem;
+        }
+
+        .post-box {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 40px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+
+        .profile-pic {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .form-control {
+            border-radius: 10px;
+        }
+
+        .btn-primary {
+            border-radius: 10px;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">My Social</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'my-perfil' %}">Meu Perfil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href=https://www.linkedin.com/in/jo%C3%A3o-vitor-xavier-532191279/>Contato</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">sair</a>
+                    </li>   
+                    {% endif %}
+
+                    {% if not user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">Cadastro</a>
+                    </li>
+                
+                    {% endif %}
+
+                </ul>
+            </div>
+        </div>
+            
+    </nav>
+<div class="container">
+    <div class="post-box mx-auto col-md-8">
+        <div class="d-flex align-items-center mb-3">
+            {% if user.profile.photo %}
+                <img src="{{ user.profile.photo.url }}" alt="Foto de perfil" class="profile-pic">
+            {% endif %}
+            <h5 class="mb-0">{{ user.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="24"></h5>
+        </div>
+
+        <form method="post">
+  {% csrf_token %}
+
+  {% if form.non_field_errors %}
+    <div class="alert alert-danger">
+      {% for err in form.non_field_errors %}
+        <div>{{ err }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="mb-3">
+    {{ form.moviment.label_tag }}
+    {{ form.moviment|add_class:"form-control" }}
+    {% for err in form.moviment.errors %}
+      <div class="text-danger small">{{ err }}</div>
+    {% endfor %}
+  </div>
+
+  <div class="mb-3">
+    {{ form.personal_record.label_tag }}
+    {{ form.personal_record|add_class:"form-control" }}
+    {% for err in form.personal_record.errors %}
+      <div class="text-danger small">{{ err }}</div>
+    {% endfor %}
+  </div>
+
+  <div class="mb-3">
+    {{ form.date.label_tag }}
+    {{ form.date|add_class:"form-control" }}
+    {% for err in form.date.errors %}
+      <div class="text-danger small">{{ err }}</div>
+    {% endfor %}
+  </div>
+                
+
+            <button type="submit" class="btn btn-primary">Publicar</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

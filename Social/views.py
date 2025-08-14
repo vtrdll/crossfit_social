@@ -178,9 +178,10 @@ def my_profile(request):
     user = request.user
     posts = request.user.post_set.all().order_by('-created_at')
     comments = request.user.comment_set.all().order_by('-created_at')
+    pr = user.profilepesonalrecord_set.all()
 
     inventory_post = PostCommentInventory.objects.filter(author=user).first()
-    return render(request, 'my_perfil.html', {'user': request.user, 'posts': posts, 'comments':comments, 'inventory_post': inventory_post, 'mostrar_inventory':True})
+    return render(request, 'my_perfil.html', {'user': request.user, 'posts': posts, 'comments':comments, 'inventory_post': inventory_post, 'mostrar_inventory':True, 'pr':pr})
 
 def like_post(request, pk):
 

@@ -1,7 +1,9 @@
 from .models import Profile
+from .models  import ProfilePesonalRecord
 from django.urls import reverse_lazy
-from Social.models import Comment, Post, PostWod
+from Social.models import Comment, Post 
 from django.contrib.auth.models import User
+from django.http import HttpResponseForbidden
 
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -10,7 +12,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm, SetPasswordForm
 from django.views.generic import UpdateView, FormView, DeleteView, DetailView, ListView
-from .forms import ProfileForm, UserFormUpdate, ProfileFormUpdate,CustomCreateUser
+from .forms import ProfileForm, UserFormUpdate, ProfileFormUpdate,CustomCreateUser, PersonalRecordForm
 
 
 def register_view(request):
@@ -191,3 +193,51 @@ class ProfileDetail(DetailView):
             'posts': posts,
             'comments': comments,
         })
+    
+
+def register_pr (request):
+    
+    if request.method == 'POST':
+        form = PersonalRecordForm(request.POST, user=request.user)
+
+        if form.is_valid():
+            pr =  form.save(commit=False)
+            pr.athlete = request.user
+            pr.save()
+            return redirect('my-perfil')
+        
+    else:
+        form  = PersonalRecordForm()
+
+    return  render (request, 'create_pr.html',{'form':form})
+
+def update_pr (request,pk):
+    obj =  get_object_or_404(ProfilePesonalRecord,  pk  = pk)
+    
+    if  obj.athlete!=request.user:
+        return HttpResponseForbidden("Você não tem permissão para editar este registro.")
+
+    if request.method =='POST':
+        new_pr =  request.POST.get('personal_record')
+        
+        if new_pr:
+            obj.personal_record = new_pr
+            obj.save()
+            return redirect('my-perfil')
+    return render  (request,'update_pr.html',{'obj':obj})
+
+def list_pr(request):
+
+    detail = ProfilePesonalRecord.objects.filter(athlete=request.user)
+
+    return render(request, 'list_pr.html',  {'detail':detail})
+'''
+
+def  delete_pr(request,  pk):
+    if request.method == 'POST':
+        
+        personal_record =  get_object_or_404(ProfilePesonalRecord, pk = pk)
+        personal_record.delete()
+    return render(request, 'my-perfil',  {'personal_record':personal_record})
+
+'''

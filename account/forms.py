@@ -1,5 +1,5 @@
 from django import forms
-from .models import Profile
+from .models import Profile, ProfilePesonalRecord
 
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -102,3 +102,29 @@ class UserFormUpdate(UserChangeForm):
 
         
 
+class PersonalRecordForm (forms.ModelForm):
+    date = forms.DateField(
+        widget=forms.DateInput(attrs={
+            'type': 'date',
+            'class': 'form-control'
+        }),
+        input_formats=['%Y-%m-%d'],
+        required=True 
+    )
+    class Meta():
+        model  = ProfilePesonalRecord
+        fields =  ['personal_record','moviment', 'date']
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        moviment = cleaned_data.get('moviment')
+
+        if self.user and moviment:
+            exists = ProfilePesonalRecord.objects.filter(athlete=self.user, moviment=moviment).exists()
+            if exists:
+                raise forms.ValidationError(f"Você já tem um registro para {moviment}.")
+        return cleaned_data

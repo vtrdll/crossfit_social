@@ -5,9 +5,68 @@
 {% block content %}
 <div class="container py-4">
     <h1 class="mb-4 text-center">🌐 Community Feed</h1>
-    
-    <!-- ... seu código para usuários, pined_wod e etc ... -->
+    {% if request.path == '/user-list/' %}
+        <h3 class="text-center">👤 Usuários encontrados</h3>
 
+        {% if search_users %}
+            {% for user in search_users %}
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-body d-flex align-items-center">
+                        {% if user.profile.photo %}
+                            <img src="{{ user.profile.photo.url }}" alt="Foto de {{ user.username }}" class="rounded-circle me-3" width="60" height="60" style="object-fit: cover;">
+                        {% else %}
+                            <div class="rounded-circle bg-secondary me-3" style="width: 60px; height: 60px;"></div>
+                        {% endif %}
+                        <div>
+                            <a href="{% url 'profile-detail' user.pk %}" class="no-link-style"><h5 class="mb-0">{{ user.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="24"> </h5> </a>
+                            <small class="text-muted">Entrou em {{ user.profile.created_at_profile|date:"d/m/Y" }} <img src="{% static 'schedule.png' %}" alt="Calendario" width="24"> </small>
+                            
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted text-center">Nenhum usuário encontrado para "{{ request.GET.search }}".</p>
+        {% endif %}
+    {% endif %}
+    <!-- ... seu código para usuários, pined_wod e etc ... -->
+{% if pined_wod %}
+    <div class="card shadow mb-4 border-success position-relative">
+        <!-- Selo fixado no canto superior esquerdo -->
+        <div class="position-absolute top-0 end-0 bg-success text-white px-3 py-1 rounded-start">
+            📌 FIXADO
+        </div> 
+        <div class="card-body">
+
+            <!-- Autor -->
+            <div class="d-flex align-items-center mb-3">
+                {% if coach_profile.photo %}
+                    <img src="{{ coach_profile.photo.url }}" alt="Foto de {{ post_coach.post.author.username }}"
+                         class="rounded-circle me-3" width="50" height="50" style="object-fit: cover;">
+                {% else %}
+                    <div class="rounded-circle bg-secondary me-3" style="width:50px; height:50px;"></div>
+                {% endif %}
+                <div>
+                    <a href="{% url 'profile-detail' coach_profile.pk %}" class="no-link-style">
+                        <h6 class="mb-0 text-success">{{ coach_profile.user.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="20"></h6>
+                    </a>
+                    <small class="text-muted">Treino fixado do coach</small>
+                </div>
+            </div>
+
+            <!-- Título e texto -->
+            <h4 class="card-title">{{ pined_wod.title }}</h4>
+            <p class="card-text">{{ pined_wod.text }}</p>
+            <p class="card-text">{{ pined_wod.warmup }}</p>
+
+            <!-- Infos -->
+            <div>
+                <small class="text-muted">{{ post_coach.post.created_at|date:"d/m/Y H:i" }}</small> —
+                <small class="text-muted">{{ post_coach.post.like.count }} Curtidas</small>
+            </div>
+        </div>
+    </div>
+{% endif %}
     <!-- Resultados de posts -->
     {% for post in posts %}
         <div class="card shadow-sm mb-4">
@@ -31,9 +90,9 @@
                 <p class="card-text">{{ post.text }}</p>
 
                 {% if post.media_dict.imagens|length > 0 or post.media_dict.videos|length > 0 %}
-    <div style="max-width: 470px; margin: auto;">
-        <div id="carouselPost{{ post.id }}" class="carousel slide" data-bs-ride="false">
-            <div class="carousel-inner">
+                    <div style="max-width: 470px; margin: auto;">
+                        <div id="carouselPost{{ post.id }}" class="carousel slide" data-bs-ride="false">
+                            <div class="carousel-inner">
                 {% for imagem in post.media_dict.imagens %}
                     <div class="carousel-item {% if forloop.first %}active{% endif %}">
                         <img 
@@ -53,12 +112,15 @@
                         <video 
                             class="d-block w-100" 
                             muted 
+                            autoplay
+                            controls
                             preload="metadata" 
                             style="max-height: 900px; object-fit: cover; cursor: pointer;"
                             data-bs-toggle="modal" 
                             data-bs-target="#mediaModal" 
                             data-type="video" 
                             data-src="{{ vid }}"
+                            loop="true"
                         >
                             <source src="{{ vid }}" type="video/mp4" />
                             Seu navegador não suporta vídeo.
