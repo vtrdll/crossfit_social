@@ -1,7 +1,9 @@
 from .models import Profile
+from .models  import ProfilePesonalRecord
 from django.urls import reverse_lazy
-from Social.models import Comment, Post, PostWod
+from Social.models import Comment, Post 
 from django.contrib.auth.models import User
+from django.http import HttpResponseForbidden
 
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -10,7 +12,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm, SetPasswordForm
 from django.views.generic import UpdateView, FormView, DeleteView, DetailView, ListView
-from .forms import ProfileForm, UserFormUpdate, ProfileFormUpdate,CustomCreateUser
+from .forms import ProfileForm, UserFormUpdate, ProfileFormUpdate,CustomCreateUser, PersonalRecordForm, PrivacyConfigForm
 
 
 def register_view(request):
@@ -79,10 +81,13 @@ class UserUpdate(UpdateView):
     template_name = 'user-update.html'
     success_url = reverse_lazy('my-perfil')
 
-    def get_object(self):
-        return self.request.user
     
+    def get_object(self):
+        
+        return self.request.user
+
     def form_valid(self, form):
+        print("Dados recebidos no POST:", self.request.POST)
         response = super().form_valid(form)
 
         # Atualiza também o perfil
@@ -90,10 +95,21 @@ class UserUpdate(UpdateView):
         profile.box = self.request.POST.get('box')
         profile.category = self.request.POST.get('category')
         profile.weight = self.request.POST.get('weight')
+        profile.height =  self.request.POST.get('height')
+        profile.genre = self.request.POST.get('genre')
+        
+        
         profile.save()
 
         return response
     
+    def form_invalid(self, form):
+        print("Dados recebidos no POST:", self.request.POST)
+        # You can print the errors to debug
+        print(form.errors)
+
+        # You can log or customize the response here
+        return super().form_invalid(form)
 
 @method_decorator(login_required(login_url='login'), name='dispatch')
 class PasswordUpdate(LoginRequiredMixin, FormView):
@@ -177,3 +193,54 @@ class ProfileDetail(DetailView):
             'posts': posts,
             'comments': comments,
         })
+    
+
+def register_pr (request):
+    
+    if request.method == 'POST':
+        form = PersonalRecordForm(request.POST, user=request.user)
+
+        if form.is_valid():
+            pr =  form.save(commit=False)
+            pr.athlete = request.user
+            pr.save()
+            return redirect('my-perfil')
+        
+    else:
+        form  = PersonalRecordForm()
+
+    return  render (request, 'create_pr.html',{'form':form})
+
+def update_pr (request,pk):
+    obj =  get_object_or_404(ProfilePesonalRecord,  pk  = pk)
+    
+    if  obj.athlete!=request.user:
+        return HttpResponseForbidden("Você não tem permissão para editar este registro.")
+
+    if request.method =='POST':
+        new_pr =  request.POST.get('personal_record')
+        
+        if new_pr:
+            obj.personal_record = new_pr
+            obj.save()
+            return redirect('my-perfil')
+    return render  (request,'update_pr.html',{'obj':obj})
+
+def list_pr(request):
+
+    detail = ProfilePesonalRecord.objects.filter(athlete=request.user)
+
+    return render(request, 'list_pr.html',  {'detail':detail})
+
+def privacy_config (request):
+    profile = request.user.profile
+    
+    if request.method  == 'POST':
+        form  = PrivacyConfigForm(request.POST, instance=  profile)
+        if  form.is_valid():
+            form.save()
+            return redirect('my-perfil')
+    else:
+        form = PrivacyConfigForm(instance=  profile)
+    
+    return render(request, 'privacy_settings.html', {'form': form})

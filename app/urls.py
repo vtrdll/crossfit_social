@@ -19,11 +19,12 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from Social.views import my_profile, HomeView
+from Event.views import EventCreate, EventList, EventUpdate, EventDelete
 from account.views import PhotoUpdate, PhotoDelete
 from account.views import register_view, login_view, logout_view
 from Social.views import CommentList, CommentUpdate, CommentDelete
 from Social.views import PostCreateView, PostList, PostDetail, PostUpdate, PostDelete, like_post, like_comment, PostWodCreate
-from account.views import  UserConfig, UserUpdate, UserDelete, PasswordUpdate, ProfileDetail, UserList
+from account.views import  UserConfig, UserUpdate, UserDelete, PasswordUpdate, ProfileDetail, UserList, register_pr,  update_pr, list_pr,  privacy_config
 
 
 urlpatterns = [
@@ -64,6 +65,18 @@ urlpatterns = [
 
     path('photo/<int:pk>/delete/', PhotoDelete.as_view(), name='photo-delete'),
     path('photo/<int:pk>/update/', PhotoUpdate.as_view(), name='photo-update'),
+    
+    path('event_create/', EventCreate.as_view(), name= 'event_create'),
+    path('event_list/',  EventList.as_view(),  name='event_list'),
+    path('event/<int:pk>/update/', EventUpdate.as_view(), name='event_update'),
+    path('event/<int:pk>/delete/', EventDelete.as_view(), name='event_delete'),
+
+    path('PersonalRecord/',  register_pr, name = 'create_pr'),
+ 
+    path('PersonalRecord/<int:pk>/update', update_pr, name =  'update_pr'),
+    path('PersonalRecord/list', list_pr, name='list_pr'),
+
+    path('privacy_settings/', privacy_config, name='privacy_settings'),
 
     path('', HomeView.as_view(), name='home'),
     path('my-perfil/', my_profile, name='my-perfil'),

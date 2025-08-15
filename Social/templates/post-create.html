@@ -105,32 +105,7 @@
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
 
-            {% if user.profile.is_coach %}
-                <div class="mb-3">
-                    {{ form.title.label_tag }}
-                    {{ form.title|add_class:"form-control" }}
-                </div>
-
-                <div class="mb-3">
-                    {{ form.text.label_tag }}
-                    {{ form.text|add_class:"form-control" }}
-                </div>
-
-                <div class="mb-3">
-                    {{ form.warmup.label_tag }}
-                    {{ form.warmup|add_class:"form-control" }}
-                </div>
-                
-                <div class="mb-3">
-                    {{ form.skill.label_tag }}
-                    {{ form.skill|add_class:"form-control" }}
-                </div>
-
-                <div class="mb-3">
-                    {{ form.pined }}
-                </div>
-
-            {% else %}
+            
                 <div class="mb-3">
                     {{ form.titulo.label_tag }}  
                     {{ form.titulo|add_class:"form-control" }}
@@ -159,7 +134,7 @@
                     {% endif %}
                 
                 </div>
-            {% endif %}
+            
             <button type="submit" class="btn btn-primary">Publicar</button>
         </form>
     </div>

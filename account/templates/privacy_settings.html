@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Privacidade{% endblock %}
+
+{% block content %}
+<div class="card p-4 shadow-sm">
+  <h3 class="mb-4">⚙️ Configurações de Privacidade</h3>
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="form-check form-switch mb-3">
+      {{ form.view_weight }}
+      <label class="form-check-label ms-2" for="{{ form.view_weight.id_for_label }}">
+        Mostrar meu peso
+      </label>
+    </div>
+
+    <div class="form-check form-switch mb-3">
+      {{ form.view_height }}
+      <label class="form-check-label ms-2" for="{{ form.view_height.id_for_label }}">
+        Mostrar minha altura
+      </label>
+    </div>
+
+    <div class="form-check form-switch mb-3">
+      {{ form.view_category }}
+      <label class="form-check-label ms-2" for="{{ form.view_category.id_for_label }}">
+        Mostrar minha categoria
+      </label>
+    </div>
+
+    <div class="form-check form-switch mb-3">
+      {{ form.view_box }}
+      <label class="form-check-label ms-2" for="{{ form.view_box.id_for_label }}">
+        Mostrar meu box
+      </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-4">💾 Salvar Preferências</button>
+  </form>
+</div>
+{% endblock %}

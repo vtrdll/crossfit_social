@@ -4,9 +4,6 @@
 
 {% block content %}
 
-
-
-
     <h3>Meus Posts</h3>
     <hr>
 
@@ -24,10 +21,12 @@
                     <h4 class="card-title">{{ post.titulo }}</h4>
                     <p class="card-text">{{ post.text|truncatewords:30 }}</p>
                     
-                    {% if post.photo %}
-                        <img src="{{ post.photo.url }}" alt="Imagem do post" class="img-fluid post-image my-2" width="150" height="150">
-                    {% endif %}
-                    
+                    {% for image in post.media_dict.imagens %}
+                        <img src="{{ image }}" />
+                    {% endfor %}
+                    {% for video in post.media_dict.videos %}
+                        <video src="{{ video }}" controls></video>
+                    {% endfor %}
                     <p class="text-muted">Publicado em {{ post.created_at|date:"d/m/Y H:i" }}</p>
             </a>
                     <div class="mt-2 d-flex justify-content-end gap-2">
