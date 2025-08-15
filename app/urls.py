@@ -24,7 +24,7 @@ from account.views import PhotoUpdate, PhotoDelete
 from account.views import register_view, login_view, logout_view
 from Social.views import CommentList, CommentUpdate, CommentDelete
 from Social.views import PostCreateView, PostList, PostDetail, PostUpdate, PostDelete, like_post, like_comment, PostWodCreate
-from account.views import  UserConfig, UserUpdate, UserDelete, PasswordUpdate, ProfileDetail, UserList, register_pr,  update_pr, list_pr
+from account.views import  UserConfig, UserUpdate, UserDelete, PasswordUpdate, ProfileDetail, UserList, register_pr,  update_pr, list_pr,  privacy_config
 
 
 urlpatterns = [
@@ -75,6 +75,8 @@ urlpatterns = [
  
     path('PersonalRecord/<int:pk>/update', update_pr, name =  'update_pr'),
     path('PersonalRecord/list', list_pr, name='list_pr'),
+
+    path('privacy_settings/', privacy_config, name='privacy_settings'),
 
     path('', HomeView.as_view(), name='home'),
     path('my-perfil/', my_profile, name='my-perfil'),

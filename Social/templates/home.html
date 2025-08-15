@@ -5,6 +5,7 @@
 {% block content %}
 <div class="container py-4">
     <h1 class="mb-4 text-center">🌐 Community Feed</h1>
+
     {% if request.path == '/user-list/' %}
         <h3 class="text-center">👤 Usuários encontrados</h3>
 
@@ -18,9 +19,10 @@
                             <div class="rounded-circle bg-secondary me-3" style="width: 60px; height: 60px;"></div>
                         {% endif %}
                         <div>
-                            <a href="{% url 'profile-detail' user.pk %}" class="no-link-style"><h5 class="mb-0">{{ user.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="24"> </h5> </a>
-                            <small class="text-muted">Entrou em {{ user.profile.created_at_profile|date:"d/m/Y" }} <img src="{% static 'schedule.png' %}" alt="Calendario" width="24"> </small>
-                            
+                            <a href="{% url 'profile-detail' user.pk %}" class="no-link-style">
+                                <h5 class="mb-0">{{ user.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="24"></h5>
+                            </a>
+                            <small class="text-muted">Entrou em {{ user.profile.created_at_profile|date:"d/m/Y" }} <img src="{% static 'schedule.png' %}" alt="Calendario" width="24"></small>
                         </div>
                     </div>
                 </div>
@@ -29,53 +31,47 @@
             <p class="text-muted text-center">Nenhum usuário encontrado para "{{ request.GET.search }}".</p>
         {% endif %}
     {% endif %}
-    <!-- ... seu código para usuários, pined_wod e etc ... -->
-{% if pined_wod %}
-    <div class="card shadow mb-4 border-success position-relative">
-        <!-- Selo fixado no canto superior esquerdo -->
-        <div class="position-absolute top-0 end-0 bg-success text-white px-3 py-1 rounded-start">
-            📌 FIXADO
-        </div> 
-        <div class="card-body">
 
-            <!-- Autor -->
-            <div class="d-flex align-items-center mb-3">
-                {% if coach_profile.photo %}
-                    <img src="{{ coach_profile.photo.url }}" alt="Foto de {{ post_coach.post.author.username }}"
-                         class="rounded-circle me-3" width="50" height="50" style="object-fit: cover;">
-                {% else %}
-                    <div class="rounded-circle bg-secondary me-3" style="width:50px; height:50px;"></div>
-                {% endif %}
+    {% if pined_wod %}
+        <!-- Card do treino fixado -->
+        <div class="card shadow mb-4 border-success position-relative">
+            <div class="position-absolute top-0 end-0 bg-success text-white px-3 py-1 rounded-start">📌 FIXADO</div>
+            <div class="card-body">
+                <!-- Autor -->
+                <div class="d-flex align-items-center mb-3">
+                    {% if coach_profile.photo %}
+                        <img src="{{ coach_profile.photo.url }}" alt="{{ post_coach.post.author.username }}" class="rounded-circle me-3" width="50" height="50" style="object-fit: cover;">
+                    {% else %}
+                        <div class="rounded-circle bg-secondary me-3" style="width:50px; height:50px;"></div>
+                    {% endif %}
+                    <div>
+                        <a href="{% url 'profile-detail' coach_profile.pk %}" class="no-link-style">
+                            <h6 class="mb-0 text-success">{{ coach_profile.user.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="20"></h6>
+                        </a>
+                        <small class="text-muted">Treino fixado do coach</small>
+                    </div>
+                </div>
+
+                <h4 class="card-title">{{ pined_wod.title }}</h4>
+                <p class="card-text">{{ pined_wod.text }}</p>
+                <p class="card-text">{{ pined_wod.warmup }}</p>
+
                 <div>
-                    <a href="{% url 'profile-detail' coach_profile.pk %}" class="no-link-style">
-                        <h6 class="mb-0 text-success">{{ coach_profile.user.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="20"></h6>
-                    </a>
-                    <small class="text-muted">Treino fixado do coach</small>
+                    <small class="text-muted">{{ post_coach.post.created_at|date:"d/m/Y H:i" }}</small> —
+                    <small class="text-muted">{{ post_coach.post.like.count }} Curtidas</small>
                 </div>
             </div>
-
-            <!-- Título e texto -->
-            <h4 class="card-title">{{ pined_wod.title }}</h4>
-            <p class="card-text">{{ pined_wod.text }}</p>
-            <p class="card-text">{{ pined_wod.warmup }}</p>
-
-            <!-- Infos -->
-            <div>
-                <small class="text-muted">{{ post_coach.post.created_at|date:"d/m/Y H:i" }}</small> —
-                <small class="text-muted">{{ post_coach.post.like.count }} Curtidas</small>
-            </div>
         </div>
-    </div>
-{% endif %}
-    <!-- Resultados de posts -->
+    {% endif %}
+
+    <!-- Feed de posts -->
     {% for post in posts %}
         <div class="card shadow-sm mb-4">
             <div class="card-body">
-
+                <!-- Autor do post -->
                 <div class="d-flex align-items-center mb-3">
                     {% if post.author.profile.photo %}
-                        <img src="{{ post.author.profile.photo.url }}" alt="Foto de {{ post.author.username }}"
-                             class="rounded-circle me-3" width="50" height="50" style="object-fit: cover;">
+                        <img src="{{ post.author.profile.photo.url }}" alt="Foto de {{ post.author.username }}" class="rounded-circle me-3" width="50" height="50" style="object-fit: cover;">
                     {% else %}
                         <div class="rounded-circle bg-secondary me-3" style="width:50px; height:50px;"></div>
                     {% endif %}
@@ -89,58 +85,62 @@
                 <h4 class="card-title">{{ post.titulo }}</h4>
                 <p class="card-text">{{ post.text }}</p>
 
-                {% if post.media_dict.imagens|length > 0 or post.media_dict.videos|length > 0 %}
-                    <div style="max-width: 470px; margin: auto;">
-                        <div id="carouselPost{{ post.id }}" class="carousel slide" data-bs-ride="false">
-                            <div class="carousel-inner">
-                {% for imagem in post.media_dict.imagens %}
-                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                        <img 
-                            src="{{ imagem }}" 
-                            class="d-block w-100" 
-                            alt="Imagem do post" 
-                            style="max-height: 900px; object-fit: cover; cursor: pointer;"
-                            data-bs-toggle="modal" 
-                            data-bs-target="#mediaModal" 
-                            data-type="image" 
-                            data-src="{{ imagem }}"
-                        >
-                    </div>
-                {% endfor %}
-                {% for vid in post.media_dict.videos %}
-                    <div class="carousel-item {% if forloop.first and not post.media_dict.imagens %}active{% endif %}">
-                        <video 
-                            class="d-block w-100" 
-                            muted 
-                            autoplay
-                            controls
-                            preload="metadata" 
-                            style="max-height: 900px; object-fit: cover; cursor: pointer;"
-                            data-bs-toggle="modal" 
-                            data-bs-target="#mediaModal" 
-                            data-type="video" 
-                            data-src="{{ vid }}"
-                            loop="true"
-                        >
-                            <source src="{{ vid }}" type="video/mp4" />
-                            Seu navegador não suporta vídeo.
-                        </video>
-                    </div>
-                {% endfor %}
-            </div>
+                <!-- Contagem de mídias -->
+                {% with imagens_count=post.media_dict.imagens|length|default:0 videos_count=post.media_dict.videos|length|default:0 %}
+                    {% with total_media=imagens_count|add:videos_count %}
+                        {% if total_media > 0 %}
+                            <p class="text-muted text-center">📷 {{ total_media }} mídia(s)</p>
+                        {% endif %}
 
-            <div class="d-flex justify-content-center gap-3 mt-3">
-                <button class="btn btn-primary btn-sm" type="button" data-bs-target="#carouselPost{{ post.id }}" data-bs-slide="prev">
-                    ← Anterior
-                </button>
-                <button class="btn btn-primary btn-sm" type="button" data-bs-target="#carouselPost{{ post.id }}" data-bs-slide="next">
-                    Próximo →
-                </button>
-            </div>
-        </div>
-    </div>
-{% endif %}
+                        {% if total_media > 1 %}
+                            <!-- Carrossel com controles -->
+                            <div style="max-width: 470px; margin: auto;">
+                                <div id="carouselPost{{ post.id }}" class="carousel slide" data-bs-ride="false">
+                                    <div class="carousel-inner">
+                                        {% for imagem in post.media_dict.imagens %}
+                                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                                <img src="{{ imagem }}" class="d-block w-100" alt="Imagem do post" style="max-height:900px; object-fit:cover; cursor:pointer;"
+                                                    data-bs-toggle="modal" data-bs-target="#mediaModal" data-type="image" data-src="{{ imagem }}">
+                                            </div>
+                                        {% endfor %}
+                                        {% for vid in post.media_dict.videos %}
+                                            <div class="carousel-item {% if forloop.first and not post.media_dict.imagens %}active{% endif %}">
+                                                <video class="d-block w-100" muted autoplay controls preload="metadata" style="max-height:900px; object-fit:cover; cursor:pointer;"
+                                                    data-bs-toggle="modal" data-bs-target="#mediaModal" data-type="video" data-src="{{ vid }}" loop>
+                                                    <source src="{{ vid }}" type="video/mp4">
+                                                    Seu navegador não suporta vídeo.
+                                                </video>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="d-flex justify-content-center gap-3 mt-3">
+                                        <button class="btn btn-primary btn-sm" type="button" data-bs-target="#carouselPost{{ post.id }}" data-bs-slide="prev">← Anterior</button>
+                                        <button class="btn btn-primary btn-sm" type="button" data-bs-target="#carouselPost{{ post.id }}" data-bs-slide="next">Próximo →</button>
+                                    </div>
+                                </div>
+                            </div>
+                        {% elif total_media == 1 %}
+                            <!-- Exibe a mídia única sem carrossel -->
+                           <div class="d-flex justify-content-center">
+                                {% if imagens_count == 1 %}
+                                    <img src="{{ post.media_dict.imagens.0 }}" 
+                                        class="d-block" 
+                                        style="max-height:900px; max-width:100%; object-fit:cover; cursor:pointer;"
+                                        data-bs-toggle="modal" data-bs-target="#mediaModal" data-type="image" data-src="{{ post.media_dict.imagens.0 }}">
+                                {% elif videos_count == 1 %}
+                                    <video class="d-block" muted autoplay controls preload="metadata" 
+                                        style="max-height:900px; max-width:100%; object-fit:cover; cursor:pointer;"
+                                        data-bs-toggle="modal" data-bs-target="#mediaModal" data-type="video" data-src="{{ post.media_dict.videos.0 }}" loop>
+                                        <source src="{{ post.media_dict.videos.0 }}" type="video/mp4">
+                                        Seu navegador não suporta vídeo.
+                                    </video>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                {% endwith %}
 
+                <!-- Data e curtidas -->
                 <div>
                     <a href="{% url 'post-detail' post.pk %}" class="no-link-style">
                         <small class="text-muted">{{ post.created_at|date:"d/m/Y H:i" }}</small>
@@ -150,8 +150,7 @@
 
                 <!-- Curtir e comentar -->
                 <div class="d-flex align-items-center gap-3 mt-3">
-                    <form method="post" action="{% url 'post-like' post.pk %}" class="m-0 p-0">
-                        {% csrf_token %}
+                    <form method="post" action="{% url 'post-like' post.pk %}" class="m-0 p-0">{% csrf_token %}
                         {% if user in post.like.all %}
                             <button type="submit" class="btn btn-sm btn-outline-danger">❤️ Descurtir</button>
                         {% else %}
@@ -159,14 +158,14 @@
                         {% endif %}
                     </form>
 
-                    <form method="post" class="d-flex flex-grow-1 align-items-center m-0 p-0" style="gap: 0.5rem;">
-                        {% csrf_token %}
-                        <textarea name="comment" rows="1" class="form-control" style="resize: none;" placeholder="Escreva um comentário..."></textarea>
+                    <form method="post" class="d-flex flex-grow-1 align-items-center m-0 p-0" style="gap:0.5rem;">{% csrf_token %}
+                        <textarea name="comment" rows="1" class="form-control" style="resize:none;" placeholder="Escreva um comentário..."></textarea>
                         <input type="hidden" name="post_id" value="{{ post.id }}">
                         <button type="submit" class="btn btn-outline-primary btn-sm">Comentar</button>
                     </form>
                 </div>
 
+                <!-- Botões de editar/excluir post -->
                 {% if post in user.post_set.all %}
                     <div class="d-flex justify-content-end gap-2 mt-2">
                         <a href="{% url 'post-edit' post.pk %}" class="btn btn-sm btn-outline-primary">Editar Post</a>
@@ -180,16 +179,14 @@
                     {% for comment in post.comment_set.all %}
                         <div class="d-flex align-items-start mb-2">
                             {% if comment.author.profile.photo %}
-                                <img src="{{ comment.author.profile.photo.url }}" alt="{{ comment.author.username }}"
-                                     class="rounded-circle me-2" width="32" height="32" style="object-fit: cover;">
+                                <img src="{{ comment.author.profile.photo.url }}" alt="{{ comment.author.username }}" class="rounded-circle me-2" width="32" height="32" style="object-fit: cover;">
                             {% endif %}
                             <div class="bg-light rounded px-3 py-2">
                                 <strong>{{ comment.author.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="24">:</strong>
                                 <span>{{ comment.comment }}</span>
                             </div>
                             <a><small class="text-muted">{{ comment.like_comment.count }}</small> Curtidas</a>
-                            <form method="post" action="{% url 'like-comment' comment.pk %}" class="m-0 p-0">
-                                {% csrf_token %}
+                            <form method="post" action="{% url 'like-comment' comment.pk %}" class="m-0 p-0">{% csrf_token %}
                                 {% if user in comment.like_comment.all %}
                                     <button type="submit" class="btn btn-sm btn-outline-danger">❤️ Descurtir</button>
                                 {% else %}
@@ -207,7 +204,6 @@
                         <p class="text-muted">Nenhum comentário ainda.</p>
                     {% endfor %}
                 </div>
-
             </div>
         </div>
     {% empty %}

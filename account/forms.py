@@ -128,3 +128,23 @@ class PersonalRecordForm (forms.ModelForm):
             if exists:
                 raise forms.ValidationError(f"Você já tem um registro para {moviment}.")
         return cleaned_data
+    
+
+class PrivacyConfigForm(forms.ModelForm):
+
+    class Meta:
+        model = Profile
+        fields = ['view_weight', 'view_height', 'view_category', 'view_box']
+
+        labels = {
+            'view_weight': 'Mostrar peso',
+            'view_height': 'Mostrar altura',
+            'view_category': 'Mostrar categoria',
+            'view_box': 'Mostrar box',
+        }
+        widgets = {
+            'view_weight': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'view_height': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'view_category': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'view_box': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }

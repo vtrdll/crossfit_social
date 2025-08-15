@@ -12,7 +12,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm, SetPasswordForm
 from django.views.generic import UpdateView, FormView, DeleteView, DetailView, ListView
-from .forms import ProfileForm, UserFormUpdate, ProfileFormUpdate,CustomCreateUser, PersonalRecordForm
+from .forms import ProfileForm, UserFormUpdate, ProfileFormUpdate,CustomCreateUser, PersonalRecordForm, PrivacyConfigForm
 
 
 def register_view(request):
@@ -231,13 +231,16 @@ def list_pr(request):
     detail = ProfilePesonalRecord.objects.filter(athlete=request.user)
 
     return render(request, 'list_pr.html',  {'detail':detail})
-'''
 
-def  delete_pr(request,  pk):
-    if request.method == 'POST':
-        
-        personal_record =  get_object_or_404(ProfilePesonalRecord, pk = pk)
-        personal_record.delete()
-    return render(request, 'my-perfil',  {'personal_record':personal_record})
-
-'''
+def privacy_config (request):
+    profile = request.user.profile
+    
+    if request.method  == 'POST':
+        form  = PrivacyConfigForm(request.POST, instance=  profile)
+        if  form.is_valid():
+            form.save()
+            return redirect('my-perfil')
+    else:
+        form = PrivacyConfigForm(instance=  profile)
+    
+    return render(request, 'privacy_settings.html', {'form': form})

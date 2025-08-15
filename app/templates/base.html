@@ -126,7 +126,12 @@
           {% endif %}
           <h5>{{ user.username }} <img src="{% static 'verified.png' %}" width="20"></h5>
           <p class="text-muted">{{ user.email }}</p>
-          <p class="text-muted">{{ user.profile.weight }} Kg</p>
+          {% if user.profile.view_weight %}
+            <p class="text-muted">Peso: {{ user.profile.weight }} Kg</p>
+          {% endif %}
+          {% if user.profile.view_height %}
+            <p class="text-muted">Altura: {{ user.profile.height }} </p>
+          {% endif %}
           <p class="text-muted">Desde: {{ user.profile.created_at_profile }}</p>
           {% if request.resolver_match.url_name == 'my-perfil' %}
             <h4>Movimentos</h4>
@@ -157,6 +162,7 @@
       <!-- Feed de conteúdo -->
       <div class="{% if user.is_authenticated %}col-md-9{% else %}col-12{% endif %}">
         {% block content %}
+          
         {% endblock %}
       </div>
     </div>

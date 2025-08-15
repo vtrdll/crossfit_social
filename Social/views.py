@@ -64,6 +64,20 @@ class PostDetail(DetailView):
     model = Post
     template_name = 'post-detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post = self.get_object()  # pega o Post atual pelo ID da URL
+
+        # acessando imagens e vídeos
+        context['imagens'] = post.images.all()  # retorna QuerySet de PostImagem
+        context['videos'] = post.videos.all()    # retorna QuerySet de PostVideo
+        
+
+        context['total_media'] = post.images.count() + post.videos.count()
+       
+
+        return context
+
 class PostUpdate(UpdateView):
     model = Post
     fields = ['text' ]
@@ -113,11 +127,12 @@ class HomeView(FormMixin, ListView):
                 'imagens': imagens,
                 'videos': videos,
             }
-        print(imagens)
+            
         
        
 
         return context
+
 
 
     def post(self, request, *args, **kwargs):
@@ -176,9 +191,20 @@ class CommentDelete(DeleteView):
 
 def my_profile(request):
     user = request.user
-    posts = request.user.post_set.all().order_by('-created_at')
+    posts = user.post_set.all().order_by('-created_at')
+    
     comments = request.user.comment_set.all().order_by('-created_at')
+    
     pr = user.profilepesonalrecord_set.all()
+   
+    for post in posts:
+            imagens = [img.photo.url for img in post.images.all() if img.photo]
+            videos = [vid.video.url for vid in post.videos.all() if vid.video]
+            post.media_dict = {
+                'imagens': imagens,
+                'videos': videos,
+            }
+
 
     inventory_post = PostCommentInventory.objects.filter(author=user).first()
     return render(request, 'my_perfil.html', {'user': request.user, 'posts': posts, 'comments':comments, 'inventory_post': inventory_post, 'mostrar_inventory':True, 'pr':pr})
@@ -223,7 +249,7 @@ def like_comment (request, pk):
 class PostWodCreate(LoginRequiredMixin, CreateView):
     model = PostWod
     form_class = PostWodForm
-    template_name  = 'post-create.html'
+    template_name  = 'wod_create.html'
     success_url = reverse_lazy ('home')
     
 
