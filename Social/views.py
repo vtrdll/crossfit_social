@@ -1,5 +1,7 @@
 
 import random 
+from django.http import Http404
+from django.urls import reverse
 from .models import Post, Comment, PostImage, PostVideo, PostWod
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
@@ -83,12 +85,16 @@ class PostUpdate(UpdateView):
     fields = ['text' ]
     template_name ='post-update.html'
     context_object_name = 'post_update'
-    success_url =reverse_lazy('my-perfil')
+
+
+    def get_success_url(self):
+        # Redireciona para a página de detalhes do post atualizado
+        return reverse('post-detail', kwargs={'pk': self.object.pk})
 
 class PostDelete(DeleteView):
     model = Post 
     template_name = 'post-delete.html'
-    success_url = reverse_lazy('my-perfil')
+    success_url = reverse_lazy('my_perfil')
 
 class HomeView(FormMixin, ListView):
     model = Post
@@ -104,11 +110,11 @@ class HomeView(FormMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = self.get_form()
-        
-        inventory = PostCommentInventory.objects.get(author=self.request.user)
+       
+        inventory = PostCommentInventory.objects.get_or_create(author=self.request.user)
         context['mostrar_inventory'] = True
         context['inventory_post'] = inventory
-
+       
         # Post do coach fixado (pined=True)
         context['imagens'] = PostImage.objects.all()  # <-- ESSENCIAL
         context['videos'] = PostVideo.objects.all()
@@ -145,6 +151,7 @@ class HomeView(FormMixin, ListView):
             comment.save()
             return self.form_valid(form)
         return self.form_invalid(form)
+    
      
     
     
@@ -195,7 +202,7 @@ def my_profile(request):
     
     comments = request.user.comment_set.all().order_by('-created_at')
     
-    pr = user.profilepesonalrecord_set.all()
+    pr = user.profilepersonalrecord_set.all()
    
     for post in posts:
             imagens = [img.photo.url for img in post.images.all() if img.photo]

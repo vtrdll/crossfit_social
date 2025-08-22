@@ -35,7 +35,7 @@ class Profile (models.Model):
     
 
 
-class ProfilePesonalRecord(models.Model):
+class ProfilePersonalRecord(models.Model):
     BARBEL_CHOICES =(('BACK SQUAT',  'BACK SQUAT'), ('BENCH PRESS',  'BENCH PRESS'))
     athlete =  models.ForeignKey(User, on_delete=models.CASCADE)
     moviment = models.CharField(choices= BARBEL_CHOICES, default='NONE')

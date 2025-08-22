@@ -1,5 +1,5 @@
 from .models import Profile
-from .models  import ProfilePesonalRecord
+from .models  import ProfilePersonalRecord
 from django.urls import reverse_lazy
 from Social.models import Comment, Post 
 from django.contrib.auth.models import User
@@ -21,15 +21,32 @@ def register_view(request):
         user_form = CustomCreateUser(request.POST)
         profile_form = ProfileForm(request.POST, request.FILES)
 
+        if user_form.is_valid():
+            print('ok')
+        else:
+            
+            print(user_form.errors)
+        
+        if profile_form.is_valid():
+            print('ok')
+        else:
+            
+            print(profile_form.errors)
+
+
+
         if user_form.is_valid() and profile_form.is_valid():
+            
             user = user_form.save()
             
             profile = profile_form.save(commit=False)
             profile.user = user
             profile.save()
-
+            
             return redirect('login')
     else:
+        
+       
         user_form = CustomCreateUser()
         profile_form = ProfileForm()
 
@@ -79,7 +96,7 @@ class UserUpdate(UpdateView):
     model = User
     form_class = UserFormUpdate
     template_name = 'user-update.html'
-    success_url = reverse_lazy('my-perfil')
+    success_url = reverse_lazy('my_perfil')
 
     
     def get_object(self):
@@ -149,7 +166,7 @@ class PhotoUpdate(UpdateView):
     model = Profile 
     form_class = ProfileFormUpdate
     template_name = 'photo-update.html'
-    success_url = reverse_lazy('my-perfil')
+    success_url = reverse_lazy('my_perfil')
     
 
     def get_context_data(self, **kwargs):
@@ -204,7 +221,7 @@ def register_pr (request):
             pr =  form.save(commit=False)
             pr.athlete = request.user
             pr.save()
-            return redirect('my-perfil')
+            return redirect('my_perfil')
         
     else:
         form  = PersonalRecordForm()
@@ -212,7 +229,7 @@ def register_pr (request):
     return  render (request, 'create_pr.html',{'form':form})
 
 def update_pr (request,pk):
-    obj =  get_object_or_404(ProfilePesonalRecord,  pk  = pk)
+    obj =  get_object_or_404(ProfilePersonalRecord,  pk  = pk)
     
     if  obj.athlete!=request.user:
         return HttpResponseForbidden("Você não tem permissão para editar este registro.")
@@ -223,12 +240,12 @@ def update_pr (request,pk):
         if new_pr:
             obj.personal_record = new_pr
             obj.save()
-            return redirect('my-perfil')
+            return redirect('my_perfil')
     return render  (request,'update_pr.html',{'obj':obj})
 
 def list_pr(request):
 
-    detail = ProfilePesonalRecord.objects.filter(athlete=request.user)
+    detail = ProfilePersonalRecord.objects.filter(athlete=request.user)
 
     return render(request, 'list_pr.html',  {'detail':detail})
 
@@ -239,7 +256,7 @@ def privacy_config (request):
         form  = PrivacyConfigForm(request.POST, instance=  profile)
         if  form.is_valid():
             form.save()
-            return redirect('my-perfil')
+            return redirect('my_perfil')
     else:
         form = PrivacyConfigForm(instance=  profile)
     
