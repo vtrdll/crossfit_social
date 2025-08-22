@@ -7,47 +7,85 @@
     <title>Novo Evento</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            background-color: #f0f2f5;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+  body {
+    background-color: #f8f9fc;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #343a40;
+  }
 
-        .navbar {
-            background-color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
+  .navbar {
+    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
 
-        .navbar-brand {
-            font-weight: bold;
-            color: #3b5998;
-            font-size: 1.5rem;
-        }
+  .navbar-brand {
+    font-weight: 600;
+    color: #3f37c9;
+    font-size: 1.6rem;
+  }
 
-        .post-box {
-            background-color: white;
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 40px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-        }
+  .navbar-brand:hover {
+    color: #1d1dff;
+  }
 
-        .profile-pic {
-            width: 50px;
-            height: 50px;
-            object-fit: cover;
-            border-radius: 50%;
-            margin-right: 15px;
-        }
+  .post-box {
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 40px;
+    margin: 50px auto;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.05);
+    max-width: 700px;
+  }
 
-        .form-control {
-            border-radius: 10px;
-        }
+  .profile-pic {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 15px;
+  }
 
-        .btn-primary {
-            border-radius: 10px;
-            padding: 10px 20px;
-        }
-    </style>
+  h5 {
+    font-weight: 600;
+    color: #212529;
+  }
+
+  label {
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #495057;
+  }
+
+  .form-control {
+    border-radius: 10px;
+    border: 1px solid #d1d1d1;
+    padding: 14px;
+    font-size: 1rem;
+    background-color: #fdfdfd;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .form-control:focus {
+    border-color: #6c63ff;
+    box-shadow: 0 0 0 0.15rem rgba(108, 99, 255, 0.25);
+    background-color: #fff;
+  }
+
+  .btn-primary {
+    background-color: #6c63ff;
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    width: 100%;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    background-color: #574fd6;
+  }
+</style>
 </head>
 <body>
 
@@ -65,7 +103,7 @@
                         <a class="nav-link" href="{% url 'home' %}">Início</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'my-perfil' %}">Meu Perfil</a>
+                        <a class="nav-link" href="{% url 'my_perfil' %}">Meu Perfil</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href=https://www.linkedin.com/in/jo%C3%A3o-vitor-xavier-532191279/>Contato</a>
@@ -94,89 +132,59 @@
             
     </nav>
 <div class="container">
-    <div class="post-box mx-auto col-md-8">
-        <div class="d-flex align-items-center mb-3">
-            {% if user.profile.photo %}
-                <img src="{{ user.profile.photo.url }}" alt="Foto de perfil" class="profile-pic">
-            {% endif %}
-            <h5 class="mb-0">{{ user.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="24"></h5>
+  <div class="post-box">
+    <div class="d-flex align-items-center mb-4">
+      {% if user.profile.photo %}
+        <img src="{{ user.profile.photo.url }}" alt="Foto de perfil" class="profile-pic">
+      {% endif %}
+      <h5 class="mb-0">{{ user.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="20"></h5>
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      {% if user.profile.is_coach %}
+        <div class="mb-4">
+          <label for="{{ form.title.id_for_label }}" class="form-label">Título do Evento</label>
+          {{ form.title|add_class:"form-control" }}
         </div>
 
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
+        <div class="mb-4">
+          <label for="{{ form.text.id_for_label }}" class="form-label">Descrição</label>
+          {{ form.text|add_class:"form-control" }}
+        </div>
 
-            {% if user.profile.is_coach %}
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <label for="{{ form.title.id_for_label }}" class="form-label">Data de ínicio</label>
+            {{ form.date_initial|add_class:"form-control" }}
+          </div>
+          <div class="col-md-6 mb-4">
+            <label for="{{ form.title.id_for_label }}" class="form-label">Data de Término</label>
+            {{ form.date_end|add_class:"form-control" }}
+          </div>
+        </div>
 
-                <div class="mb-3">
-                    {{ form.title.label_tag }}
-                    {{ form.title|add_class:"form-control" }}
-                </div>
+        <div class="mb-4">
+          <label for="{{ form.title.id_for_label }}" class="form-label">Link do Evento</label>
+          {{ form.link|add_class:"form-control" }}
+        </div>
 
-                <div class="mb-3">
-                    {{ form.text.label_tag }}
-                    {{ form.text|add_class:"form-control" }}
-                </div>
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <label for="{{ form.title.id_for_label }}" class="form-label">Local do Evento</label>
+            {{ form.local|add_class:"form-control" }}
+          </div>
+          <div class="col-md-6 mb-4">
+            <label for="{{ form.title.id_for_label }}" class="form-label">Preço do Evento</label>
+            {{ form.price|add_class:"form-control" }}
+          </div>
+        </div>
+      {% endif %}
 
-                <div class="mb-3">
-                    {{ form.date_initial.label_tag }}
-                    {{ form.date_initial|add_class:"form-control" }}
-                </div>
-                <div class="mb-3">
-                    {{ form.date_end.label_tag }}
-                    {{ form.date_end|add_class:"form-control" }}
-                </div>
-
-                <div class="mb-3">
-                    {{ form.link.label_tag }}
-                    {{ form.link|add_class:"form-control" }}
-                </div>
-                
-                <div class="mb-3">
-                    {{ form.local.label_tag }}
-                    {{ form.local|add_class:"form-control" }}
-                </div>
-                
-                <div class="mb-3">
-                    {{ form.price.label_tag }}
-                    {{ form.price|add_class:"form-control" }}
-                </div>
-                
-
-                
-
-            {% else %}
-                <div class="mb-3">
-                    {{ form.titulo.label_tag }}  
-                    {{ form.titulo|add_class:"form-control" }}
-                </div>
-                <div class="mb-3">
-                    {{ form.text.label_tag }}
-                    {{ form.text|add_class:"form-control" }}
-                </div>
-
-
-                <div class="mb-3" >
-                    {{ image_form.photo.label_tag }}
-                    <input type="file" name="photo" multiple class="form-control">
-                
-                    {% for err in image_form.photo.errors %}
-                        <div class="text-danger small">{{ err }}</div>
-                    {% endfor %}
-                </div>
-
-
-                <div class="mb-3">
-                    {{ video_form.video.label_tag }}
-                    <input type="file" name="video" multiple class="form-control">
-                    {% if video_form.video.errors %}
-                        <div class="text-danger small">{{ form.video.errors.0 }}</div>
-                    {% endif %}
-                
-                </div>
-            {% endif %}
-            <button type="submit" class="btn btn-primary">Publicar</button>
-        </form>
-    </div>
+      <button type="submit" class="btn btn-primary mt-2">Publicar</button>
+    </form>
+  </div>
 </div>
 
 </body>

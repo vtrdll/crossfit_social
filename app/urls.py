@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from Social.views import my_profile, HomeView
-from Event.views import EventCreate, EventList, EventUpdate, EventDelete
+from Event.views import EventCreate, EventList, EventUpdate, EventDelete,  EventDetail
 from account.views import PhotoUpdate, PhotoDelete
 from account.views import register_view, login_view, logout_view
 from Social.views import CommentList, CommentUpdate, CommentDelete
@@ -68,6 +68,7 @@ urlpatterns = [
     
     path('event_create/', EventCreate.as_view(), name= 'event_create'),
     path('event_list/',  EventList.as_view(),  name='event_list'),
+    path('event/<int:pk>/detail/', EventDetail.as_view(), name = 'event_detail'),
     path('event/<int:pk>/update/', EventUpdate.as_view(), name='event_update'),
     path('event/<int:pk>/delete/', EventDelete.as_view(), name='event_delete'),
 
@@ -79,6 +80,6 @@ urlpatterns = [
     path('privacy_settings/', privacy_config, name='privacy_settings'),
 
     path('', HomeView.as_view(), name='home'),
-    path('my-perfil/', my_profile, name='my-perfil'),
+    path('my_perfil/', my_profile, name='my_perfil'),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

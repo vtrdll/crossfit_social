@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 class Post(models.Model):
     author= models.ForeignKey(User, on_delete=models.CASCADE, )
     created_at = models.DateTimeField(auto_now=True, auto_created=True)
-    text = models.TextField(max_length=2000)
+    text = models.TextField(max_length=3000)
     like = models.ManyToManyField(User,  related_name= 'liked_post')
     
 
@@ -19,7 +19,7 @@ class Post(models.Model):
 class PostWod(models.Model):
     
     coach = models.ForeignKey(User, on_delete=models.CASCADE)
-    text = models.CharField(max_length = 255 )
+    text = models.CharField(max_length = 3000 )
     title = models.CharField(max_length = 255, default= "NONE")
     warmup = models.CharField(max_length = 255, default= "NONE")
     skill = models.CharField(max_length = 255, default= "NONE")
