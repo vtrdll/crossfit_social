@@ -1,0 +1,150 @@
+[33mcommit 1e67898a85859008587ab8e75962efbf5f5966c5[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: Joao <vtrdll3@gmail.com>
+Date:   Tue Aug 26 22:07:54 2025 -0300
+
+    chore:atualizar dependencias
+
+[33mcommit d0ef72f4b36a15b8623a95aec2e0df23a589f4dc[m
+Author: Joao <vtrdll3@gmail.com>
+Date:   Wed Jul 23 23:30:39 2025 -0300
+
+    implementando multiplos upload
+
+[33mcommit 5256566f9bd29ebedee04e1ea076a672f2ee41de[m
+Author: Joao <vtrdll3@gmail.com>
+Date:   Sat Jul 19 01:01:04 2025 -0300
+
+    Add size validation
+
+[33mcommit c2688e6eb33ef86eedb54ab8f777feba79337ea1[m
+Author: Joao <vtrdll3@gmail.com>
+Date:   Sat Jul 19 00:55:37 2025 -0300
+
+    Add upload video and validation in form photo and video
+
+[33mcommit f4ee14ba1716e387f7d18d07f7e7f5f52dca8b32[m
+Author: Joao <vtrdll3@gmail.com>
+Date:   Fri Jul 18 01:01:02 2025 -0300
+
+    Inserção propiedades em profile e repaginação front end
+
+[33mcommit 441dedd3bb58f41a2ff6b329b937323d80735f07[m
+Author: Joao <vtrdll3@gmail.com>
+Date:   Thu Jul 17 00:37:14 2025 -0300
+
+    add categorya fit e box
+
+[33mcommit 0be5fd667410f6554d7beef63c9219e4c9c3f9bc[m
+Merge: 478bf01 8be4f37
+Author: Joao <vtrdll3@gmail.com>
+Date:   Thu Jun 26 02:08:19 2025 -0300
+
+    Merge branch 'main' of https://github.com/vtrdll/blog
+
+[33mcommit 478bf01ef01d586470234364eaa56a86bae852b6[m
+Author: Joao <vtrdll3@gmail.com>
+Date:   Thu Jun 26 02:07:34 2025 -0300
+
+    add icons
+
+[33mcommit 8be4f37593a068d8e0e0f2f84ceb505d5245826c[m
+Author: João Vitor <138629963+vtrdll@users.noreply.github.com>
+Date:   Tue Jun 24 22:24:01 2025 -0300
+
+    Update README.md
+
+[33mcommit 256bcdcd92e325f4b74a181cc09e077c52ace476[m
+Author: João Vitor <138629963+vtrdll@users.noreply.github.com>
+Date:   Tue Jun 24 22:23:40 2025 -0300
+
+    Update README.md
+
+[33mcommit 3b8141d0155d33c9c48f1ddd001ca73eba6ffc54[m
+Author: João Vitor <138629963+vtrdll@users.noreply.github.com>
+Date:   Tue Jun 24 22:22:38 2025 -0300
+
+    Update README.md
+
+[33mcommit eddbcd6bd4e61ae6e1ebad98a03a44b2f329c41c[m
+Author: Joao <vtrdll3@gmail.com>
+Date:   Fri Jun 20 23:43:50 2025 -0300
+
+    Add curtida comentario e atualizações no front
+
+[33mcommit 061065dd38bad7ff1ee91cbe7470739be221bf3c[m
+Author: Joao <vtrdll3@gmail.com>
+Date:   Fri Jun 20 00:18:12 2025 -0300
+
+    Add opcao de curtida
+
+[33mcommit 7c751358962a1dcee608d5991d919f9e04b42f79[m
+Author: vtrdll <vtr.dll3@gmail.com>
+Date:   Fri May 9 21:35:58 2025 -0300
+
+    Implementação de signals para contagem
+
+[33mcommit d516cf18e7916699f207d86ee9da25c1c0014647[m
+Author: vtrdll <vtr.dll3@gmail.com>
+Date:   Fri May 9 02:22:44 2025 -0300
+
+    Cuidados finais
+
+[33mcommit b8aebd1fd774a2fac95687f7b18cb38947ef528f[m
+Author: João Vitor <138629963+vtrdll@users.noreply.github.com>
+Date:   Thu May 8 00:52:52 2025 -0300
+
+    Update README.md
+
+[33mcommit 1b160e1a1aba0399d5f7b363ba9abd9570b157b6[m
+Author: João Vitor <138629963+vtrdll@users.noreply.github.com>
+Date:   Thu May 8 00:52:20 2025 -0300
+
+    Update README.md
+
+[33mcommit 53654bab1feb6aee990bffa08f7ce4b71101bc3e[m
+Author: João Vitor <138629963+vtrdll@users.noreply.github.com>
+Date:   Thu May 8 00:51:02 2025 -0300
+
+    Update README.md
+
+[33mcommit 46d6f23695ccb6d3db69d1fc8724d75e03ae6fd2[m
+Author: João Vitor <138629963+vtrdll@users.noreply.github.com>
+Date:   Thu May 8 00:49:51 2025 -0300
+
+    Create README.md
+
+[33mcommit 44bff6614a89811926e94ccce2c6bbe37afc99a7[m
+Author: vtrdll <vtr.dll3@gmail.com>
+Date:   Thu May 8 00:34:37 2025 -0300
+
+    Iniciado CRUD de comentários
+
+[33mcommit 3b46c7af57220fc7175b8e531981fa3c5fd99dd1[m
+Author: vtrdll <vtr.dll3@gmail.com>
+Date:   Wed May 7 20:53:31 2025 -0300
+
+    Reparo em update photos e pequenos ajustes
+
+[33mcommit 12c8c56c99c5b95606a0f7f4de5c3b15fb7bc2b5[m
+Author: Joao <vtr.dll3@gmail.com>
+Date:   Wed May 7 00:38:14 2025 -0300
+
+    finalizado CRUD de Users e Photo.users
+
+[33mcommit 4a71b2b70555dfc784fe47295159912fedab21f4[m
+Author: Joao <vtr.dll3@gmail.com>
+Date:   Fri May 2 21:18:41 2025 -0300
+
+    Update de User e Post
+
+[33mcommit 42edaf720c807406f1a78dbc0ebbd6ce27c5abe5[m
+Author: Joao <vtr.dll3@gmail.com>
+Date:   Thu May 1 20:02:25 2025 -0300
+
+    Repaginando os templates e inserção de Comentarios no POST
+
+[33mcommit a1b38b4fbc821e9acef3df2ecf04cfa73bbfa744[m
+Author: Joao <vtr.dll3@gmail.com>
+Date:   Wed Apr 30 20:55:01 2025 -0300
+
+    first commit

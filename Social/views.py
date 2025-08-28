@@ -2,11 +2,13 @@
 import random 
 from django.http import Http404
 from django.urls import reverse
+from datetime import timedelta
+from django.utils import timezone
 from .models import Post, Comment, PostImage, PostVideo, PostWod
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
-from .models import PostCommentInventory
-from .forms import CommentForm, PostForm, ImageForm, VideoForm, PostWodForm
+from .models import PostCommentInventory,StoryMedia, Story
+from .forms import CommentForm, PostForm, ImageForm, VideoForm, PostWodForm, StoryForm
 from django.http import HttpResponseNotAllowed
 from django.views.generic.edit import FormMixin
 from django.utils.decorators import method_decorator
@@ -105,15 +107,19 @@ class HomeView(FormMixin, ListView):
     ordering = ['-created_at'] 
 
 
-
+    
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = self.get_form()
-       
-        inventory = PostCommentInventory.objects.get_or_create(author=self.request.user)
-        context['mostrar_inventory'] = True
-        context['inventory_post'] = inventory
+        context['stories'] = Story.objects.all()
+
+        if self.request.user.is_authenticated:
+            inventory = PostCommentInventory.objects.get_or_create(author=self.request.user)
+            context['mostrar_inventory'] = True
+            context['inventory_post'] = inventory
+        else:
+            pass
        
         # Post do coach fixado (pined=True)
         context['imagens'] = PostImage.objects.all()  # <-- ESSENCIAL
@@ -268,3 +274,41 @@ class PostWodCreate(LoginRequiredMixin, CreateView):
     def form_invalid(self, form):
         print("Formulário inválido:", form.errors)
         return super().form_invalid(form)
+    
+
+
+class StoryCreateView(CreateView):
+    model  = StoryMedia
+    form_class =  StoryForm
+    template_name = 'story_create.html'
+    success_url=  reverse_lazy('home')
+
+
+ 
+    
+
+    def post(self,request):
+        form  = StoryForm( request.POST, request.FILES)
+        
+        if form.is_valid():
+            print("POST recebido")
+            story = Story.objects.create(user=request.user, expires_at=timezone.now() + timedelta(days=1))
+            
+            objeto =  form.save(commit=False)
+            objeto.story = story
+            
+            objeto.save()
+
+            return redirect('home')
+        else:
+            print(f'erro no formulario  de post para storie{form.errors}')
+           
+        return render(request, 'story_create.html',{'form':form})
+  
+
+class StoryDetailView(DetailView):
+    model = Story
+    template_name = 'story_detail.html'
+    context_object_name = 'story'
+
+

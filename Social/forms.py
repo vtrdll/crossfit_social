@@ -1,5 +1,5 @@
 from django import forms 
-from Social.models import Comment, Post, PostImage, PostVideo, PostWod
+from Social.models import Comment, Post, PostImage, PostVideo, PostWod, StoryMedia
 from django.forms.widgets import FileInput
 from django.core.exceptions import ValidationError
 import os
@@ -117,3 +117,10 @@ class VideoForm(forms.ModelForm):
             raise forms.ValidationError(errors)
 
         return files
+    
+class StoryForm(forms.ModelForm):
+    
+
+    class Meta:
+        model = StoryMedia
+        fields  =  [ 'photo', 'video']  
