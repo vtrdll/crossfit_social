@@ -1,0 +1,30 @@
+{% block title %}Criar Story{% endblock %}
+
+{% block content %}
+<div class="card p-4">
+  <h3 class="mb-4">Criar novo Story</h3>
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    
+    <div class="mb-3">
+      <label for="id_image" class="form-label">imagme</label>
+      {{ form.photo }}
+      
+      
+    </div>
+
+    <div class="mb-3">
+      <label for="id_image" class="form-label">Video</label>
+      {{ form.video }}
+      
+      
+    </div>
+   
+
+    
+    <button type="submit" class="btn btn-outline-primary">Publicar Story</button>
+  </form>
+</div>
+{% endblock %}

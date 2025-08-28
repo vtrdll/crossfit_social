@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils import timezone
+
 from django.contrib.auth.models import User
 
 
@@ -63,3 +65,19 @@ class PostCommentInventory(models.Model):
 
     def __str__(self):
         return f'{self.author} - {self.post_count} - {self.comment_count}'
+    
+
+class Story(models.Model):
+    user =  models.ForeignKey(User, on_delete=models.CASCADE, related_name='stories')
+    created_at =  models.DateTimeField(auto_now_add= True)
+    expires_at = models.DateTimeField()
+
+
+    def is_expired(self):
+        return timezone.now()  >  self.expires_at
+    
+
+class StoryMedia(models.Model):
+    story=  models.ForeignKey(Story, related_name='media', on_delete=models.CASCADE )
+    video = models.FileField(upload_to='media/media_story_video', null=True, blank=True)
+    photo = models.ImageField(upload_to='media/media_story_photo', null=True, blank=True)

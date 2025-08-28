@@ -24,6 +24,7 @@ from account.views import PhotoUpdate, PhotoDelete
 from account.views import register_view, login_view, logout_view
 from Social.views import CommentList, CommentUpdate, CommentDelete
 from Social.views import PostCreateView, PostList, PostDetail, PostUpdate, PostDelete, like_post, like_comment, PostWodCreate
+from Social.views import StoryCreateView,StoryDetailView 
 from account.views import  UserConfig, UserUpdate, UserDelete, PasswordUpdate, ProfileDetail, UserList, register_pr,  update_pr, list_pr,  privacy_config
 
 
@@ -38,6 +39,10 @@ urlpatterns = [
     path('post/create_wod', PostWodCreate.as_view(), name='post-wod-create' ),
     path('perfil/<int:pk>/', ProfileDetail.as_view(), name='user-public-profile'),
     
+    path('story/', StoryCreateView.as_view(), name='story_create'),
+    
+    path('story/<int:pk>/', StoryDetailView.as_view(), name='story_detail'),
+
     path('post-list/', PostList.as_view(), name ='post-list' ),
     path('post/<int:pk>/editar/', PostUpdate.as_view(), name='post-edit'),
     path('post/<int:pk>/delete/', PostDelete.as_view(), name='post-delete'),

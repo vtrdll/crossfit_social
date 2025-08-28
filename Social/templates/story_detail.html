@@ -1,0 +1,13 @@
+<h2>Story de {{ story.user.username }}</h2>
+<div class="text-center">
+  {% for media in story.media.all %}
+    {% if media.photo %}
+      <img src="{{ media.photo.url }}" class="img-fluid mb-3">
+    {% elif media.video %}
+      <video class="img-fluid mb-3" controls>
+        <source src="{{ media.video.url }}" type="video/mp4">
+      </video>
+    {% endif %}
+  {% endfor %}
+</div>
+<a href="{% url 'home' %}" class="btn btn-secondary mt-3">Voltar</a>
