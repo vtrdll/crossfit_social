@@ -81,3 +81,5 @@ class StoryMedia(models.Model):
     story=  models.ForeignKey(Story, related_name='media', on_delete=models.CASCADE )
     video = models.FileField(upload_to='media/media_story_video', null=True, blank=True)
     photo = models.ImageField(upload_to='media/media_story_photo', null=True, blank=True)
+
+    
