@@ -6,7 +6,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 
 
-
 def post_inventory_update(sender, instance, **kwargs):
     user = instance.author
     post_count = Post.objects.filter(author=user).count()
