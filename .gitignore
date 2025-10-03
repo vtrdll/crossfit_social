@@ -1,19 +1,33 @@
-# Ambientes virtuais
-venv/
-.env/
-
-# Cache do Python
+# Arquivos do Python
 __pycache__/
 *.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
 
-# Arquivos temporários
-*.log
-*.tmp
+# Ambiente virtual
+venv/
+.env/
+*.env
 
-# Dados brutos
-*.csv
-*.xlsx
+# Banco local
+db.sqlite3
 
-# Configurações de IDEs
+# Arquivos do Django
+/staticfiles/
+/media/
+
+# Configurações do IDE
 .vscode/
 .idea/
+
+# Logs
+*.log
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
