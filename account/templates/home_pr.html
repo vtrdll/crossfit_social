@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}🏆 Personal Records{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">🏆 Personal Records</h1>
+    <a href="{% url 'create_pr' %}" class="btn btn-success">
+      ➕ Novo PR
+    </a>
+  </div>
+
+  
+
+  {% if pr_list %}
+    {% for pr in pr_list %}
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+
+          <!-- Usuário dono do PR -->
+          <div class="d-flex align-items-center mb-3">
+            {% if pr.athlete.profile.photo %}
+              <img
+                src="{{ pr.athlete.profile.photo.url }}"
+                alt="Foto de {{ pr.athlete.username }}"
+                class="rounded-circle me-3"
+                width="50"
+                height="50"
+                style="object-fit: cover;"
+              >
+            {% else %}
+              <div class="rounded-circle bg-secondary me-3" style="width:50px; height:50px;"></div>
+            {% endif %}
+
+            <div>
+              <h5 class="mb-0">{{ pr.athlete.username }}</h5>
+              <small class="text-muted">Última atualização: {{ pr.created_at|date:"d/m/Y"  }}</small>
+            </div>
+          </div>
+
+          <!-- Dados do PR -->
+          <h4 class="card-title text-primary">{{ pr.moviment }}</h4>
+          <p class="mb-1"><strong>Peso:</strong> {{ pr.personal_record }} kg</p>
+      
+
+          <!-- Botão editar (apenas para o dono do PR) -->
+          {% if request.user == pr.athlete %}
+            <div class="text-end">
+              <a href="{% url 'update_pr' pr.pk %}" class="btn btn-sm btn-outline-primary">
+                ✏️ Editar PR
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="text-muted text-center">Nenhum Personal Record cadastrado ainda.</p>
+  {% endif %}
+
+</div>
+{% endblock %}

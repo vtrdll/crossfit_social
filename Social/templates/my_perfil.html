@@ -1,70 +1,132 @@
 {% extends "base.html" %}
-{%  load static  %}
+{% load static %}
 {% block title %}Meu Perfil{% endblock %}
 
 {% block content %}
 
-    <h3>Meus Posts</h3>
-    <hr>
+<style>
+    .post-card, .comment-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s;
+    }
+
+    .post-card:hover, .comment-card:hover {
+        transform: translateY(-3px);
+    }
+
+    .profile-img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 50%;
+        background-color: #ddd;
+    }
+
+    .truncate-text {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;  
+        overflow: hidden;
+    }
+
+    .no-link-style {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .btn-icon {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    video {
+        max-width: 100%;
+        border-radius: 8px;
+        margin-top: 8px;
+    }
+
+    img.post-media {
+        max-width: 100%;
+        border-radius: 8px;
+        margin-top: 8px;
+    }
+
+</style>
+
+<div class="container">
+
+    <h3 class="mb-4"><i class="bi bi-journal-text me-2"></i>Meus Posts</h3>
 
     {% for post in posts %}
-        <div class="card mb-3">
-            <a href="{% url 'post-detail' post.pk %}" class="no-link-style">
+        <div class="card post-card mb-4">
             <div class="card-body d-flex">
                 {% if user.profile.photo %}
-                    <img src="{{ user.profile.photo.url }}" alt="Foto do autor" class="rounded-circle me-3" width="60" height="60" style="object-fit: cover;">
-                {% else %}
-                    <div class="rounded-circle bg-secondary me-3" style="width: 60px; height: 60px;"></div>
+                    <img src="{{ user.profile.photo.url }}" alt="Foto do autor" class="profile-img me-3">
                 {% endif %}
 
                 <div class="w-100">
-                    <h4 class="card-title">{{ post.titulo }}</h4>
-                    <p class="card-text">{{ post.text|truncatewords:30 }}</p>
-                    
-                    {% for image in post.media_dict.imagens %}
-                        <img src="{{ image }}" />
-                    {% endfor %}
-                    {% for video in post.media_dict.videos %}
-                        <video src="{{ video }}" controls></video>
-                    {% endfor %}
-                    <p class="text-muted">Publicado em {{ post.created_at|date:"d/m/Y H:i" }}</p>
-            </a>
-                    <div class="mt-2 d-flex justify-content-end gap-2">
-                        <a href="{% url 'post-edit' post.pk %}" class="btn btn-sm btn-outline-primary">Editar</a>
-                        <a href="{% url 'post-delete' post.pk %}" class="btn btn-sm btn-outline-danger">Deletar</a>
+                    <a href="{% url 'post-detail' post.pk %}" class="no-link-style">
+                        <h5 class="card-title mb-1">{{ post.titulo }}</h5>
+                        <p class="card-text text-muted mb-2">{{ post.created_at|date:"d/m/Y H:i" }}</p>
+                        <p class="card-text truncate-text">{{ post.text }}</p>
+
+                        {% for image in post.media_dict.imagens %}
+                            <img src="{{ image }}" class="post-media">
+                        {% endfor %}
+                        {% for video in post.media_dict.videos %}
+                            <video src="{{ video }}" controls></video>
+                        {% endfor %}
+                    </a>
+
+                    <div class="mt-3 d-flex justify-content-end gap-2">
+                        <a href="{% url 'post-edit' post.pk %}" class="btn btn-outline-primary btn-sm btn-icon">
+                            <i class="bi bi-pencil-square"></i> Editar
+                        </a>
+                        <a href="{% url 'post-delete' post.pk %}" class="btn btn-outline-danger btn-sm btn-icon">
+                            <i class="bi bi-trash"></i> Deletar
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     {% empty %}
-        <p>Você ainda não publicou nenhum post.</p>
+        <div class="alert alert-warning">Você ainda não publicou nenhum post.</div>
     {% endfor %}
 
-    <h3 class="mt-5">Meus Comentários</h3>
-    <hr>
+
+    <h3 class="mt-5 mb-4"><i class="bi bi-chat-left-text me-2"></i>Meus Comentários</h3>
 
     {% for comment in comments %}
-        <div class="list-group-item mb-3 border rounded p-3 d-flex shadow-sm">
-            <a href="{% url 'post-detail' comment.post.pk %}" class="no-link-style">
-            {% if user.profile.photo %}
-                <img src="{{ user.profile.photo.url }}" alt="Foto do autor" class="rounded-circle me-3" width="48" height="48" style="object-fit: cover;">
-            {% else %}
-                <div class="rounded-circle bg-secondary me-3" style="width: 48px; height: 48px;"></div>
-            {% endif %}
+        <div class="card comment-card mb-3 p-3">
+            <div class="d-flex">
+                {% if user.profile.photo %}
+                    <img src="{{ user.profile.photo.url }}" alt="Foto do autor" class="profile-img me-3">
+                {% endif %}
 
-            <div class="w-100">
-                <p class="mb-1"><strong>Em:</strong> {{ comment.post.text }}</p>
-                <p class="mb-1"><strong>Comentario:</strong> {{ comment.comment }}</p>
-                <small class="text-muted">Publicado em {{ comment.created_at|date:"d/m/Y H:i" }}</small>
-            </a>
-                <div class="mt-2 d-flex justify-content-end gap-2">
-                    <a href="{% url 'comment-update' comment.pk %}" class="btn btn-sm btn-outline-primary">Editar</a>
-                    <a href="{% url 'comment-delete' comment.pk %}" class="btn btn-sm btn-outline-danger">Deletar</a>
+                <div class="w-100">
+                    <a href="{% url 'post-detail' comment.post.pk %}" class="no-link-style">
+                        <p class="mb-1 text-muted"><strong>Em:</strong> {{ comment.post.titulo }}</p>
+                        <p class="mb-1"><strong>Comentário:</strong> {{ comment.comment }}</p>
+                        <small class="text-muted">Publicado em {{ comment.created_at|date:"d/m/Y H:i" }}</small>
+                    </a>
+
+                    <div class="mt-2 d-flex justify-content-end gap-2">
+                        <a href="{% url 'comment-update' comment.pk %}" class="btn btn-outline-primary btn-sm btn-icon">
+                            <i class="bi bi-pencil"></i> Editar
+                        </a>
+                        <a href="{% url 'comment-delete' comment.pk %}" class="btn btn-outline-danger btn-sm btn-icon">
+                            <i class="bi bi-trash"></i> Deletar
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     {% empty %}
-        <p>Você ainda não fez nenhum comentário.</p>
+        <div class="alert alert-info">Você ainda não fez nenhum comentário.</div>
     {% endfor %}
+
 </div>
 {% endblock %}

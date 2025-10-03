@@ -18,19 +18,6 @@ class Post(models.Model):
     def __str__(self):
         return f'{self.author.username} - {self.text}'
     
-class PostWod(models.Model):
-    
-    coach = models.ForeignKey(User, on_delete=models.CASCADE)
-    text = models.CharField(max_length = 3000 )
-    title = models.CharField(max_length = 255, default= "NONE")
-    warmup = models.CharField(max_length = 255, default= "NONE")
-    skill = models.CharField(max_length = 255, default= "NONE")
-    
-    date = models.DateTimeField(auto_now_add = True)
-    pined  = models.BooleanField(default = True)
-
-    def __str__(self):
-        return f"{self.title} - {self.coach.username}"
     
 class PostImage(models.Model):
     post = models.ForeignKey(Post, related_name='images', on_delete=models.CASCADE, null=True, blank=True)
@@ -79,5 +66,7 @@ class Story(models.Model):
 
 class StoryMedia(models.Model):
     story=  models.ForeignKey(Story, related_name='media', on_delete=models.CASCADE )
-    video = models.FileField(upload_to='media/media_story_video', null=True, blank=True)
-    photo = models.ImageField(upload_to='media/media_story_photo', null=True, blank=True)
+    document = models.FileField(upload_to='media/media_story_file', null=True, blank=True)
+    
+    def __str__(self):
+        return f"StoryMedia #{self.id} - {self.document.name if self.document else 'Sem arquivo'}"

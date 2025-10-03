@@ -158,10 +158,17 @@
           <div class="col-md-6 mb-4">
             <label for="{{ form.title.id_for_label }}" class="form-label">Data de ínicio</label>
             {{ form.date_initial|add_class:"form-control" }}
+            {% if form.date_initial.errors %}
+            <div class="text-danger small">{{ form.date_initial.errors.0 }}</div>
+            {% endif %}
+
           </div>
           <div class="col-md-6 mb-4">
             <label for="{{ form.title.id_for_label }}" class="form-label">Data de Término</label>
             {{ form.date_end|add_class:"form-control" }}
+            {% if form.date_end.errors %}
+            <div class="text-danger small">{{ form.date_end.errors.0 }}</div>
+            {% endif %}
           </div>
         </div>
 

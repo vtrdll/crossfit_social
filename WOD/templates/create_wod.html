@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% block title %}Montar WOD{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+
+      <div class="card border-0 shadow-lg rounded-4">
+        <div class="card-body p-5">
+
+          <h2 class="text-center fw-bold mb-4 text-primary">
+            🏋️‍♀️ Criar WOD
+          </h2>
+          <p class="text-muted text-center mb-5">
+            Preencha os campos abaixo para montar seu treino do dia de forma clara e organizada.
+          </p>
+
+          <form method="post" id="wodForm">
+            {% csrf_token %}
+
+            <!-- Renderizando os campos individualmente para estilizar -->
+            <div class="mb-4">
+              {{ form.title.label_tag }}
+              {% render_field form.title class="form-control form-control-lg shadow-sm" placeholder="Ex: AMRAP 20" %}
+            </div>
+
+            <div class="mb-4">
+              {{ form.description_wod.label_tag }}
+              {% render_field form.description_wod class="form-control shadow-sm" rows="8" placeholder="Digite aqui todo o conteúdo do WOD (aquecimento, skill, treino principal, observações...)" %}
+            </div>
+
+            <h4 class="fw-semibold mt-5 mb-3 text-secondary">📊 Resultados</h4>
+            <div class="row">
+              <div class="col-md-2 mb-3">
+                {{ form.elite.label_tag }}
+                {% render_field form.elite class="form-control text-center shadow-sm" %}
+              </div>
+              <div class="col-md-2 mb-3">
+                {{ form.rx.label_tag }}
+                {% render_field form.rx class="form-control text-center shadow-sm" %}
+              </div>
+              <div class="col-md-2 mb-3">
+                {{ form.amauter.label_tag }}
+                {% render_field form.amauter class="form-control text-center shadow-sm" %}
+              </div>
+              <div class="col-md-2 mb-3">
+                {{ form.scaled.label_tag }}
+                {% render_field form.scaled class="form-control text-center shadow-sm" %}
+              </div>
+              <div class="col-md-2 mb-3">
+                {{ form.fit.label_tag }}
+                {% render_field form.fit class="form-control text-center shadow-sm" %}
+              </div>
+            </div>
+
+            <div class="form-check form-switch mt-4 mb-4">
+              {% render_field form.pinned class="form-check-input" %}
+              <label class="form-check-label fw-semibold" for="pinned">📌 Fixar no topo</label>
+            </div>
+
+            <div class="text-center mt-5">
+              <button type="submit" class="btn btn-gradient btn-lg px-5 shadow">
+                💾 Salvar WOD
+              </button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Estilo extra para dar um toque mais profissional -->
+<style>
+  .btn-gradient {
+    background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+    color: #fff;
+    border: none;
+    transition: 0.3s ease;
+  }
+  .btn-gradient:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+  }
+  textarea.form-control {
+    min-height: 180px;
+  }
+</style>
+{% endblock %}

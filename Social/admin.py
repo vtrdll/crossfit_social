@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post, PostWod
+from .models import Post
 
 class PostAdmin(admin.ModelAdmin):
     list_display = ('text', 'author', 'created_at')
@@ -15,4 +15,3 @@ class PostAdmin(admin.ModelAdmin):
 
 admin.site.site_header = "Administração CF4Time"
 admin.site.register(Post, PostAdmin)
-admin.site.register(PostWod)

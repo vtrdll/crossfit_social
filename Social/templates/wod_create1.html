@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+{% load widget_tweaks %}
+{% load static %}
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Nova Postagem - WOD</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .post-box {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 40px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .profile-pic {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .form-control {
+            border-radius: 10px;
+        }
+
+        .btn-primary {
+            border-radius: 10px;
+            padding: 10px 25px;
+        }
+
+        .tab-pane {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'home' %}">My Social</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Início</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'my_perfil' %}">Meu Perfil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://www.linkedin.com/in/jo%C3%A3o-vitor-xavier-532191279/">Contato</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Sair</a></li>   
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Cadastro</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="post-box mx-auto col-md-10">
+        <div class="d-flex align-items-center mb-4">
+            {% if user.profile.photo %}
+                <img src="{{ user.profile.photo.url }}" alt="Foto de perfil" class="profile-pic">
+            {% endif %}
+            <h5 class="mb-0">{{ user.username }} <img src="{% static 'verified.png' %}" alt="Verificado" width="24"></h5>
+        </div>
+
+        {% if user.profile.is_coach %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Título do WOD -->
+            <div class="mb-4">
+                <label class="form-label">🏷️ Título do WOD</label>
+                {{ form.title|add_class:"form-control" }}
+                <div class="form-text">Ex: WOD - Força e Cardio</div>
+            </div>
+
+            <!-- Tabs -->
+            <ul class="nav nav-tabs" id="wodTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="warmup-tab" data-bs-toggle="tab" data-bs-target="#warmup" type="button" role="tab">🔥 Aquecimento</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="skill-tab" data-bs-toggle="tab" data-bs-target="#skill" type="button" role="tab">🏋️ Técnica</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="metcon-tab" data-bs-toggle="tab" data-bs-target="#metcon" type="button" role="tab">⚡ Metcon</button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="wodTabContent">
+                <!-- Aquecimento -->
+                <div class="tab-pane fade show active" id="warmup" role="tabpanel">
+                    <label class="form-label mt-3">🔥 Detalhe o aquecimento</label>
+                    {{ form.warmup|add_class:"form-control" }}
+                </div>
+
+                <!-- Técnica / Skill -->
+                <div class="tab-pane fade" id="skill" role="tabpanel">
+                    <label class="form-label mt-3">🏋️ Qual é o foco técnico?</label>
+                    {{ form.skill|add_class:"form-control" }}
+                </div>
+
+                <!-- Metcon -->
+                <div class="tab-pane fade" id="metcon" role="tabpanel">
+                    <label class="form-label mt-3">⚡ Descreva o treino principal (Metcon)</label>
+                    {{ form.text|add_class:"form-control" }}
+                </div>
+            </div>
+
+            <!-- Pin -->
+            <div class="form-check form-switch mt-4">
+                {{ form.pined|add_class:"form-check-input" }}
+                <label class="form-check-label">Fixar no topo</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-4">✅ Publicar WOD</button>
+        </form>
+        {% else %}
+            <div class="alert alert-danger" role="alert">
+                ❌ Você não tem permissão para acessar esta página.
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

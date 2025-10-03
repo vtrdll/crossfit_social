@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Treino de Hoje{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  {% if wod %}
+    <div class="card shadow-lg border-0 p-4 mb-4">
+      <h2 class="text-center fw-bold mb-3 text-uppercase text-dark">🔥 Treino de Hoje</h2>
+
+      <!-- Cabeçalho -->
+      <div class="text-center mb-4">
+        <h3 class="fw-bold text-primary">{{ wod.title }}</h3>
+        <p class="text-muted">{{ wod.description_wod }}</p>
+        <small class="text-muted">Coach: {{ wod.coach.user.username }}</small>
+      </div>
+
+      <!-- Badges de níveis -->
+      <div class="d-flex justify-content-center gap-2 flex-wrap mb-4">
+        <span class="badge bg-dark fs-6">Elite: {{ wod.elite }}</span>
+        <span class="badge bg-primary fs-6">RX: {{ wod.rx }}</span>
+        <span class="badge bg-success fs-6">Amateur: {{ wod.amauter }}</span>
+        <span class="badge bg-warning text-dark fs-6">Scaled: {{ wod.scaled }}</span>
+        <span class="badge bg-info text-dark fs-6">Fit: {{ wod.fit }}</span>
+      </div>
+
+      <!-- Warmup -->
+      <h4 class="mt-4">🔥 Warmup</h4>
+      <div class="card shadow-sm border-0 p-3 mb-3">
+        {% if warmup %}
+
+          <p class="mb-0">{{ warmup.movement_warmup|linebreaks }} -  {{ warmup.rep_movement }} rep </p> 
+          <p class="mb-0">{{ warmup.time_warmup|linebreaks }} -  {{ warmup.round_warmup }} round </p> 
+          <p class="mb-0">{{ warmup.text_skill|linebreaks }} -  {{ warmup.text_skill }} round </p> 
+        {% else %}
+          <p class="text-muted">Nenhum aquecimento cadastrado.</p>
+        {% endif %}
+      </div>
+
+      <!-- Skill -->
+      <h4 class="mt-4">⚡ Skill</h4>
+      <div class="card shadow-sm border-0 p-3 mb-3">
+        {% if skill %}
+          <p class="mb-0">{{ skill.movement_skill|linebreaks }} -  {{ skill.weight_skill }} peso - {{ skill.rep_skill }} rep</p> 
+          <p class="mb-0">{{ skill.round_skill|linebreaks }} round  -  {{ skill.text_skill }} texto </p> 
+          
+        {% else %}
+          <p class="text-muted">Nenhuma skill cadastrada.</p>
+        {% endif %}
+      </div>
+
+      <!-- Exercícios -->
+      <h4 class="mt-4">🏋️‍♂️ Exercícios</h4>
+      {% if exercicios %}
+        <div class="list-group mb-4">
+          {% for ex in exercicios %}
+            <div class="list-group-item border-0 shadow-sm rounded-3 mb-2">
+              <div class="fw-bold fs-5 text-dark">
+                {{ ex.movement.name }} <span class="badge bg-light text-dark">{{ ex.movement.type }}</span>
+              </div>
+              <div class="mt-1">
+                {% if ex.rep %}<span class="me-2">🔁 Reps: <strong>{{ ex.rep }}</strong></span>{% endif %}
+                {% if ex.weight %}<span class="me-2">🏋️ Peso: <strong>{{ ex.weight }}kg</strong></span>{% endif %}
+                {% if ex.distance %}<span class="me-2">📏 Distância: <strong>{{ ex.distance }}</strong></span>{% endif %}
+                {% if ex.time %}<span class="me-2">⏱ Tempo: <strong>{{ ex.time }}</strong></span>{% endif %}
+                {% if ex.round %}<span class="me-2">🔄 Rounds: <strong>{{ ex.round }}</strong></span>{% endif %}
+              </div>
+              {% if ex.obs %}
+                <small class="text-muted">💡 {{ ex.obs }}</small>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="text-muted">Nenhum exercício adicionado.</p>
+      {% endif %}
+
+      <!-- Se fixado -->
+      {% if wod.pinned %}
+        <div class="alert alert-warning text-center mt-3 fw-bold">
+          📌 Este WOD está fixado no topo
+        </div>
+      {% endif %}
+    </div>
+  {% else %}
+    <p class="text-muted text-center">Nenhum WOD cadastrado.</p>
+  {% endif %}
+</div>
+{% endblock %}

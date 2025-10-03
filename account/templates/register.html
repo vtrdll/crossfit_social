@@ -136,6 +136,11 @@
       <div class="mb-3">
         <label class="form-label">Data de Nascimento</label>
         {{ profile_form.birthday|add_class:"form-control" }}
+
+        {% if profile_form.birthday.errors %}
+          <div class="text-danger small">{{ profile_form.birthday.errors.0 }}</div>
+        {% endif %}
+
       </div>
 
       <div class="row">

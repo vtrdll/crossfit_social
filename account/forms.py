@@ -1,6 +1,6 @@
 from django import forms
 from .models import Profile, ProfilePersonalRecord
-
+import datetime
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 
@@ -23,6 +23,14 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = ['photo','birthday', 'category', 'box', 'genre', 'weight', 'height', ]
 
+
+    def clean_birthday (self):
+        value = self.cleaned_data.get('birthday')
+    
+
+        if  value.year <  1925 or value.year > datetime.datetime.now().year:
+            raise forms.ValidationError( 'DATA INVALIDA')
+        return value
 
 class ProfileFormUpdate(forms.ModelForm):
     
@@ -134,17 +142,22 @@ class PrivacyConfigForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ['view_weight', 'view_height', 'view_category', 'view_box']
+        fields = ['view_weight', 'view_height', 'view_category', 'view_box','view_personal_record']
 
         labels = {
             'view_weight': 'Mostrar peso',
             'view_height': 'Mostrar altura',
             'view_category': 'Mostrar categoria',
             'view_box': 'Mostrar box',
+            'view_personal_record':'Mostrar  PR',
         }
         widgets = {
             'view_weight': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'view_height': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'view_category': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'view_box': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'view_personal_record': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+
+            
         }
+

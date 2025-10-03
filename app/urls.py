@@ -21,12 +21,12 @@ from django.conf.urls.static import static
 from Social.views import my_profile, HomeView
 from Event.views import EventCreate, EventList, EventUpdate, EventDelete,  EventDetail
 from account.views import PhotoUpdate, PhotoDelete
-from account.views import register_view, login_view, logout_view
+from account.views import register_view, login_view, logout_view, privacy_config 
 from Social.views import CommentList, CommentUpdate, CommentDelete
-from Social.views import PostCreateView, PostList, PostDetail, PostUpdate, PostDelete, like_post, like_comment, PostWodCreate
+from Social.views import PostCreateView, PostList, PostDetail, PostUpdate, PostDelete, like_post, like_comment
 from Social.views import StoryCreateView,StoryDetailView 
-from account.views import  UserConfig, UserUpdate, UserDelete, PasswordUpdate, ProfileDetail, UserList, register_pr,  update_pr, list_pr,  privacy_config
-
+from account.views import   user_update, UserDelete, PasswordUpdate, ProfileDetail, UserList, register_pr,  update_pr, list_pr  
+from WOD.views import  create_wod, like_wod #list_wod
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -36,7 +36,7 @@ urlpatterns = [
     
     
     path('post/', PostCreateView.as_view(), name='post-create' ),
-    path('post/create_wod', PostWodCreate.as_view(), name='post-wod-create' ),
+    path('post/create_wod/', create_wod, name='create_wod' ),
     path('perfil/<int:pk>/', ProfileDetail.as_view(), name='user-public-profile'),
     
     path('story/', StoryCreateView.as_view(), name='story_create'),
@@ -49,6 +49,7 @@ urlpatterns = [
     path('post/<int:pk>/detail/', PostDetail.as_view(), name='post-detail'),
     
     path('post-liked/<int:pk>/like/', like_post, name='post-like'),
+    path('wod-liked/<int:pk>/like/', like_wod, name = 'like-wod'),
     path('comment-liked/<int:pk>/liked', like_comment, name='like-comment'),
 
 
@@ -57,8 +58,8 @@ urlpatterns = [
     path('comment/<int:pk>/delete/', CommentDelete.as_view(),  name='comment-delete'),
 
     path('user-list/', UserList.as_view(), name='user-list'),
-    path('user/<int:pk>/editar/', UserUpdate.as_view(), name='user-update'),
-    path('user/<int:pk>/config/', UserConfig.as_view(), name='user-config'),
+    path('user/editar/', user_update, name='user-update'),
+    
 
 
 
@@ -78,9 +79,10 @@ urlpatterns = [
     path('event/<int:pk>/delete/', EventDelete.as_view(), name='event_delete'),
 
     path('PersonalRecord/',  register_pr, name = 'create_pr'),
- 
     path('PersonalRecord/<int:pk>/update', update_pr, name =  'update_pr'),
-    path('PersonalRecord/list', list_pr, name='list_pr'),
+    path('PersonalRecord/home', list_pr, name='list_pr'),
+
+    #path('list_wod/', list_wod, name = 'list_wod'),
 
     path('privacy_settings/', privacy_config, name='privacy_settings'),
 

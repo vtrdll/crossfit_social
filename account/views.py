@@ -89,7 +89,49 @@ class UserList(ListView):
 
 
 
-@method_decorator(login_required(login_url='login'), name='dispatch')
+@login_required(login_url='login')
+def user_update(request):
+    user = request.user
+    profile = user.profile
+   
+    
+    if request.method == 'POST':
+        form_type = request.POST.get('submit_type')
+
+        form = UserFormUpdate(request.POST, instance=user)
+        form_privacy = PrivacyConfigForm(instance=profile)
+
+        if form_type == 'user_form':
+            form = UserFormUpdate(request.POST, instance=user)
+            
+            if form.is_valid():
+                form.save()
+                return redirect('my_perfil')
+            
+
+
+        elif form_type == 'privacy_form':
+            
+            form_privacy = PrivacyConfigForm(request.POST, instance=profile)
+
+            if form_privacy.is_valid():
+                form_privacy.save()
+                return redirect('my_perfil')
+
+
+    else:
+        form = UserFormUpdate(instance=user)
+        form_privacy = PrivacyConfigForm(instance=profile)
+ 
+    return render(request, 'user-update.html', {
+        'form': form,
+        'form_privacy': form_privacy,
+      
+    })
+
+
+
+
 class UserUpdate(UpdateView):
 
 
@@ -127,6 +169,8 @@ class UserUpdate(UpdateView):
 
         # You can log or customize the response here
         return super().form_invalid(form)
+    
+
 
 @method_decorator(login_required(login_url='login'), name='dispatch')
 class PasswordUpdate(LoginRequiredMixin, FormView):
@@ -151,14 +195,7 @@ class UserDelete(DeleteView):
     success_url = reverse_lazy ('home')
 
     
-@method_decorator(login_required(login_url='login'), name='dispatch')
-class UserConfig(DetailView):
-    model = Profile 
-    template_name = 'config_account.html'
-    context_object_name = 'profile'
 
-    def get_object(self, queryset=None):
-        return self.request.user.profile  
 
 
 @method_decorator(login_required(login_url='login'), name='dispatch')
@@ -221,7 +258,7 @@ def register_pr (request):
             pr =  form.save(commit=False)
             pr.athlete = request.user
             pr.save()
-            return redirect('my_perfil')
+            return redirect('list_pr')
         
     else:
         form  = PersonalRecordForm()
@@ -247,9 +284,13 @@ def list_pr(request):
 
     detail = ProfilePersonalRecord.objects.filter(athlete=request.user)
 
-    return render(request, 'list_pr.html',  {'detail':detail})
+    return render(request, 'home_pr.html',  {'pr_list':detail})
+
+
+
 
 def privacy_config (request):
+   
     profile = request.user.profile
     
     if request.method  == 'POST':
@@ -260,4 +301,6 @@ def privacy_config (request):
     else:
         form = PrivacyConfigForm(instance=  profile)
     
-    return render(request, 'privacy_settings.html', {'form': form})
+    return render(request, 'user-update.html', {'form_privacy': form})
+
+

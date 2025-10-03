@@ -11,8 +11,8 @@ class Event(models.Model):
     title =  models.CharField (max_length=50, default= 'null')
     link =  models.URLField(max_length=100, blank= True, null= True )
     text = models.CharField(max_length=3000, blank=  True, null= True)
-    date_initial = models.DateField( default=  timezone.now())
-    date_end = models.DateField  (default= timezone.now())
+    date_initial = models.DateTimeField( default=  timezone.now())
+    date_end = models.DateTimeField (default= timezone.now())
     date_create= models.DateTimeField(auto_now_add= True,  null= False, blank= False)
     price =  models.FloatField(validators=[MinValueValidator(0)], null= True, blank=True)
 

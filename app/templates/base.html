@@ -3,220 +3,205 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}SOCIAL{% endblock %}</title>
+
+  <!-- Favicon -->
   <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+
+  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons (opcional) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- FullCalendar CSS (se necessário) -->
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
 
-  
-  
+  <!-- Estilos Globais -->
   <style>
     :root {
-      --cor-roxo: #000000;
-      --cor-rosa: #000000;
+      --color-primary: #000000;  /* Roxo */
+      --color-secondary: #ff0054;  /* Rosa vibrante */
+      --color-bg: #f9f9f9;
+      --color-text: #1a1a1a;
     }
 
     body {
-      background-color: #ffffff;
-      color: #000000;
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
+    /* Navbar */
     .navbar {
-      background: var(--cor-roxo);
+      background-color: var(--color-primary);
     }
 
     .navbar-brand,
     .navbar-nav .nav-link {
-      color: #ffffff;
+      color: #fff !important;
       font-weight: 600;
     }
 
     .navbar-brand:hover,
     .navbar-nav .nav-link:hover {
-      color: var(--cor-rosa);
+      color: var(--color-secondary) !important;
     }
 
     .navbar-toggler {
-      border-color: #ffffff;
+      border: none;
     }
 
     .navbar-toggler-icon {
-      background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='white' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23ffffff' viewBox='0 0 30 30'%3E%3Cpath stroke='white' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
     }
 
     .card {
-      border-radius: 20px;
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .btn-outline-primary {
-      color: var(--cor-roxo);
-      border-color: var(--cor-roxo);
-    }
-
-    .btn-outline-primary:hover {
-      background-color: var(--cor-rosa);
-      border-color: var(--cor-rosa);
-      color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      background-color: #fff;
     }
 
     .no-link-style {
       text-decoration: none;
       color: inherit;
     }
+
+    .profile-img {
+      object-fit: cover;
+      border-radius: 50%;
+      width: 100px;
+      height: 100px;
+    }
+
+    footer {
+      background-color: #f1f1f1;
+    }
   </style>
 
   {% block extra_head %}{% endblock %}
-  
 </head>
 <body>
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark mb-4">
-    <div class="container">
-      <a class="navbar-brand" href="{% url 'home' %}">SOCIAL</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
 
-      <div class="collapse navbar-collapse" id="navbarNav">
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'home' %}">CF4TIME</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      {% if user.is_authenticated %}
+      <!-- Barra de busca -->
+      <form id="searchForm" method="get" action="{% url 'post-list' %}" class="d-flex ms-3" style="max-width: 400px;">
+        <input type="text" name="search" class="form-control me-2" placeholder="Buscar..." value="{{ request.GET.search }}">
+        <select id="searchType" name="type" class="form-select me-2">
+          <option value="post" {% if request.path == "/post-list/" %}selected{% endif %}>Post</option>
+          <option value="user" {% if request.path == "/user-list/" %}selected{% endif %}>Usuário</option>
+        </select>
+        <button type="submit" class="btn btn-outline-light">🔍</button>
+      </form>
+      {% endif %}
+
+      <!-- Links de navegação -->
+      <ul class="navbar-nav ms-auto">
         {% if user.is_authenticated %}
-       <form id="searchForm" method="get" action="{% url 'post-list' %}" class="d-flex ms-3" style="max-width: 400px;">
-  <input type="text" name="search" class="form-control me-2" placeholder="Buscar..." value="{{ request.GET.search }}">
-  <select id="searchType" name="type" class="form-select me-2">
-    <option value="post" {% if request.path == "/post-list/" %}selected{% endif %}>Post</option>
-    <option value="user" {% if request.path == "/user-list/" %}selected{% endif %}>Usuário</option>
-  </select>
-  <button type="submit" class="btn btn-outline-light">🔍</button>
-</form>
-        {% endif %}
-
-        <ul class="navbar-nav ms-auto">
-          {% if user.is_authenticated %}
           <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Início</a></li>
           {% if user.profile.is_coach %}
-          <li class="nav-item"><a class="nav-link" href="{% url 'post-wod-create' %}">Postar Wod</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'event_create' %}">Postar Evento</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'create_wod' %}">Postar WOD</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'event_create' %}">Novo Evento</a></li>
           {% endif %}
           <li class="nav-item"><a class="nav-link" href="{% url 'post-create' %}">Postar</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'event_list' %}">Eventos</a></li>
-          <li class="nav-item"><a class="nav-link" href="https://www.linkedin.com/in/jo%C3%A3o-vitor-xavier-532191279/">Contato</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'my_perfil' %}">Perfil</a></li>
+          <li class="nav-item"><a class="nav-link" href="https://www.linkedin.com/in/jo%C3%A3o-vitor-xavier-532191279/">Contato</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Sair</a></li>
-          {% else %}
+        {% else %}
           <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Início</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Cadastro</a></li>
-          {% endif %}
-        </ul>
-      </div>
-    </div>
-  </nav>
- 
-  
-  
-  <!-- Conteúdo principal -->
-  <div class="container">
-    <div class="row">
-      {% if user.is_authenticated %}
-      <!-- Sidebar do perfil -->
-      <div class="col-md-3 mb-4">
-        <div class="card shadow-sm p-3 text-center">
-          {% if user.profile.photo %}
-            <img src="{{ user.profile.photo.url }}" class="rounded-circle mb-3 mx-auto d-block" width="100" height="100" style="object-fit: cover;">
-
-          {% else %}
-            <img src="https://via.placeholder.com/100" class="rounded-circle mb-3" alt="Sem foto">
-          {% endif %}
-          <h5>{{ user.username }} <img src="{% static 'verified.png' %}" width="20"></h5>
-          <p class="text-muted">{{ user.email }}</p>
-          {% if user.profile.view_weight %}
-            <p class="text-muted">Peso: {{ user.profile.weight }} Kg</p>
-          {% endif %}
-          {% if user.profile.view_height %}
-            <p class="text-muted">Altura: {{ user.profile.height }} </p>
-          {% endif %}
-          {% if user.profile.view_box %}
-            <p class="text-muted">BOX: {{ user.profile.box }} </p>
-          {% endif %}
-
-          {% if user.profile.view_genre %}
-            <p class="text-muted">Gênerp: {{ user.profile.genre }} </p>
-          {% endif %}
-
-          {% if user.profile.view_category %}
-            <p class="text-muted">CATEGORIA: {{ user.profile.category }} </p>
-          {% endif %}
-
-          <p class="text-muted">membro desde: {{ user.profile.created_at_profile }}</p>
-
-
-          
-            <h4>Record Pessoal</h4>
-            <ul>
-              
-                {% for pr in request.user.profilepersonalrecord_set.all %}
-                  <li>{{ pr.moviment }}:  </li>
-                  <p>{{ pr.personal_record }} kg</p>
-                  
-                {% empty %}
-                  <li>Nenhum registro encontrado.</li>
-                {% endfor %}
-            </ul>
-          
-          
-          
-         
-
-            {% if request.resolver_match.url_name == "my_perfil"  %}
-              {% if mostrar_inventory and inventory_post %}
-                <hr>
-                <small><strong>Posts:</strong> {{ inventory_post.post_count }}</small><br>
-                <small><strong>Comentários:</strong> {{ inventory_post.comment_count }}</small>
-              <div class="mt-2">
-              <a href="{% url 'user-update' user.pk %}" class="text-decoration-none d-block" style="color: #3a0ca3;">
-                <strong>Configurações ⚙️</strong>
-              </a>
-              <a href="{% url 'privacy_settings' %}" class="text-decoration-none d-block" style="color: #3a0ca3;">
-                <strong>Privacidade 👁️‍🗨️</strong>
-              </a>
-            </div>
-              {% endif %}
-          {% endif %}
-        </div>
-      </div>
-      {% endif %}
-
-      <!-- Feed de conteúdo -->
-      <div class="{% if user.is_authenticated %}col-md-9{% else %}col-12{% endif %}">
-        {% block content %}
-          
-        {% endblock %}
-      </div>
+        {% endif %}
+      </ul>
     </div>
   </div>
+</nav>
 
-  <!-- Rodapé -->
-  <footer class="bg-light text-center text-muted py-3 mt-4 border-top">
-    <div class="container">
-      <small>&copy; {{ year|default:2025 }} CF4TIME. Todos os direitos reservados.</small>
+<!-- CONTEÚDO PRINCIPAL -->
+<div class="container my-4">
+  <div class="row">
+    
+    {% if user.is_authenticated %}
+    <!-- SIDEBAR PERFIL -->
+    <div class="col-md-3 mb-4">
+      <div class="card text-center p-3">
+        {% if user.profile.photo %}
+          <img src="{{ user.profile.photo.url }}" alt="Foto de Perfil" class="profile-img mx-auto mb-3">
+        {% else %}
+          <img src="https://via.placeholder.com/100" alt="Sem Foto" class="profile-img mb-3">
+        {% endif %}
+
+        <h5>{{ user.username }} <img src="{% static 'verified.png' %}" width="18"></h5>
+        <p class="text-muted">{{ user.email }}</p>
+
+        {% if user.profile.view_weight %}<p class="text-muted">Peso: {{ user.profile.weight }}kg</p>{% endif %}
+        {% if user.profile.view_height %}<p class="text-muted">Altura: {{ user.profile.height }}</p>{% endif %}
+        {% if user.profile.view_box %}<p class="text-muted">Box: {{ user.profile.box }}</p>{% endif %}
+        {% if user.profile.view_genre %}<p class="text-muted">Gênero: {{ user.profile.genre }}</p>{% endif %}
+        {% if user.profile.view_category %}<p class="text-muted">Categoria: {{ user.profile.category }}</p>{% endif %}
+       
+        <p class="text-muted"><small>Membro desde: {{ user.profile.created_at_profile }}</small></p>
+
+        <!-- PRs -->
+        {% if user.profile.view_personal_record %}
+        <h6 class="mt-3">Recordes Pessoais</h6>
+        <ul class="list-unstyled small">
+          {% for pr in request.user.profilepersonalrecord_set.all %}
+            <li>{{ pr.moviment }}: <strong>{{ pr.personal_record }}kg</strong></li>
+          {% empty %}
+            <li>Nenhum PR cadastrado.</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% if request.resolver_match.url_name == "my_perfil" %}
+          <a href="{% url 'user-update' %}" class="btn btn-outline-primary btn-sm mt-2">Editar Perfil ⚙️</a>
+          <a href="{% url 'list_pr' %}" class="btn btn-outline-primary btn-sm mt-2">Personal Record </a>
+          {% if mostrar_inuentory and inventory_post %}
+          <hr>
+          <p><strong>Posts:</strong> {{ inventory_post.post_count }}</p>
+          <p><strong>Comentários:</strong> {{ inventory_post.comment_count }}</p>
+          {% endif %}
+        {% endif %}
+      </div>
     </div>
-  </footer>
+    {% endif %}
 
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-  <script>
-document.getElementById('searchType').addEventListener('change', function() {
+    <!-- ÁREA PRINCIPAL -->
+    <div class="{% if user.is_authenticated %}col-md-9{% else %}col-12{% endif %}">
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+</div>
+
+<!-- RODAPÉ -->
+<footer class="text-center text-muted py-3 border-top">
+  <small>&copy; {{ year|default:2025 }} CF4TIME. Todos os direitos reservados.</small>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+<script>
+  // Altera a rota do formulário de busca
+  document.getElementById('searchType')?.addEventListener('change', function() {
     const form = document.getElementById('searchForm');
-    if (this.value === 'user') {
-        form.action = "{% url 'user-list' %}";
-    } else {
-        form.action = "{% url 'post-list' %}";
-    }
-});
+    form.action = this.value === 'user' ? "{% url 'user-list' %}" : "{% url 'post-list' %}";
+  });
 </script>
-  
-  {% block extra_js %}{% endblock %}
+
+{% block extra_js %}{% endblock %}
 </body>
 </html>
