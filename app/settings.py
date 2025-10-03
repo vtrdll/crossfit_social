@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-l2p%&m9g%gsq-3ly4ak_z&+in$1@jp8k405$z(66af#=ltf@@n
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -145,3 +145,12 @@ CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
 CELERY_BEAT_SCHEDULE = {
     'deletar-imagens-antigas-diariamente': {'task': 'social.tasks.delete_old_media','schedule': crontab(minute=0, hour=0),},}
 
+
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+MIDDLEWARE = [
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # add aqui
+    ...
+]
