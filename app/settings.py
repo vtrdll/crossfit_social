@@ -43,9 +43,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    
     'django.contrib.staticfiles',
-    
+    'cloudinary_storage',
+    'cloudinary',
     'Social', 'account','widget_tweaks', 'Event', 'WOD'
     
 ]
@@ -86,7 +86,7 @@ DB_LIVE = os.getenv("DB_LIVE")
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 if DB_LIVE in ["False", False]:
-
+    print('OLAAAAAA')
 
     DATABASES = {
         'default': {
@@ -95,6 +95,7 @@ if DB_LIVE in ["False", False]:
         }
     } 
 
+    
 
     CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
     CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
@@ -117,6 +118,21 @@ else:
             
         }
     } 
+
+    STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+    CLOUDINARY_STORAGE={
+        'CLOUD_NAME': os.getenv("CLOUDINARY_CLOUD_NAME"),
+        'API_KEY': os.getenv("CLOUDINARY_API_KEY"),
+        'API_SECRET': os.getenv("CLOUDINARY_API_SECRET"),
+    }
+
 
     CELERY_BROKER_URL = config("REDIS_URL", default="redis://default:pbEKaBnheUGuFazUNTForNnlRzSDBGlc@redis.railway.internal:6379")
     CELERY_RESULT_BACKEND = config("REDIS_URL", default="redis://default:pbEKaBnheUGuFazUNTForNnlRzSDBGlc@redis.railway.internal:6379")
@@ -167,7 +183,7 @@ LOGIN_URL = '/login'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATIC_URL = '/static/'
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 STATICFILES_DIRS = [
     BASE_DIR / 'app' / 'static',
@@ -179,7 +195,7 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 MEDIA_URL = '/media/'
 
 
