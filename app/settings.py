@@ -13,7 +13,6 @@ from celery.schedules import crontab
 from pathlib import Path
 import os 
 import dj_database_url
-from decouple import config
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,12 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config("DJANGO_SECRET_KEY", default="insecure-key")    
+SECRET_KEY = 'django-insecure-l2p%&m9g%gsq-3ly4ak_z&+in$1@jp8k405$z(66af#=ltf@@n'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config("DEBUG", default=False, cast=bool)
+DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -81,8 +80,10 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    "default": dj_database_url.config(
-        default=config("DATABASE_URL", default="sqlite:///db.sqlite3")
+    'default': dj_database_url.config(
+        default='postgresql://postgres:nRvFTPaEXZZazVQhUxIcljlUhHaDVOKo@postgres.railway.internal:5432/railway',
+        conn_max_age=600,
+        conn_health_checks=True,
     )
 }
 
@@ -144,17 +145,3 @@ CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
 CELERY_BEAT_SCHEDULE = {
     'deletar-imagens-antigas-diariamente': {'task': 'social.tasks.delete_old_media','schedule': crontab(minute=0, hour=0),},}
 
-
-STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-
-MIDDLEWARE = [
-    "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware", 
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
-]
