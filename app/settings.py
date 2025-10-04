@@ -123,8 +123,8 @@ else:
 
     CELERY_BEAT_SCHEDULE = {
         "deletar-imagens-antigas-diariamente": {
-            "task": "social.tasks.delete_old_media",
-            "schedule": crontab(minute=0, hour=0),
+            "task": "Social.tasks.delete_old_media",
+            "schedule": crontab(minute='*'),
         },
     }
 
