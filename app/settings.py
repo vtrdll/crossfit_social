@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-l2p%&m9g%gsq-3ly4ak_z&+in$1@jp8k405$z(66af#=ltf@@n'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = ["https://crossfitsocial-production.up.railway.app", "https://127.0.0.1:8000"]
