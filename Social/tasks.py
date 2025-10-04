@@ -15,7 +15,7 @@ def delete_old_media():
 
     for story in expired_stories:
 
-        story.delete()
+        
         for media in story.media.all():
             print(media)
             try:
@@ -30,6 +30,8 @@ def delete_old_media():
                 
             except Exception as e:
                 logger.error(f'Erro ao deletar media ID {media.id}: {e}')
+
+        story.delete()
 
     logger.info('Tarefa de limpeza de imagens concluída.')
 

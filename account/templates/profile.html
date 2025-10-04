@@ -28,6 +28,13 @@
                             <small><strong>Comentários:</strong> {{ inventory_post.comment_count }}</small>
                         </div>
                     {% endif %}
+                            
+                    {% if user_profile.profile.view_weight %}<p class="text-muted">Peso: {{ user_profile.profile.weight }}kg</p>{% endif %}
+                    {% if user_profile.profile.view_height %}<p class="text-muted">Altura: {{ user_profile.profile.height }}</p>{% endif %}
+                    {% if user_profile.profile.view_box %}<p class="text-muted">Box: {{ user_profile.profile.box }}</p>{% endif %}
+                    {% if user_profile.profile.view_genre %}<p class="text-muted">Gênero: {{ user_profile.profile.genre }}</p>{% endif %}
+                    {% if user_profile.profile.view_category %}<p class="text-muted">Categoria: {{ user_profile.profile.category }}</p>{% endif %}
+
                 </div>
             </div>
         </div>

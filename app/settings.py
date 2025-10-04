@@ -168,5 +168,5 @@ CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
 
 
 CELERY_BEAT_SCHEDULE = {
-    'deletar-imagens-antigas-diariamente': {'task': 'social.tasks.delete_old_media','schedule': crontab(minute=0, hour=0),},}
+    'deletar-imagens-antigas-diariamente': {'task': 'Social.tasks.delete_old_media','schedule': crontab(minute='*'),},}
 

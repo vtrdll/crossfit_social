@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}SOCIAL{% endblock %}</title>
+  <title>{% block title %}CROSSOCIAL{% endblock %}</title>
 
   <!-- Favicon -->
   <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
@@ -87,7 +87,7 @@
 <!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg navbar-dark">
   <div class="container">
-    <a class="navbar-brand" href="{% url 'home' %}">CF4TIME</a>
+    <a class="navbar-brand" href="{% url 'home' %}">CROSSSOCIAL</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -167,7 +167,7 @@
 
         {% if request.resolver_match.url_name == "my_perfil" %}
           <a href="{% url 'user-update' %}" class="btn btn-outline-primary btn-sm mt-2">Editar Perfil ⚙️</a>
-          <a href="{% url 'list_pr' %}" class="btn btn-outline-primary btn-sm mt-2">Personal Record </a>
+          <a href="{% url 'list_pr' %}" class="btn btn-outline-primary btn-sm mt-2">Personal Record 🏋️ </a>
           {% if mostrar_inuentory and inventory_post %}
           <hr>
           <p><strong>Posts:</strong> {{ inventory_post.post_count }}</p>
@@ -187,7 +187,7 @@
 
 <!-- RODAPÉ -->
 <footer class="text-center text-muted py-3 border-top">
-  <small>&copy; {{ year|default:2025 }} CF4TIME. Todos os direitos reservados.</small>
+  <small>&copy; {{ year|default:2025 }} Todos os direitos reservados.</small>
 </footer>
 
 <!-- Scripts -->

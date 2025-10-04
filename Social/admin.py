@@ -13,5 +13,5 @@ class PostAdmin(admin.ModelAdmin):
 
 
 
-admin.site.site_header = "Administração CF4Time"
+admin.site.site_header = "Administração "
 admin.site.register(Post, PostAdmin)
