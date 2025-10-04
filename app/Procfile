@@ -1,2 +1,4 @@
 release: python manage.py migrate
 web: gunicorn app.wsgi
+worker: celery -A app worker --loglevel=info
+beat: celery -A app beat --loglevel=info

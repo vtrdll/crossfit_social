@@ -13,6 +13,7 @@ import os
 
 from celery.schedules import crontab
 from pathlib import Path
+from decouple import config
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -29,7 +30,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-l2p%&m9g%gsq-3ly4ak_z&+in$1@jp8k405$z(66af#=ltf@@n'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = ["https://crossfitsocial-production.up.railway.app", "https://127.0.0.1:8000"]
@@ -94,6 +95,15 @@ if DB_LIVE in ["False", False]:
         }
     } 
 
+
+    CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+    CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
+
+
+    CELERY_BEAT_SCHEDULE = {
+        'deletar-imagens-antigas-diariamente': {'task': 'Social.tasks.delete_old_media','schedule': crontab(minute='*'),},}
+    
+
 else:
 
     DATABASES = {
@@ -107,6 +117,16 @@ else:
             
         }
     } 
+
+    CELERY_BROKER_URL = config("REDIS_URL", default="redis://default:pbEKaBnheUGuFazUNTForNnlRzSDBGlc@redis.railway.internal:6379")
+    CELERY_RESULT_BACKEND = config("REDIS_URL", default="redis://default:pbEKaBnheUGuFazUNTForNnlRzSDBGlc@redis.railway.internal:6379")
+
+    CELERY_BEAT_SCHEDULE = {
+        "deletar-imagens-antigas-diariamente": {
+            "task": "social.tasks.delete_old_media",
+            "schedule": crontab(minute=0, hour=0),
+        },
+    }
 
 
 # Password validation
@@ -163,10 +183,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
-CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
 
-
-CELERY_BEAT_SCHEDULE = {
-    'deletar-imagens-antigas-diariamente': {'task': 'Social.tasks.delete_old_media','schedule': crontab(minute='*'),},}
 
