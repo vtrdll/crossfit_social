@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cloudinary_storage',
     'cloudinary',
+    'django_celery_beat',
     'Social', 'account','widget_tweaks', 'Event', 'WOD'
     
 ]
@@ -142,6 +143,7 @@ else:
     CELERY_BROKER_URL = os.getenv("REDIS_URL")
     CELERY_RESULT_BACKEND = os.getenv("REDIS_URL")
     CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
 
     CELERY_BEAT_SCHEDULE = {
         "deletar-imagens-antigas-diariamente": {
