@@ -136,7 +136,9 @@ else:
     CELERY_BROKER_URL = os.getenv("REDIS_URL")
     CELERY_RESULT_BACKEND = os.getenv("REDIS_URL")
     CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
-    DATABASE_URL = 'postgresql://postgres:nRvFTPaEXZZazVQhUxIcljlUhHaDVOKo@postgres.railway.internal:5432/railway'
+    DATABASES = {
+    "default": dj_database_url.config(default=os.environ.get("DATABASE_URL"))
+}
 
     
    
