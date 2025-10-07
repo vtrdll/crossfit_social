@@ -11,38 +11,24 @@ from django.core.files.storage import default_storage
 logger = logging.getLogger(__name__)
 
 @shared_task
-def delete_old_media():
-    # Seleciona apenas stories expiradas
-    expired_stories = Story.objects.all()
-
-    for story in expired_stories:
-
-        # Deleta as imagens associadas
-        for media in story.story_images.all():
+def delete_old_media(self):
+    try:
+        expired_stories = Story.objects.all()  # Para teste, sem filtro
+        for story in expired_stories:
+            for media in getattr(story, 'story_images', []) + getattr(story, 'story_videos', []):
+                try:
+                    if hasattr(media, 'story_image') and media.story_image:
+                        if default_storage.exists(media.story_image.name):
+                            default_storage.delete(media.story_image.name)
+                    if hasattr(media, 'story_video') and media.story_video:
+                        if default_storage.exists(media.story_video.name):
+                            default_storage.delete(media.story_video.name)
+                    media.delete()
+                except Exception as e:
+                    logger.error(f"Erro deletando mídia {media.id}: {e}")
             try:
-                if media.story_image and default_storage.exists(media.story_image.name):
-                    logger.info(f"Deletando arquivo de imagem: {media.story_image.name}")
-                    default_storage.delete(media.story_image.name)
-
-                media.delete()
-                logger.info(f"Registro da imagem deletado: ID {media.id}")
+                story.delete()
             except Exception as e:
-                logger.error(f"Erro ao deletar imagem ID {media.id}: {e}")
-
-        # Deleta os vídeos associados
-        for media in story.story_videos.all():
-            try:
-                if media.story_video and default_storage.exists(media.story_video.name):
-                    logger.info(f"Deletando arquivo de vídeo: {media.story_video.name}")
-                    default_storage.delete(media.story_video.name)
-
-                media.delete()
-                logger.info(f"Registro do vídeo deletado: ID {media.id}")
-            except Exception as e:
-                logger.error(f"Erro ao deletar vídeo ID {media.id}: {e}")
-
-        # Deleta a story
-        story.delete()
-        logger.info(f"Story deletada: ID {story.id}")
-
-    logger.info("Tarefa de limpeza de stories concluída.")
+                logger.error(f"Erro deletando story {story.id}: {e}")
+    except Exception as e:
+        logger.error(f"Erro geral na task delete_old_media: {e}")
