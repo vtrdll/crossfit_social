@@ -22,9 +22,11 @@ from Social.views import my_profile, HomeView
 from Event.views import EventCreate, EventList, EventUpdate, EventDelete,  EventDetail
 from account.views import PhotoUpdate, PhotoDelete
 from account.views import register_view, login_view, logout_view, privacy_config 
+
+from Social.views import create_story
 from Social.views import CommentList, CommentUpdate, CommentDelete
 from Social.views import PostCreateView, PostList, PostDetail, PostUpdate, PostDelete, like_post, like_comment
-from Social.views import StoryCreateView,StoryDetailView 
+
 from account.views import   user_update, UserDelete, PasswordUpdate, ProfileDetail, UserList, register_pr,  update_pr, list_pr  
 from WOD.views import  create_wod, like_wod #list_wod
 
@@ -39,9 +41,9 @@ urlpatterns = [
     path('post/create_wod/', create_wod, name='create_wod' ),
     path('perfil/<int:pk>/', ProfileDetail.as_view(), name='user-public-profile'),
     
-    path('story/', StoryCreateView.as_view(), name='story_create'),
+    path('story/', create_story, name='story_create'),
     
-    path('story/<int:pk>/', StoryDetailView.as_view(), name='story_detail'),
+    #path('story/<int:pk>/', StoryDetailView.as_view(), name='story_detail'),
 
     path('post-list/', PostList.as_view(), name ='post-list' ),
     path('post/<int:pk>/editar/', PostUpdate.as_view(), name='post-edit'),

@@ -3,97 +3,138 @@
 {% block title %}FEED{% endblock %}
 {% load custom_filters %}
 {% block content %}
-<div class="container py-4">
 
-  <!-- STORIES -->
+<style>
+  
+  .story-circle {
+    border-color: #3498db; /* azul = não visto */
+    transition: border-color 0.3s;
+  }
+
+  .story-circle.viewed {
+    border-color: #ccc; /* cinza = visto */
+  }
+
+</style>
+
+
+
+
 <div class="mb-4">
   <div class="d-flex overflow-auto" style="gap: 1rem;">
-    
-    <!-- Botão para adicionar novo story -->
-    <div class="text-center">
-      <div
-        class="rounded-circle border border-3 border-success d-flex align-items-center justify-content-center"
-        style="width:70px; height:70px; overflow:hidden; cursor:pointer; background:#e9f7ef;"
-        data-bs-toggle="modal"
-        data-bs-target="#addStoryModal"
-      >
-        <span class="fs-3 text-success">+</span>
-      </div>
-      <small>Adicionar</small>
+  <!-- Botão para adicionar novo story -->
+  <div class="text-center">
+    <div
+      class="rounded-circle border border-3 border-success d-flex align-items-center justify-content-center"
+      style="width:70px; height:70px; overflow:hidden; cursor:pointer; background:#e9f7ef;"
+      data-bs-toggle="modal"
+      data-bs-target="#addStoryModal"
+    >
+      <span class="fs-3 text-success">+</span>
     </div>
+    <small>Adicionar</small>
+  </div>
 
-    {% for story in stories %}
-      {% if story.media.all %}
-        <!-- Avatar do Story -->
-        <div class="text-center">
-          <div
-            class="rounded-circle border border-3 border-primary"
-            style="width:70px; height:70px; overflow:hidden; cursor:pointer;"
-            data-bs-toggle="modal"
-            data-bs-target="#storyModal{{ story.id }}"
-          >
-            {% if story.user.profile.photo %}
-              <img
-                src="{{ story.user.profile.photo.url }}"
-                alt="Story de {{ story.user.username }}"
-                class="w-100 h-100"
-                style="object-fit:cover;"
-              >
-            {% else %}
-              <div class="bg-secondary w-100 h-100"></div>
-            {% endif %}
-          </div>
-          <small>{{ story.user.username }}</small>
+  {% for story in stories %}
+    {% if story.story_images.all or story.story_videos.all %}
+      <div class="text-center">
+        <div
+          class="story-circle rounded-circle border border-3 border-primary"
+          style="width:70px; height:70px; cursor:pointer; overflow:hidden;"
+          data-bs-toggle="modal"
+          data-bs-target="#storyModal{{ story.id }}"
+          data-story-id="{{ story.id }}"
+        >
+          {% if story.user.profile.photo %}
+            <img src="{{ story.user.profile.photo.url }}" class="w-100 h-100" style="object-fit:cover;">
+          {% else %}
+            <div class="bg-secondary w-100 h-100"></div>
+          {% endif %}
         </div>
+        <small>{{ story.user.username }}</small>
+      </div>
 
-        <!-- Modal do Story -->
-        <div class="modal fade" id="storyModal{{ story.id }}" tabindex="-1" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content bg-dark text-white">
-              <div class="modal-header border-0">
-                <h6 class="modal-title">{{ story.user.username }}</h6>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-              </div>
-              <div class="modal-body p-0">
-                <div id="storyCarousel{{ story.id }}" class="carousel slide" data-bs-ride="false">
-                  <div class="carousel-inner">
-                    {% for media in story.media.all %}
-                      <div class="carousel-item {% if forloop.first %}active{% endif %} d-flex align-items-center justify-content-center" style="min-height:60vh;">
-                        {% if media.document.name|endswith_any:".jpg,.png,.webp" %}
-                          <img src="{{ media.document.url }}" class="img-fluid" style="max-height:90vh; object-fit:contain;">
-                        
-                        {% elif media.document.name|endswith_any:".MP4,.MKV,.MOV,.AVI,.WEBM,.FLV,.WMV,.MPEG,.MPG" %} 
-                          <video controls style="max-height:90vh; max-width:100%; object-fit:contain;">
-                            <source src="{{ media.document.url }}" type="video/mp4">
-                          </video>
-                        
-                        {% endif %}
-                      </div>
-                    {% endfor %}
-                  </div>
-
-                  {% if story.media.all %}
-                    <button class="carousel-control-prev" type="button" data-bs-target="#storyCarousel{{ story.id }}" data-bs-slide="prev">
-                      <span class="carousel-control-prev-icon"></span>
-                      <span class="visually-hidden">Anterior</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#storyCarousel{{ story.id }}" data-bs-slide="next">
-                      <span class="carousel-control-next-icon"></span>
-                      <span class="visually-hidden">Próximo</span>
-                    </button>
-                  {% endif %}
+      <!-- Modal do Story -->
+      <div class="modal fade" id="storyModal{{ story.id }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content bg-dark text-white">
+            <div class="modal-header border-0">
+              <h6 class="modal-title">{{ story.user.username }}</h6>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0">
+              <div id="storyCarousel{{ story.id }}" class="carousel slide" data-bs-ride="false">
+                <div class="carousel-inner">
+                  {% for image in story.story_images.all %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %} d-flex align-items-center justify-content-center" style="min-height:60vh;">
+                      <img src="{{ image.story_image.url }}" class="img-fluid" style="max-height:90vh; object-fit:contain;">
+                    </div>
+                  {% endfor %}
+                  {% for video in story.story_videos.all %}
+                    <div class="carousel-item {% if not story.story_images.all and forloop.first %}active{% endif %} d-flex align-items-center justify-content-center" style="min-height:60vh;">
+                      <video controls style="max-height:90vh; max-width:100%; object-fit:contain;">
+                        <source src="{{ video.story_video.url }}" type="video/mp4">
+                      </video>
+                    </div>
+                  {% endfor %}
                 </div>
+
+                {% if story.story_images.all or story.story_videos.all %}
+                  <button class="carousel-control-prev" type="button" data-bs-target="#storyCarousel{{ story.id }}" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                    <span class="visually-hidden">Anterior</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#storyCarousel{{ story.id }}" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                    <span class="visually-hidden">Próximo</span>
+                  </button>
+                {% endif %}
               </div>
             </div>
           </div>
         </div>
-        <!-- Fim Modal -->
-      {% endif %}
-    {% empty %}
-      <p class="text-muted">Nenhum story disponível.</p>
-    {% endfor %}
-  </div>
+      </div>
+      <!-- Fim Modal -->
+
+    {% endif %}
+  {% endfor %}
 </div>
+
+<style>
+.story-circle {
+  transition: border-color 0.3s;
+}
+.story-circle.viewed {
+  border-color: #ccc !important;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const storyCircles = document.querySelectorAll(".story-circle");
+
+  // Recupera stories já vistos
+  let viewedStories = JSON.parse(localStorage.getItem("viewedStories") || "[]");
+
+  storyCircles.forEach(circle => {
+    const storyId = circle.dataset.storyId;
+
+    // Aplica classe viewed se já tiver sido visto
+    if (viewedStories.includes(storyId)) {
+      circle.classList.add("viewed");
+    }
+
+    // Marca como visto ao abrir o modal
+    circle.addEventListener("click", () => {
+      if (!viewedStories.includes(storyId)) {
+        viewedStories.push(storyId);
+        localStorage.setItem("viewedStories", JSON.stringify(viewedStories));
+      }
+      circle.classList.add("viewed");
+    });
+  });
+});
+</script>
 
 <!-- Modal para criar novo Story -->
 <div class="modal fade" id="addStoryModal" tabindex="-1" aria-hidden="true">
@@ -105,9 +146,9 @@
           <h5 class="modal-title">Adicionar Story</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body text-center">
           <p>Selecione foto ou vídeo para postar no seu story:</p>
-          <input type="file" name="document" class="form-control" accept="image/*,video/*" required>
+          <input type="file" name="media" id="id_media" multiple accept="image/*,video/mp4" class="form-control w-75 mx-auto">
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-success">Postar</button>
@@ -116,7 +157,6 @@
     </div>
   </div>
 </div>
-
 
   {% if request.path == '/user-list/' %}
     <h3 class="text-center">👤 Usuários encontrados</h3>
@@ -500,5 +540,33 @@
     modalVideo.pause();
     modalVideo.src = '';
   });
+
+  document.addEventListener("DOMContentLoaded", function() {
+  const storyCircles = document.querySelectorAll(".story-circle");
+
+  storyCircles.forEach(circle => {
+    circle.addEventListener("click", () => {
+      // Marca como visto imediatamente ao abrir o modal
+      circle.classList.add("viewed");
+
+      // Se quiser, pode salvar em localStorage para persistir entre páginas
+      const storyId = circle.getAttribute("data-story-id");
+      let viewedStories = JSON.parse(localStorage.getItem("viewedStories") || "[]");
+
+      if (!viewedStories.includes(storyId)) {
+        viewedStories.push(storyId);
+        localStorage.setItem("viewedStories", JSON.stringify(viewedStories));
+      }
+    });
+
+    // Recupera stories já vistos do localStorage
+    let viewedStories = JSON.parse(localStorage.getItem("viewedStories") || "[]");
+    const storyId = circle.getAttribute("data-story-id");
+    if (viewedStories.includes(storyId)) {
+      circle.classList.add("viewed");
+    }
+  });
+
+});
 </script>
 {% endblock %}

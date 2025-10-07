@@ -1,22 +1,22 @@
-{% block title %}Criar Story{% endblock %}
-
+{% extends "base.html" %}
 {% block content %}
-<div class="card p-4">
-  <h3 class="mb-4">Criar novo Story</h3>
+<div class="container py-4">
+  <h2 class="text-center mb-3">📸 Criar Story</h2>
 
-  <form method="post" enctype="multipart/form-data">
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+
+  <form method="POST" enctype="multipart/form-data" class="text-center">
     {% csrf_token %}
-    
-    <!-- Campo de arquivo -->
     <div class="mb-3">
-        <label for="id_file" class="form-label">Escolha um arquivo:</label>
-        {{ form.document }}
+      <label for="id_media" class="form-label">Selecione suas mídias</label>
+      <input type="file" name="media" id="id_media" multiple accept="image/*,video/mp4" class="form-control w-75 mx-auto">
     </div>
-    
-    <!-- Outros campos (se houver) -->
-    {{ form.non_field_errors }}
-    
-    <button type="submit" class="btn btn-primary">Enviar</button>
-</form>
+
+    <button type="submit" class="btn btn-primary px-4 rounded-pill shadow-sm">
+      Publicar Story
+    </button>
+  </form>
 </div>
 {% endblock %}

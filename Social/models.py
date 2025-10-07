@@ -1,11 +1,12 @@
 from django.db import models
 from django.utils import timezone
 
+from cloudinary_storage.storage import VideoMediaCloudinaryStorage, MediaCloudinaryStorage
 from django.contrib.auth.models import User
 
 
 # Create your models here.
-
+ 
 
 
 class Post(models.Model):
@@ -28,9 +29,36 @@ class PostImage(models.Model):
 class PostVideo(models.Model): 
     post = models.ForeignKey(Post, related_name='videos', on_delete=models.CASCADE, null=True, blank=True)
     
-    video = models.FileField(upload_to='media_post', null = True, blank=True)
+    video = models.FileField(upload_to='media_post',storage = VideoMediaCloudinaryStorage, null = True, blank=True)
     
+class Story(models.Model):
+    user =  models.ForeignKey(User, on_delete=models.CASCADE, related_name='stories')
+    created_at =  models.DateTimeField(auto_now_add= True)
+    expires_at = models.DateTimeField()
 
+
+    def is_expired(self):
+        return timezone.now()  >  self.expires_at
+    
+class StoryImage(models.Model):
+    post = models.ForeignKey(Story, related_name='story_images', on_delete=models.CASCADE, null=True, blank=True)
+    
+    story_image = models.ImageField(upload_to='media_post', storage =  MediaCloudinaryStorage(),  null = True, blank=True)
+
+
+class StoryVideo(models.Model): 
+    post = models.ForeignKey(Story, related_name='story_videos', on_delete=models.CASCADE, null=True, blank=True)
+    
+    story_video = models.FileField(upload_to='media_post',storage = VideoMediaCloudinaryStorage(), null = True, blank=True)
+
+'''
+class StoryMedia(models.Model):
+    story=  models.ForeignKey(Story, related_name='media', on_delete=models.CASCADE )
+    document = models.FileField(upload_to='media_story', storage = MediaCloudinaryStorage(), null=True, blank=True)
+    
+    def __str__(self):
+        return f"StoryMedia #{self.id} - {self.document.name if self.document else 'Sem arquivo'}"
+'''
 
     
 
@@ -54,19 +82,3 @@ class PostCommentInventory(models.Model):
         return f'{self.author} - {self.post_count} - {self.comment_count}'
     
 
-class Story(models.Model):
-    user =  models.ForeignKey(User, on_delete=models.CASCADE, related_name='stories')
-    created_at =  models.DateTimeField(auto_now_add= True)
-    expires_at = models.DateTimeField()
-
-
-    def is_expired(self):
-        return timezone.now()  >  self.expires_at
-    
-
-class StoryMedia(models.Model):
-    story=  models.ForeignKey(Story, related_name='media', on_delete=models.CASCADE )
-    document = models.FileField(upload_to='media/media_story_file', null=True, blank=True)
-    
-    def __str__(self):
-        return f"StoryMedia #{self.id} - {self.document.name if self.document else 'Sem arquivo'}"

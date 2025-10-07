@@ -1,22 +1,24 @@
 
+import os
 import random 
+from django.utils import timezone
+from datetime import timedelta
 from WOD.models import  WOD
 from django.http import Http404
 from django.urls import reverse
-from datetime import timedelta
-from django.utils import timezone
+from account.models import User
+from django.contrib import messages
 from django.urls import reverse_lazy
-from .models import Post, Comment, PostImage, PostVideo
+from .models import Post, Comment, PostImage, PostVideo, StoryVideo, StoryImage
 from django.shortcuts import redirect
 
-from .models import PostCommentInventory,StoryMedia, Story
-from .forms import CommentForm, PostForm, ImageForm, VideoForm, StoryForm
+from .models import PostCommentInventory, Story
+from .forms import CommentForm, PostForm, ImageForm, VideoForm, StoryMediaForm #StoryImageForm, StoryVideoForm,  
 from django.http import HttpResponseNotAllowed
 from django.views.generic.edit import FormMixin
 from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 
 
@@ -111,29 +113,30 @@ class HomeView(FormMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = self.get_form()
-        
-        context['stories'] = Story.objects.all()
-    
+
+        # Stories que ainda não expiraram
+        context['stories'] = Story.objects.filter(expires_at__gt=timezone.now()).order_by('-created_at')
+        story_users = User.objects.filter(stories__isnull=False).distinct()
+        context['story_users'] = story_users
+
         if self.request.user.is_authenticated:
-            inventory = PostCommentInventory.objects.get_or_create(author=self.request.user)
+            inventory, _ = PostCommentInventory.objects.get_or_create(author=self.request.user)
             context['mostrar_inventory'] = True
             context['inventory_post'] = inventory
-        else:
-            pass
-        
-        # Post do coach fixado (pined=True)
-        context['imagens'] = PostImage.objects.all()  # <-- ESSENCIAL
+
+        # Post do coach fixado (pinned=True)
+        context['imagens'] = PostImage.objects.all()
         context['videos'] = PostVideo.objects.all()
-        posts  = context['posts']
-        
+        posts = context['posts']
+
+
+
         pinned = WOD.objects.filter(pinned=True).last()
-        
         context['pinned'] = pinned
         if pinned:
-            
-            context['coach_profile'] =  pinned
-            
-           
+            context['coach_profile'] = pinned
+
+        # Adiciona dicionário de mídias a cada post
         for post in posts:
             imagens = [img.photo.url for img in post.images.all() if img.photo]
             videos = [vid.video.url for vid in post.videos.all() if vid.video]
@@ -141,9 +144,6 @@ class HomeView(FormMixin, ListView):
                 'imagens': imagens,
                 'videos': videos,
             }
-            
-        
-       
 
         return context
 
@@ -263,38 +263,27 @@ def like_comment (request, pk):
 
 
 
-class StoryCreateView(CreateView):
-    model  = StoryMedia
-    form_class =  StoryForm
-    template_name = 'story_create.html'
-    success_url=  reverse_lazy('home')
-
-
- 
+def create_story(request):
     
-
-    def post(self,request):
-        form  = StoryForm( request.POST, request.FILES)
-        
+    if request.method == "POST":
+        form = StoryMediaForm(request.POST, request.FILES)
         if form.is_valid():
-            print("POST recebido")
-            story = Story.objects.create(user=request.user, expires_at=timezone.now() + timedelta(days=1))
-            
-            objeto =  form.save(commit=False)
-            objeto.story = story
-            
-            objeto.save()
+            story = Story.objects.create(
+                user=request.user,
+                expires_at=timezone.now() + timedelta(days=1)
+            )
 
-            return redirect('home')
-        else:
-            print(f'erro no formulario  de post para storie{form.errors}')
-           
-        return render(request, 'story_create.html',{'form':form})
-  
+            for f in form.cleaned_data["media"]:
+                ext = os.path.splitext(f.name)[1].lower()
+                if ext in [".jpg", ".jpeg", ".png", ".webp"]:
+                    StoryImage.objects.create(post=story, story_image=f)
+                elif ext == ".mp4":
+                    StoryVideo.objects.create(post=story, story_video=f)
 
-class StoryDetailView(DetailView):
-    model = Story
-    template_name = 'story_detail.html'
-    context_object_name = 'story'
+            messages.success(request, "Story criado com sucesso!")
+        return redirect("home")
+    else:
+        form = StoryMediaForm()
 
+    return render(request, "story_create.html", {"form": form})
 
