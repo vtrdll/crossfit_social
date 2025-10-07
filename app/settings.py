@@ -14,6 +14,7 @@ import os
 from celery.schedules import crontab
 from pathlib import Path
 from decouple import config
+import dj_database_url 
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -129,28 +130,16 @@ if DB_LIVE in ["False", False]:
 else:
 
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv("DB_NAME"),
-            'USER': os.getenv("DB_USER"),
-            'PASSWORD': os.getenv("DB_PASSWORD"),
-            'HOST': os.getenv("DB_HOST"),
-            'PORT': os.getenv("DB_PORT"),
-            
-        }
-    } 
+        "default": dj_database_url.config(default=os.environ.get("DATABASE_URL"))
+    }
 
     CELERY_BROKER_URL = os.getenv("REDIS_URL")
     CELERY_RESULT_BACKEND = os.getenv("REDIS_URL")
     CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+    DATABASE_URL = 'postgresql://postgres:nRvFTPaEXZZazVQhUxIcljlUhHaDVOKo@postgres.railway.internal:5432/railway'
 
-
-    CELERY_BEAT_SCHEDULE = {
-        "deletar-imagens-antigas-diariamente": {
-            "task": "Social.tasks.delete_old_media",
-            "schedule": crontab(minute='*'),
-        },
-    }
+    
+   
 
 
 # Password validation
