@@ -118,6 +118,7 @@ if DB_LIVE in ["False", False]:
 
     CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
     CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
+    CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 
     CELERY_BEAT_SCHEDULE = {
@@ -140,6 +141,7 @@ else:
 
     CELERY_BROKER_URL = os.getenv("REDIS_URL")
     CELERY_RESULT_BACKEND = os.getenv("REDIS_URL")
+    CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
     CELERY_BEAT_SCHEDULE = {
         "deletar-imagens-antigas-diariamente": {

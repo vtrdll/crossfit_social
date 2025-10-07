@@ -1,4 +1,4 @@
 release: python manage.py migrate
-web: gunicorn app.wsgi
+web: python manage.py migrate && gunicorn app.wsgi:application --bind 0.0.0.0:$PORT
 worker: celery -A app worker --loglevel=info
 beat: celery -A app beat --loglevel=info
