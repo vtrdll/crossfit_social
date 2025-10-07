@@ -10,7 +10,7 @@ from django.core.files.storage import default_storage
 
 logger = logging.getLogger(__name__)
 
-@shared_task
+@shared_task(bind=True)
 def delete_old_media(self):
     try:
         expired_stories = Story.objects.all()  # Para teste, sem filtro
