@@ -6,7 +6,7 @@ from Social.models import Story, StoryImage, StoryVideo
 
 logger = logging.getLogger(__name__)
 
-@shared_task(bind=False)  # bind=False permite chamar direto sem self
+@shared_task(idempotent=True, acks_late=True) # bind=False permite chamar direto sem self
 def delete_old_media():
     """
     Task que deleta stories expiradas e seus arquivos (imagens e vídeos) do storage.
