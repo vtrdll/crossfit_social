@@ -37,7 +37,7 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 # ------------------------------
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
-DB_LIVE = os.getenv("DB_LIVE", "False")
+
 # ------------------------------
 # DATABASE
 # ------------------------------
@@ -161,7 +161,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # DEFAULT PRIMARY KEY
 # ------------------------------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
+'''
 if DB_LIVE in ["False", False]:
     DATABASES = {
         'default': {
@@ -172,4 +172,4 @@ if DB_LIVE in ["False", False]:
 else:
     DATABASES = {
         'default': dj_database_url.config(default=os.environ.get("DATABASE_URL"))
-    }
+    }'''
