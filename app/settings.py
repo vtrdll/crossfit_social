@@ -35,7 +35,7 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 # ------------------------------
 # HOSTS & CSRF
 # ------------------------------
-ALLOWED_HOSTS = "crossfitsocial-social.up.railway.app"
+ALLOWED_HOSTS = ["crossfitsocial-social.up.railway.app"]
 CSRF_TRUSTED_ORIGINS = ["https://crossfitsocial-social.up.railway.app", "https://127.0.0.1:8000/"]
 
 # ------------------------------
