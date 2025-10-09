@@ -6,6 +6,14 @@ from Social.models import Story, StoryImage, StoryVideo
 
 logger = logging.getLogger(__name__)
 
+
+@shared_task
+def task_teste():
+    print("✅ Task de teste executada!")
+    return "Task concluída"
+
+
+
 @shared_task
 def delete_old_media():
     """
@@ -58,4 +66,4 @@ def delete_old_media():
         logger.error(f"Erro ao deletar lote de stories {story_ids}: {e}")
 
     # Reagende a task para processar o próximo lote
-    delete_old_media.apply_async(countdown=2)  # Pequeno delay antes do próximo lote   
+    delete_old_media.apply_async(countdown=2)  # Pequeno delay antes do próximo lote  
