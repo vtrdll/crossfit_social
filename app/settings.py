@@ -20,7 +20,6 @@ print("DJANGO_SETTINGS_MODULE:", os.getenv("DJANGO_SETTINGS_MODULE"), file=sys.s
 print("DATABASE_URL:", os.getenv("DATABASE_URL"), file=sys.stderr)
 print("REDIS_URL:", os.getenv("REDIS_URL"), file=sys.stderr)
 
-
 # ------------------------------
 # BASE
 # ------------------------------
@@ -30,8 +29,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECRET & DEBUG
 # ------------------------------
 SECRET_KEY = os.getenv("SECRET_KEY")
-DEBUG = os.getenv("DEBUG", "False") == "True"
 
+DEBUG=True
 # ------------------------------
 # HOSTS & CSRF
 # ------------------------------
