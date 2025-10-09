@@ -142,7 +142,7 @@ from celery.schedules import crontab
 CELERY_BEAT_SCHEDULE = {
     'deletar-imagens-antigas-diariamente': {
         'task': 'Social.tasks.delete_old_media',
-        'schedule': crontab(minute=0, hour=0),  # todos os dias à meia-noite
+        'schedule': crontab(minute='*'),  # todos os dias à meia-noite
     },
 }
 
