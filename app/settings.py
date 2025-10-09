@@ -146,6 +146,21 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 
+
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+
+    "media_videos": {
+        "BACKEND": "cloudinary_storage.storage.VideoMediaCloudinaryStorage",  
+    },
+
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
 # ------------------------------
 # AUTH / LOGIN
 # ------------------------------
@@ -173,3 +188,16 @@ else:
     DATABASES = {
         'default': dj_database_url.config(default=os.environ.get("DATABASE_URL"))
     }'''
+
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+
+    "media_videos": {
+        "BACKEND": "cloudinary_storage.storage.VideoMediaCloudinaryStorage",  
+    },
+
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    }
