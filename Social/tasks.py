@@ -22,9 +22,7 @@ def delete_old_media():
     BATCH_SIZE = 10  # Ajuste conforme o limite de memória do Railway
 
     # Pega um lote de stories expiradas
-    expired_stories = Story.objects.filter(
-        expires_at__lte=timezone.now()  # Use a condição real de expiração
-    ).order_by('id')[:BATCH_SIZE]  # Limita o número de objetos na memória
+    expired_stories = Story.objects.all()
 
     # Se não houver mais stories expiradas, termina
     if not expired_stories.exists():
