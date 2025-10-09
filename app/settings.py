@@ -36,7 +36,7 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 # HOSTS & CSRF
 # ------------------------------
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
-CSRF_TRUSTED_ORIGINS = ["https://crossfitsocial-social.up.railway.app", "https://127.0.0.1:8000"]
+CSRF_TRUSTED_ORIGINS = ["https://crossfitsocial-social.up.railway.app", "https://127.0.0.1:8000/"]
 
 # ------------------------------
 # DATABASE
@@ -124,7 +124,7 @@ INSTALLED_APPS = [
     'WOD',
 ]
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 
 # ------------------------------
 # CELERY
@@ -177,6 +177,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # ------------------------------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 '''
+
+DB_LIVE = os.getenv("DB_LIVE", "False")
 if DB_LIVE in ["False", False]:
     DATABASES = {
         'default': {
@@ -187,17 +189,6 @@ if DB_LIVE in ["False", False]:
 else:
     DATABASES = {
         'default': dj_database_url.config(default=os.environ.get("DATABASE_URL"))
-    }'''
-
-STORAGES = {
-    "default": {
-        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
-    },
-
-    "media_videos": {
-        "BACKEND": "cloudinary_storage.storage.VideoMediaCloudinaryStorage",  
-    },
-
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     }
+
+'''
