@@ -11,6 +11,15 @@ Configuração pronta para:
 import os
 from pathlib import Path
 import dj_database_url
+import sys
+from dotenv import load_dotenv
+load_dotenv()
+
+
+print("DJANGO_SETTINGS_MODULE:", os.getenv("DJANGO_SETTINGS_MODULE"), file=sys.stderr)
+print("DATABASE_URL:", os.getenv("DATABASE_URL"), file=sys.stderr)
+print("REDIS_URL:", os.getenv("REDIS_URL"), file=sys.stderr)
+
 
 # ------------------------------
 # BASE
@@ -28,7 +37,7 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 # ------------------------------
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
-
+DB_LIVE = os.getenv("DB_LIVE", "False")
 # ------------------------------
 # DATABASE
 # ------------------------------
@@ -152,3 +161,15 @@ AUTH_PASSWORD_VALIDATORS = [
 # DEFAULT PRIMARY KEY
 # ------------------------------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+if DB_LIVE in ["False", False]:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES = {
+        'default': dj_database_url.config(default=os.environ.get("DATABASE_URL"))
+    }
