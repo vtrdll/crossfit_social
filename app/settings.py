@@ -176,19 +176,3 @@ AUTH_PASSWORD_VALIDATORS = [
 # DEFAULT PRIMARY KEY
 # ------------------------------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-'''
-
-DB_LIVE = os.getenv("DB_LIVE", "False")
-if DB_LIVE in ["False", False]:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-else:
-    DATABASES = {
-        'default': dj_database_url.config(default=os.environ.get("DATABASE_URL"))
-    }
-
-'''
