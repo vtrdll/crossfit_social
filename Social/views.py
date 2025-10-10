@@ -287,3 +287,23 @@ def create_story(request):
 
     return render(request, "story_create.html", {"form": form})
 
+@login_required
+def delete_story(request, story_id):
+    story = get_object_or_404(Story, id=story_id, user=request.user)
+
+    
+    for image in story.story_images.all():
+        if image.story_image:
+            image.story_image.delete(save=False)  
+        image.delete()
+
+   
+    for video in story.story_videos.all():
+        if video.story_video:
+            video.story_video.delete(save=False)  
+        video.delete()
+
+    
+    story.delete()
+
+    return redirect('home')  

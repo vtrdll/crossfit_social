@@ -55,46 +55,56 @@
       </div>
 
       <!-- Modal do Story -->
-      <div class="modal fade" id="storyModal{{ story.id }}" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-          <div class="modal-content bg-dark text-white">
-            <div class="modal-header border-0">
-              <h6 class="modal-title">{{ story.user.username }}</h6>
-              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body p-0">
-              <div id="storyCarousel{{ story.id }}" class="carousel slide" data-bs-ride="false">
-                <div class="carousel-inner">
-                  {% for image in story.story_images.all %}
-                    <div class="carousel-item {% if forloop.first %}active{% endif %} d-flex align-items-center justify-content-center" style="min-height:60vh;">
-                      <img src="{{ image.story_image.url }}" class="img-fluid" style="max-height:90vh; object-fit:contain;">
-                    </div>
-                  {% endfor %}
-                  {% for video in story.story_videos.all %}
-                    <div class="carousel-item {% if not story.story_images.all and forloop.first %}active{% endif %} d-flex align-items-center justify-content-center" style="min-height:60vh;">
-                      <video controls style="max-height:90vh; max-width:100%; object-fit:contain;">
-                        <source src="{{ video.story_video.url }}" type="video/mp4">
-                      </video>
-                    </div>
-                  {% endfor %}
-                </div>
+<div class="modal fade" id="storyModal{{ story.id }}" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header border-0 d-flex justify-content-between align-items-center">
+        <h6 class="modal-title mb-0">{{ story.user.username }}</h6>
 
-                {% if story.story_images.all or story.story_videos.all %}
-                  <button class="carousel-control-prev" type="button" data-bs-target="#storyCarousel{{ story.id }}" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"></span>
-                    <span class="visually-hidden">Anterior</span>
-                  </button>
-                  <button class="carousel-control-next" type="button" data-bs-target="#storyCarousel{{ story.id }}" data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span>
-                    <span class="visually-hidden">Próximo</span>
-                  </button>
-                {% endif %}
-              </div>
-            </div>
-          </div>
+        <div class="d-flex align-items-center">
+          {% if story.user == request.user %}
+            <form method="post" action="{% url 'delete_story' story.id %}" class="me-2 m-0 p-0">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-danger">Deletar</button>
+            </form>
+          {% endif %}
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
       </div>
-      <!-- Fim Modal -->
+
+      <div class="modal-body p-0">
+        <div id="storyCarousel{{ story.id }}" class="carousel slide" data-bs-ride="false">
+          <div class="carousel-inner">
+            {% for image in story.story_images.all %}
+              <div class="carousel-item {% if forloop.first %}active{% endif %} d-flex align-items-center justify-content-center" style="min-height:60vh;">
+                <img src="{{ image.story_image.url }}" class="img-fluid" style="max-height:90vh; object-fit:contain;">
+              </div>
+            {% endfor %}
+            {% for video in story.story_videos.all %}
+              <div class="carousel-item {% if not story.story_images.all and forloop.first %}active{% endif %} d-flex align-items-center justify-content-center" style="min-height:60vh;">
+                <video controls style="max-height:90vh; max-width:100%; object-fit:contain;">
+                  <source src="{{ video.story_video.url }}" type="video/mp4">
+                </video>
+              </div>
+            {% endfor %}
+          </div>
+
+          {% if story.story_images.all or story.story_videos.all %}
+            <button class="carousel-control-prev" type="button" data-bs-target="#storyCarousel{{ story.id }}" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon"></span>
+              <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#storyCarousel{{ story.id }}" data-bs-slide="next">
+              <span class="carousel-control-next-icon"></span>
+              <span class="visually-hidden">Próximo</span>
+            </button>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Fim Modal -->
 
     {% endif %}
   {% endfor %}
