@@ -20,26 +20,25 @@ print("DJANGO_SETTINGS_MODULE:", os.getenv("DJANGO_SETTINGS_MODULE"), file=sys.s
 print("DATABASE_URL:", os.getenv("DATABASE_URL"), file=sys.stderr)
 print("REDIS_URL:", os.getenv("REDIS_URL"), file=sys.stderr)
 
-# ------------------------------
+
 # BASE
-# ------------------------------
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# ------------------------------
 # SECRET & DEBUG
-# ------------------------------
+
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG=True
-# ------------------------------
+
 # HOSTS & CSRF
-# ------------------------------
+
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 CSRF_TRUSTED_ORIGINS = ["https://crossfitsocial-social.up.railway.app", "https://127.0.0.1:8000/"]
 
-# ------------------------------
+
 # DATABASE
-# ------------------------------
+
 DATABASES = {
     "default": dj_database_url.config(
         default=os.getenv("DATABASE_URL"),
@@ -48,9 +47,9 @@ DATABASES = {
     )
 }
 
-# ------------------------------
+
 # STATIC FILES (Whitenoise)
-# ------------------------------
+
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'app' / 'static']
@@ -58,7 +57,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # servir static files
+    "whitenoise.middleware.WhiteNoiseMiddleware", 
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -67,9 +66,8 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# ------------------------------
 # TEMPLATES
-# ------------------------------
+
 ROOT_URLCONF = 'app.urls'
 
 TEMPLATES = [
@@ -89,17 +87,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'app.wsgi.application'
 
-# ------------------------------
+
 # TIMEZONE
-# ------------------------------
+
 TIME_ZONE = os.getenv("TZ", "America/Sao_Paulo")
 USE_TZ = True
 USE_I18N = True
 LANGUAGE_CODE = 'en-us'
 
-# ------------------------------
 # MEDIA / CLOUDINARY
-# ------------------------------
+
 CLOUDINARY_URL = os.getenv("CLOUDINARY_URL")
 CLOUDINARY_SECURE = os.getenv("CLOUDINARY_SECURE", "True") == "True"
 
@@ -125,9 +122,8 @@ INSTALLED_APPS = [
 
 
 
-# ------------------------------
 # CELERY
-# ------------------------------
+
 CELERY_BROKER_URL = os.getenv("REDIS_URL")
 CELERY_RESULT_BACKEND = os.getenv("REDIS_URL")
 CELERY_ACCEPT_CONTENT = ['json']
@@ -141,7 +137,7 @@ from celery.schedules import crontab
 CELERY_BEAT_SCHEDULE = {
     'deletar-imagens-antigas-diariamente': {
         'task': 'Social.tasks.delete_old_media',
-        'schedule': crontab(minute='*'),  # todos os dias à meia-noite
+        'schedule': crontab(hour=0, minute=0),  
     },
 }
 
@@ -160,9 +156,8 @@ STORAGES = {
     },
 }
 
-# ------------------------------
+
 # AUTH / LOGIN
-# ------------------------------
 LOGIN_URL = '/login'
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -171,7 +166,6 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# ------------------------------
+
 # DEFAULT PRIMARY KEY
-# ------------------------------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

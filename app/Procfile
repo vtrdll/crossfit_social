@@ -1,4 +1,5 @@
-release: python manage.py migrate
-web: python manage.py migrate && gunicorn app.wsgi:application --bind 0.0.0.0:$PORT
-worker: celery -A app worker --loglevel=info
+release: python manage.py migrate && python manage.py collectstatic --noinput && python manage.py createsuperuser --noinput || true
+web: gunicorn app.wsgi --log-file -
+worker: celery -A app worker --loglevel=info --concurrency=2 --max-tasks-per-child=10
 beat: celery -A app beat --loglevel=info
+
