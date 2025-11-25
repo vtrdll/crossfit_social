@@ -147,7 +147,13 @@ python manage.py migrate
 <h3>🏋️ Postar WOD</h3>
 <img width="1895" src="https://github.com/user-attachments/assets/f5804786-a404-4f8d-9424-25eeba0ba4f3"/>
 
-<hr>
+<h3>🏋️ Criar BOX (Apenas ADMIN)</h3>
+<img width="1907" src="https://github.com/user-attachments/assets/a0b2ece6-d08c-46ef-a4c6-48aa65efd5f6" />
+
+
+
+
+
 
 <h2>📜 Licença</h2>
 <p>Projeto livre para estudo, modificação e aprendizado.</p>
