@@ -1,123 +1,159 @@
-📝 Blog com Django
+<h1 align="center">🏋️‍♂️ Blog CrossFit – Projeto Django</h1>
 
-Este projeto é um sistema de blog desenvolvido com o framework Django. A aplicação permite criação de contas, postagens, comentários e gerenciamento de perfil, sendo ideal para praticar e consolidar conhecimentos em desenvolvimento web com Django.
-🔧 Funcionalidades Implementadas
+<p align="center">
+  Sistema completo de blog desenvolvido com <strong>Django</strong>, voltado para treinos e ambiente CrossFit.<br>
+  Inclui contas, postagens, eventos, times, WOD e muito mais.
+</p>
 
-    Cadastro, login e logout de usuários;
+<hr>
 
-    CRUD completo de usuários, postagens e imagem de perfil;
+<h2>📦 Apps do Projeto</h2>
 
-    Upload de imagens nos posts;
+<h3>🔐 Accounts</h3>
+<ul>
+  <li>Perfis de usuário</li>
+  <li>Gerenciamento de Times</li>
+  <li>Gerenciamento de Box (academias)</li>
+</ul>
 
-    Página de perfil com informações editáveis;
+<h3>💬 Social</h3>
+<ul>
+  <li>Postagens</li>
+  <li>Comentários</li>
+  <li>Stories (imagens e vídeos)</li>
+</ul>
 
-    Sistema de comentários por post;
+<h3>🏋️ WOD</h3>
+<ul>
+  <li>Movimentos</li>
+  <li>Workouts (WOD – Workout of the Day)</li>
+</ul>
 
-    Interface simples e funcional.
+<h3>📅 Event</h3>
+<ul>
+  <li>Criação e edição de eventos</li>
+</ul>
 
-🗂 Estrutura do Projeto
+<p>✔️ Todos os apps possuem CRUD completo.</p>
 
-    accounts/: gerenciamento de usuários e perfis;
+<hr>
 
-    posts/: sistema de postagens e comentários;
+<h2>🛠 Tecnologias Utilizadas</h2>
+<ul>
+  <li>Python 3.10+</li>
+  <li>Django 4.x</li>
+  <li>SQLite (suporte futuro para PostgreSQL)</li>
+  <li>Bootstrap 5</li>
+  <li>HTML5, CSS3, JavaScript</li>
+  <li>Redis + Celery</li>
+</ul>
 
-    templates/: HTML renderizado com suporte a Bootstrap;
+<hr>
 
-    media/: armazenamento local de arquivos enviados.
+<h2>🚀 Como Executar Localmente</h2>
 
-🛠 Tecnologias Utilizadas
+<h3>1. Clone o repositório</h3>
+<pre>
+git clone https://github.com/vtrdll/blog.git
+cd blog
+</pre>
 
-    Python 3.10+
+<h3>2. Crie e ative o ambiente virtual</h3>
+<pre>
+python -m venv venv
+</pre>
 
-    Django 4.x
+<p><strong>Linux/macOS:</strong></p>
+<pre>source venv/bin/activate</pre>
 
-    SQLite (com suporte futuro para PostgreSQL)
+<p><strong>Windows:</strong></p>
+<pre>venv\Scripts\activate</pre>
 
-    HTML5, CSS3, Bootstrap 5
+<h3>3. Instale as dependências</h3>
+<pre>pip install -r requirements.txt</pre>
 
-    JavaScript (mínimo)
+<hr>
 
+<h3>4. Popule os Movimentos (WOD)</h3>
 
+<pre>
+python manage.py shell
+</pre>
 
-Como Executar Localmente
+<pre>
+from WOD.scripts import populate_movements
+populate_movements()
+exit()
+</pre>
 
-1. Clone o repositório:
-   
-    git clone https://github.com/vtrdll/blog.git
+<pre>
+python manage.py makemigrations
+python manage.py migrate
+</pre>
 
-    cd blog
+<hr>
 
-3. Crie e ative um ambiente virtual:
+<h3>5. Ative Redis e Celery</h3>
 
-    python -m venv venv
+<p>Verifique se o Redis está funcionando:</p>
 
-    source venv/bin/activate  # Linux/Mac
+<pre>redis-cli ping</pre>
 
-    venv\Scripts\activate     # Windows
+<p>Se retornar <code>PONG</code>, está ok.</p>
 
-3. Instale as dependências:
-   
-    pip install -r requirements.txt
+<h4>Abra dois terminais (com a venv ativada):</h4>
 
-5. Aplique as migrações:
-   
-    python manage.py makemigrations
-  
-    python manage.py migrate
+<p><strong>Celery Worker</strong></p>
+<pre>celery -A app worker --loglevel=info</pre>
 
-6. Crie um superusuário (opcional):
-   
-   python manage.py createsuperuser
+<p><strong>Celery Beat</strong></p>
+<pre>celery -A app beat --loglevel=info</pre>
 
-8. Execute o servidor:
-   
-   python manage.py runserver
+<hr>
 
-   Acesse http://127.0.0.1:8000/ no navegador para usar o blog.
+<h3>6. Crie um superusuário</h3>
+<pre>python manage.py createsuperuser</pre>
 
+<h3>7. Execute o servidor</h3>
+<pre>python manage.py runserver</pre>
 
+<p>Acesse: <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a></p>
 
-🖼 Capturas de Tela
-LOGIN ![login](https://github.com/user-attachments/assets/ededc810-df8b-4e27-aeb8-d9d005c7fa9e)
+<hr>
 
-HOME ![home](https://github.com/user-attachments/assets/60e5a652-a329-4702-b254-d3ad021906ee)
+<h2>🖼 Capturas de Tela</h2>
 
-Comments ![Comments](https://github.com/user-attachments/assets/d6bf5c9f-90d4-46a7-987e-52b3de7f99e8)
+<h3>📋 Criar Conta</h3>
+<img width="1905" src="https://github.com/user-attachments/assets/150edfe8-ebdb-450f-bd8d-cfbe13159d94"/>
 
-My Perfil ![Meu-Perfil](https://github.com/user-attachments/assets/af4df200-59bb-41a7-8ce4-6f69c5ec1ac7)
+<h3>🧑‍🏫 Editar Perfil</h3>
+<img width="1896" src="https://github.com/user-attachments/assets/1fefa5ec-e5e7-4732-887d-7f74ff7a9643"/>
 
-Config Account ![ConfigAccount](https://github.com/user-attachments/assets/e45d6a8c-de2e-480a-b82c-4f050a5c0267)
+<h3>📝 Criar Post</h3>
+<img width="1903" src="https://github.com/user-attachments/assets/42b43ef0-3f33-433e-8ea6-a0d5a99f3454"/>
 
+<h3>🏋️ Criar Time</h3>
+<img width="1888" src="https://github.com/user-attachments/assets/20913b44-f076-46f9-8c17-e3b402c60914"/>
 
+<h3>✏️ Editar Time</h3>
+<img width="1904" src="https://github.com/user-attachments/assets/be899388-79a8-475b-9ecc-8cda7d5d7d02"/>
 
+<h3>📅 Criar Evento</h3>
+<img width="1888" src="https://github.com/user-attachments/assets/7c5a9212-09a0-45b8-b427-3eb7f87cc591"/>
 
+<h3>🔍 Detalhar Evento</h3>
+<img width="1911" src="https://github.com/user-attachments/assets/5274ea86-3845-4c73-b282-b2fa700c81ec"/>
 
+<h3>🏋️ Postar WOD</h3>
+<img width="1895" src="https://github.com/user-attachments/assets/f5804786-a404-4f8d-9424-25eeba0ba4f3"/>
 
+<hr>
 
+<h2>📜 Licença</h2>
+<p>Projeto livre para estudo, modificação e aprendizado.</p>
 
+<hr>
 
+<h2>🤝 Contribua</h2>
+<p>Pull requests, issues e sugestões são sempre bem-vindas!</p>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
